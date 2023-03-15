@@ -51,6 +51,14 @@ export default [
                 active: "material.*",
                 permission: "view-material",
             },
+            {
+                name: "Brand",
+                show: true,
+                icon: HiClipboardList,
+                route: route("brand.index"),
+                active: "brand.*",
+                permission: "view-brand",
+            },
         ],
     },
     {
