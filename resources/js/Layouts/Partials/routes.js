@@ -31,6 +31,21 @@ export default [
         permission: "view-dashboard",
     },
     {
+        name: "Master",
+        show: true,
+        icon: HiCollection,
+        items: [
+            {
+                name: "Ukuran",
+                show: true,
+                icon: HiClipboardList,
+                route: route("size.index"),
+                active: "size.*",
+                permission: "view-size",
+            },
+        ],
+    },
+    {
         name: "User",
         show: true,
         icon: HiUser,

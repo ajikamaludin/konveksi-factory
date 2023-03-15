@@ -3,6 +3,7 @@
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SizeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,12 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [GeneralController::class, 'index'])->name('dashboard');
     Route::get('/maintance', [GeneralController::class, 'maintance'])->name('maintance');
+
+    // Size
+    Route::get('/sizes', [SizeController::class, 'index'])->name('size.index');
+    Route::post('/sizes', [SizeController::class, 'store'])->name('size.store');
+    Route::put('/sizes/{size}', [SizeController::class, 'update'])->name('size.update');
+    Route::delete('/sizes/{size}', [SizeController::class, 'destroy'])->name('size.destroy');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
