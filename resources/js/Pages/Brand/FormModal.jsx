@@ -62,7 +62,7 @@ export default function FormModal(props) {
                 name="name"
                 value={data.name}
                 onChange={handleOnChange}
-                label="name"
+                label="nama"
                 error={errors.name}
             />
             <div className="flex items-center">

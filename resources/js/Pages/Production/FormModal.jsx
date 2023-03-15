@@ -5,14 +5,11 @@ import Button from "@/Components/Button";
 import FormInput from "@/Components/FormInput";
 
 import { isEmpty } from "lodash";
-import TextArea from "@/Components/TextArea";
 
 export default function FormModal(props) {
     const { modalState } = props
     const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
         name: '',
-        email: '',
-        phone: '',
         description: '',
     })
 
@@ -32,26 +29,24 @@ export default function FormModal(props) {
     }
 
     const handleSubmit = () => {
-        const buyer = modalState.data
-        if(buyer !== null) {
-            put(route('buyer.update', buyer), {
+        const material = modalState.data
+        if(material !== null) {
+            put(route('material.update', material), {
                 onSuccess: () => handleClose(),
             })
             return
         } 
-        post(route('buyer.store'), {
+        post(route('material.store'), {
             onSuccess: () => handleClose()
         })
     }
 
     useEffect(() => {
-        const buyer = modalState.data
-        if (isEmpty(buyer) === false) {
+        const material = modalState.data
+        if (isEmpty(material) === false) {
             setData({
-                name: buyer.name,
-                phone: buyer.phone,
-                email: buyer.email,
-                description: buyer.description,
+                name: material.name,
+                description: material.description,
             })
             return 
         }
@@ -61,7 +56,7 @@ export default function FormModal(props) {
         <Modal
             isOpen={modalState.isOpen}
             toggle={handleClose}
-            title={"Pembeli"}
+            title={"Ukuran"}
         >
             <FormInput
                 name="name"
@@ -69,27 +64,6 @@ export default function FormModal(props) {
                 onChange={handleOnChange}
                 label="name"
                 error={errors.name}
-            />
-            <FormInput
-                name="phone"
-                value={data.phone}
-                onChange={handleOnChange}
-                label="kontak"
-                error={errors.phone}
-            />
-            <FormInput
-                name="email"
-                value={data.email}
-                onChange={handleOnChange}
-                label="email"
-                error={errors.email}
-            />
-            <TextArea
-                name="description"
-                value={data.description}
-                onChange={handleOnChange}
-                label="deskripsi"
-                error={errors.description}
             />
             <div className="flex items-center">
                 <Button

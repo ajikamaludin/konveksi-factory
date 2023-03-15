@@ -22,19 +22,19 @@ export default function Index(props) {
     const confirmModal = useModalState()
     const formModal = useModalState()
 
-    const toggleFormModal = (buyer = null) => {
-        formModal.setData(buyer)
+    const toggleFormModal = (production = null) => {
+        formModal.setData(production)
         formModal.toggle()
     }
 
-    const handleDeleteClick = (buyer) => {
-        confirmModal.setData(buyer)
+    const handleDeleteClick = (production) => {
+        confirmModal.setData(production)
         confirmModal.toggle()
     }
 
     const onDelete = () => {
         if(confirmModal.data !== null) {
-            router.delete(route('buyer.destroy', confirmModal.data.id))
+            router.delete(route('production.destroy', confirmModal.data.id))
         }
     }
 
@@ -52,9 +52,9 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-buyer')
-    const canUpdate = hasPermission(auth, 'update-buyer')
-    const canDelete = hasPermission(auth, 'delete-buyer')
+    const canCreate = hasPermission(auth, 'create-production')
+    const canUpdate = hasPermission(auth, 'update-production')
+    const canDelete = hasPermission(auth, 'delete-production')
 
     return (
         <AuthenticatedLayout
@@ -62,9 +62,9 @@ export default function Index(props) {
             errors={props.errors}
             flash={props.flash}
             page={'Dashboard'}
-            action={'Pembeli'}
+            action={'Artikel'}
         >
-            <Head title="Pembeli"/>
+            <Head title="Artikel"/>
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
@@ -86,28 +86,16 @@ export default function Index(props) {
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
                                             <th scope="col" className="py-3 px-6">
-                                                Nama
-                                            </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Email
-                                            </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Kontak
+                                                Name
                                             </th>
                                             <th scope="col" className="py-3 px-6"/>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map(buyer => (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={buyer.id}>
+                                        {data.map(production => (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={production.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {buyer.name}
-                                                </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {buyer.email}
-                                                </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {buyer.phone}
+                                                    {production.name}
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown
@@ -118,7 +106,7 @@ export default function Index(props) {
                                                         size={'sm'}
                                                     >
                                                         {canUpdate && (
-                                                            <Dropdown.Item onClick={() => toggleFormModal(buyer)}>
+                                                            <Dropdown.Item onClick={() => toggleFormModal(production)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiPencil/> 
                                                                     <div>Ubah</div>
@@ -126,7 +114,7 @@ export default function Index(props) {
                                                             </Dropdown.Item>
                                                         )}
                                                         {canDelete && (
-                                                            <Dropdown.Item onClick={() => handleDeleteClick(buyer)}>
+                                                            <Dropdown.Item onClick={() => handleDeleteClick(production)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 
                                                                     <div>Hapus</div>

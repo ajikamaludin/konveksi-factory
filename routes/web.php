@@ -5,6 +5,7 @@ use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SizeController;
@@ -68,6 +69,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Role
     Route::resource('/roles', RoleController::class);
+
+    // Production
+    Route::get('/productions', [ProductionController::class, 'index'])->name('production.index');
+    Route::post('/productions', [ProductionController::class, 'store'])->name('production.store');
+    Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('production.update');
+    Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
 });
 
 Route::middleware('auth')->group(function () {

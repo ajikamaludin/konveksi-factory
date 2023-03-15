@@ -35,9 +35,9 @@ export default [
         name: "Artikel",
         show: true,
         icon: HiClipboardList,
-        route: route("dashboard"),
-        active: "#",
-        permission: "view-dashboard",
+        route: route("production.index"),
+        active: "production.*",
+        permission: "view-production",
     },
     {
         name: "Line Sewing",
