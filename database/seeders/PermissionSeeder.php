@@ -46,10 +46,10 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Lihat Brand', 'name' => 'view-brand'],
             ['id' => Str::uuid(), 'label' => 'Hapus Brand', 'name' => 'delete-brand'],
 
-            ['id' => Str::uuid(), 'label' => 'Buat Bahan', 'name' => 'create-mateial'],
-            ['id' => Str::uuid(), 'label' => 'Edit Bahan', 'name' => 'update-mateial'],
-            ['id' => Str::uuid(), 'label' => 'Lihat Bahan', 'name' => 'view-mateial'],
-            ['id' => Str::uuid(), 'label' => 'Hapus Bahan', 'name' => 'delete-mateial'],
+            ['id' => Str::uuid(), 'label' => 'Buat Bahan', 'name' => 'create-material'],
+            ['id' => Str::uuid(), 'label' => 'Edit Bahan', 'name' => 'update-material'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Bahan', 'name' => 'view-material'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Bahan', 'name' => 'delete-material'],
 
             ['id' => Str::uuid(), 'label' => 'Buat Pembeli', 'name' => 'create-buyer'],
             ['id' => Str::uuid(), 'label' => 'Edit Pembeli', 'name' => 'update-buyer'],

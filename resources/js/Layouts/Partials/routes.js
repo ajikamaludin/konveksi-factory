@@ -43,6 +43,14 @@ export default [
                 active: "size.*",
                 permission: "view-size",
             },
+            {
+                name: "Bahan",
+                show: true,
+                icon: HiClipboardList,
+                route: route("material.index"),
+                active: "material.*",
+                permission: "view-material",
+            },
         ],
     },
     {

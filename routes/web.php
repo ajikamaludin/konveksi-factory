@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SizeController;
@@ -31,6 +32,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sizes', [SizeController::class, 'store'])->name('size.store');
     Route::put('/sizes/{size}', [SizeController::class, 'update'])->name('size.update');
     Route::delete('/sizes/{size}', [SizeController::class, 'destroy'])->name('size.destroy');
+
+    // Material
+    Route::get('/materials', [MaterialController::class, 'index'])->name('material.index');
+    Route::post('/materials', [MaterialController::class, 'store'])->name('material.store');
+    Route::put('/materials/{material}', [MaterialController::class, 'update'])->name('material.update');
+    Route::delete('/materials/{material}', [MaterialController::class, 'destroy'])->name('material.destroy');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
