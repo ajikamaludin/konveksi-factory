@@ -103,7 +103,7 @@ export default function Index(props) {
                                                         floatingArrow={true}
                                                         arrowIcon={true}
                                                         dismissOnClick={true}
-                                                        material={'sm'}
+                                                        size={'sm'}
                                                     >
                                                         {canUpdate && (
                                                             <Dropdown.Item onClick={() => toggleFormModal(material)}>

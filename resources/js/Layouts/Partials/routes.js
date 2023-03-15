@@ -44,6 +44,14 @@ export default [
                 permission: "view-size",
             },
             {
+                name: "Warna",
+                show: true,
+                icon: HiClipboardList,
+                route: route("color.index"),
+                active: "color.*",
+                permission: "view-color",
+            },
+            {
                 name: "Bahan",
                 show: true,
                 icon: HiClipboardList,

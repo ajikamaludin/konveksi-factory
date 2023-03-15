@@ -22,19 +22,19 @@ export default function Index(props) {
     const confirmModal = useModalState()
     const formModal = useModalState()
 
-    const toggleFormModal = (brand = null) => {
-        formModal.setData(brand)
+    const toggleFormModal = (color = null) => {
+        formModal.setData(color)
         formModal.toggle()
     }
 
-    const handleDeleteClick = (brand) => {
-        confirmModal.setData(brand)
+    const handleDeleteClick = (color) => {
+        confirmModal.setData(color)
         confirmModal.toggle()
     }
 
     const onDelete = () => {
         if(confirmModal.data !== null) {
-            router.delete(route('brand.destroy', confirmModal.data.id))
+            router.delete(route('color.destroy', confirmModal.data.id))
         }
     }
 
@@ -52,9 +52,9 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-brand')
-    const canUpdate = hasPermission(auth, 'update-brand')
-    const canDelete = hasPermission(auth, 'delete-brand')
+    const canCreate = hasPermission(auth, 'create-color')
+    const canUpdate = hasPermission(auth, 'update-color')
+    const canDelete = hasPermission(auth, 'delete-color')
 
     return (
         <AuthenticatedLayout
@@ -62,9 +62,9 @@ export default function Index(props) {
             errors={props.errors}
             flash={props.flash}
             page={'Dashboard'}
-            action={'Brand'}
+            action={'Warna'}
         >
-            <Head title="Brand"/>
+            <Head title="Warna"/>
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
@@ -92,10 +92,10 @@ export default function Index(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map(brand => (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={brand.id}>
+                                        {data.map(color => (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={color.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {brand.name}
+                                                    {color.name}
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown
@@ -106,7 +106,7 @@ export default function Index(props) {
                                                         size={'sm'}
                                                     >
                                                         {canUpdate && (
-                                                            <Dropdown.Item onClick={() => toggleFormModal(brand)}>
+                                                            <Dropdown.Item onClick={() => toggleFormModal(color)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiPencil/> 
                                                                     <div>Ubah</div>
@@ -114,7 +114,7 @@ export default function Index(props) {
                                                             </Dropdown.Item>
                                                         )}
                                                         {canDelete && (
-                                                            <Dropdown.Item onClick={() => handleDeleteClick(brand)}>
+                                                            <Dropdown.Item onClick={() => handleDeleteClick(color)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 
                                                                     <div>Hapus</div>

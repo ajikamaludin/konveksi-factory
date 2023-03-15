@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\ColorController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
@@ -33,6 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sizes', [SizeController::class, 'store'])->name('size.store');
     Route::put('/sizes/{size}', [SizeController::class, 'update'])->name('size.update');
     Route::delete('/sizes/{size}', [SizeController::class, 'destroy'])->name('size.destroy');
+
+    // Color
+    Route::get('/colors', [ColorController::class, 'index'])->name('color.index');
+    Route::post('/colors', [ColorController::class, 'store'])->name('color.store');
+    Route::put('/colors/{color}', [ColorController::class, 'update'])->name('color.update');
+    Route::delete('/colors/{color}', [ColorController::class, 'destroy'])->name('color.destroy');
 
     // Material
     Route::get('/materials', [MaterialController::class, 'index'])->name('material.index');
