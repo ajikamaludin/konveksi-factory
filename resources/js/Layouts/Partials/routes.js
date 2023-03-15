@@ -18,7 +18,8 @@ import {
     HiHome,
     HiInboxIn,
     HiOutlineCash,
-    HiOutlineTable
+    HiOutlineTable,
+    HiOutlineCog
 } from "react-icons/hi";
 
 export default [
@@ -28,6 +29,22 @@ export default [
         icon: HiChartPie,
         route: route("dashboard"),
         active: "dashboard",
+        permission: "view-dashboard",
+    },
+    {
+        name: "Artikel",
+        show: true,
+        icon: HiClipboardList,
+        route: route("dashboard"),
+        active: "#",
+        permission: "view-dashboard",
+    },
+    {
+        name: "Line Sewing",
+        show: true,
+        icon: HiOutlineCog,
+        route: route("dashboard"),
+        active: "#",
         permission: "view-dashboard",
     },
     {
