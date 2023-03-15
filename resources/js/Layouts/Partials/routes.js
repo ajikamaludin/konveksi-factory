@@ -67,6 +67,14 @@ export default [
                 active: "brand.*",
                 permission: "view-brand",
             },
+            {
+                name: "Pembeli",
+                show: true,
+                icon: HiClipboardList,
+                route: route("buyer.index"),
+                active: "buyer.*",
+                permission: "view-buyer",
+            },
         ],
     },
     {

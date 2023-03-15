@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\MaterialController;
@@ -47,11 +48,17 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/materials/{material}', [MaterialController::class, 'update'])->name('material.update');
     Route::delete('/materials/{material}', [MaterialController::class, 'destroy'])->name('material.destroy');
 
-    // Material
+    // Brand
     Route::get('/brands', [BrandController::class, 'index'])->name('brand.index');
     Route::post('/brands', [BrandController::class, 'store'])->name('brand.store');
     Route::put('/brands/{brand}', [BrandController::class, 'update'])->name('brand.update');
     Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brand.destroy');
+    
+    // Brand
+    Route::get('/buyers', [BuyerController::class, 'index'])->name('buyer.index');
+    Route::post('/buyers', [BuyerController::class, 'store'])->name('buyer.store');
+    Route::put('/buyers/{buyer}', [BuyerController::class, 'update'])->name('buyer.update');
+    Route::delete('/buyers/{buyer}', [BuyerController::class, 'destroy'])->name('buyer.destroy');
 
     // User
     Route::get('/users', [UserController::class, 'index'])->name('user.index');
