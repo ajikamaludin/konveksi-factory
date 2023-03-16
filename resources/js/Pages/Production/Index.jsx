@@ -3,7 +3,7 @@ import { Link, router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
 import { Button, Dropdown } from 'flowbite-react';
-import { HiPencil, HiTrash } from 'react-icons/hi';
+import { HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -117,9 +117,15 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
+                                                        <Dropdown.Item>
+                                                            <Link href={route("production.edit", production)} className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
+                                                                <div>Excel</div>
+                                                            </Link>
+                                                        </Dropdown.Item>
                                                         {canUpdate && (
                                                             <Dropdown.Item>
-                                                                <Link href={route("production.edit", production)} className="flex space-x-1">
+                                                                <Link href={route("production.edit", production)} className="flex space-x-1 items-center">
                                                                     <HiPencil/> 
                                                                     <div>Ubah</div>
                                                                 </Link>
