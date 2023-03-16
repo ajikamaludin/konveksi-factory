@@ -72,7 +72,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Production
     Route::get('/productions', [ProductionController::class, 'index'])->name('production.index');
+    Route::get('/productions/create', [ProductionController::class, 'create'])->name('production.create');
     Route::post('/productions', [ProductionController::class, 'store'])->name('production.store');
+    Route::get('/productions/{production}/edit', [ProductionController::class, 'edit'])->name('production.edit');
     Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('production.update');
     Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
 });

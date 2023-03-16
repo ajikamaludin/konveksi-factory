@@ -1,76 +1,78 @@
 import React, { useEffect } from "react";
-import Modal from "@/Components/Modal";
 import { useForm } from "@inertiajs/react";
+
+import Modal from "@/Components/Modal";
 import Button from "@/Components/Button";
 import FormInput from "@/Components/FormInput";
-
-import { isEmpty } from "lodash";
+import SizeSeletionInput from '../Size/SelectionInput';
+import ColorSeletionInput from '../Color/SelectionInput';
+import { toast } from "react-toastify";
 
 export default function FormModal(props) {
-    const { modalState } = props
-    const { data, setData, post, put, processing, errors, reset, clearErrors } = useForm({
-        name: '',
-        description: '',
+    const { modalState, onItemAdd } = props
+    const { data, setData, reset } = useForm({
+        size: '',
+        color: '',
+        target_quantity: 0
     })
 
     const handleOnChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? (event.target.checked ? 1 : 0) : event.target.value);
     }
 
-    const handleReset = () => {
-        modalState.setData(null)
-        reset()
-        clearErrors()
-    }
-
     const handleClose = () => {
-        handleReset()
+        reset()
         modalState.toggle()
     }
 
     const handleSubmit = () => {
-        const material = modalState.data
-        if(material !== null) {
-            put(route('material.update', material), {
-                onSuccess: () => handleClose(),
-            })
-            return
-        } 
-        post(route('material.store'), {
-            onSuccess: () => handleClose()
-        })
-    }
-
-    useEffect(() => {
-        const material = modalState.data
-        if (isEmpty(material) === false) {
-            setData({
-                name: material.name,
-                description: material.description,
-            })
+        if(data.size === '' || data.color === '' || +data.target_quantity === 0) {
+            toast.error('Periksa kembali data anda')
             return 
         }
-    }, [modalState])
+        onItemAdd({
+            size_id: data.size.id,
+            size: data.size,
+            color_id: data.color.id,
+            color: data.color,
+            target_quantity:data.target_quantity,
+        })
+        reset()
+        modalState.toggle()
+    }
 
     return (
         <Modal
             isOpen={modalState.isOpen}
             toggle={handleClose}
-            title={"Ukuran"}
+            title={"Item Artikel"}
         >
             <FormInput
-                name="name"
-                value={data.name}
+                type="number"
+                name="target_quantity"
+                value={data.target_quantity}
                 onChange={handleOnChange}
-                label="name"
-                error={errors.name}
+                label="Total Target"
             />
+            <div className='mb-2'>
+                <ColorSeletionInput
+                    label="Warna"
+                    itemSelected={data.color?.id}
+                    onItemSelected={(item) => setData('color', item)}
+                />
+            </div>
+            <div className='mb-2'>
+                <SizeSeletionInput
+                    label="Ukuran"
+                    itemSelected={data.size?.id}
+                    onItemSelected={(item) => setData('size', item)}
+                />
+            </div>
             <div className="flex items-center">
                 <Button
                     onClick={handleSubmit}
-                    processing={processing} 
                 >
-                    Simpan
+                    Tambah
                 </Button>
                 <Button
                     onClick={handleClose}

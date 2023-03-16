@@ -12,4 +12,14 @@ class ProductionItem extends Model
         'finish_quantity',
         'reject_quantity',
     ];
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
 }

@@ -19,10 +19,10 @@ return new class extends Migration
             $table->uuid('brand_id')->nullable();
             $table->uuid('material_id')->nullable();
             $table->string('code');
-            $table->string('name');
-            $table->text('description');
+            $table->string('name')->nullable();
+            $table->text('description')->nullable();
             $table->date('deadline')->nullable();
-            $table->string('sketch_image');
+            $table->string('sketch_image')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();
