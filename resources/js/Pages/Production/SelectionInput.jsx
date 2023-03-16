@@ -4,7 +4,6 @@ import { router, usePage } from '@inertiajs/react'
 import axios from 'axios'
 import { HiChevronDown, HiChevronUp, HiOutlinePlusCircle, HiPlusCircle, HiX } from 'react-icons/hi'
 import { Spinner } from 'flowbite-react'
-import { isEmpty } from 'lodash'
 
 export default function SelectionInput(props) {
     const ref = useRef()
@@ -79,7 +78,7 @@ export default function SelectionInput(props) {
 
     const fetch = (q = '') => {
         setLoading(true)
-        axios.get(route('api.size.index', { 'q': q, 'all': all }), {
+        axios.get(route('api.production.index', { 'q': q, 'all': all }), {
             headers: {
                 'Content-Type': 'application/json',
                 // 'Authorization': 'Bearer ' + auth.user.jwt_token
@@ -92,14 +91,6 @@ export default function SelectionInput(props) {
             alert(err)
         })
         .finally(() => setLoading(false))
-    }
-
-    const create = () => {
-        router.post(route('size.store'), {
-            name: query
-        })
-        setQuery('')
-        fetch()
     }
 
     // every select item open
@@ -121,7 +112,7 @@ export default function SelectionInput(props) {
     }, [disabled])
 
     useEffect(() => {
-        if (isEmpty(itemSelected) === false) {
+        if (itemSelected !== null) {
             const item = showItems.find(item => item.id === itemSelected)
             if(item) {
                 setSelected(item.name)
@@ -228,15 +219,6 @@ export default function SelectionInput(props) {
                                             ))}
                                             {showItems.length <= 0 && (
                                                 <div>
-                                                    <div 
-                                                        className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-neutral-content hover:bg-gray-400" 
-                                                        onClick={create}
-                                                    >
-                                                        <div className="w-full items-center justify-center flex mx-2 gap-2">
-                                                            <HiOutlinePlusCircle className='w-5 h-5'/>
-                                                            <span>Buat { query }</span>
-                                                        </div>
-                                                    </div>
                                                     <div className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-neutral-content">
                                                         <div className="w-full items-center justify-center flex">
                                                             <div className="mx-2 my-2">

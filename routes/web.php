@@ -4,6 +4,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\LineSewingController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
@@ -77,6 +78,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/productions/{production}/edit', [ProductionController::class, 'edit'])->name('production.edit');
     Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('production.update');
     Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
+
+    // line-sewing
+    Route::get('/line/sewing', [LineSewingController::class, 'index'])->name('line.sewing.index');
+    Route::post('/line/sewing/{item}', [LineSewingController::class, 'store'])->name('line.sewing.create');
 });
 
 Route::middleware('auth')->group(function () {

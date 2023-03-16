@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 class ProductionItem extends Model
 {
     protected $fillable = [
@@ -13,6 +15,8 @@ class ProductionItem extends Model
         'reject_quantity',
     ];
 
+    protected $appends = ['left_quantity'];
+
     public function size()
     {
         return $this->belongsTo(Size::class);
@@ -21,5 +25,17 @@ class ProductionItem extends Model
     public function color()
     {
         return $this->belongsTo(Color::class);
+    }
+
+    public function results() 
+    {
+        return $this->hasMany(ProductionItemResult::class);
+    }
+
+    public function leftQuantity(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->target_quantity - $this->finish_quantity - $this->reject_quantity,
+        );
     }
 }

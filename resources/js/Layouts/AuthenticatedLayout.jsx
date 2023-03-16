@@ -18,8 +18,8 @@ export default function Authenticated({ auth, children, flash, page = '', action
     }, [flash])
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-700">
-            <nav className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
+        <div className="min-h-screen flex flex-col bg-gray-100">
+            <nav className="bg-white border-b">
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         <div className="flex">
@@ -38,7 +38,7 @@ export default function Authenticated({ auth, children, flash, page = '', action
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 dark:bg-gray-700 dark:hover:text-gray-50 dark:text-gray-200 gap-2"
+                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 gap-2"
                                             >
                                                 {auth.user.name}
                                                 <HiChevronDown/>
@@ -76,7 +76,7 @@ export default function Authenticated({ auth, children, flash, page = '', action
                 <main className='w-full'>
                     {page !== '' && (
                         <Breadcrumb
-                            className="bg-gray-200 py-3 px-5 mb-2 dark:bg-gray-700"
+                            className="bg-gray-200 py-3 px-5 mb-2"
                         >
                             <Breadcrumb.Item
                                 onClick={() => router.visit(route('dashboard'))}

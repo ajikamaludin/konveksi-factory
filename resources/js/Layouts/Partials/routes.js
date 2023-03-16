@@ -43,9 +43,9 @@ export default [
         name: "Line Sewing",
         show: true,
         icon: HiOutlineCog,
-        route: route("dashboard"),
-        active: "#",
-        permission: "view-dashboard",
+        route: route("line.sewing.index"),
+        active: "line.sewing.index",
+        permission: "create-production-result",
     },
     {
         name: "Master",

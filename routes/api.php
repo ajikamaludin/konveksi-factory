@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BuyerController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\ProductionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SizeController;
 use App\Models\Color;
@@ -31,3 +32,4 @@ Route::get('/buyers', [BuyerController::class, 'index'])->name('api.buyer.index'
 Route::get('/materials', [MaterialController::class, 'index'])->name('api.material.index');
 Route::get('/colors', [ColorController::class, 'index'])->name('api.color.index');
 Route::get('/sizes', [SizeController::class, 'index'])->name('api.size.index');
+Route::get('/productions', [ProductionController::class, 'index'])->name('api.production.index');
