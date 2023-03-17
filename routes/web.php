@@ -77,6 +77,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/productions', [ProductionController::class, 'store'])->name('production.store');
     Route::get('/productions/{production}/edit', [ProductionController::class, 'edit'])->name('production.edit');
     Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('production.update');
+    Route::get('/productions/{production}/export', [ProductionController::class, 'export'])->name('production.export');
     Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
 
     // line-sewing

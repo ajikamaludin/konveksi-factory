@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OpenSpout\Common\Entity\Style\Style;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ProductionController extends Controller
 {
@@ -136,5 +138,48 @@ class ProductionController extends Controller
         $production->delete();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
+    }
+
+    public function export(Production $production)
+    {
+        $exports = [
+            ['Kode', 'Nama', 'Buyer', 'Deadline', 'Bahan', 'Brand'],
+            [
+                $production->code,
+                $production->name,
+                $production->buyer?->name,
+                $production->deadline,
+                $production->material?->name,
+                $production->brand?->name,
+            ],
+            [], [],
+            ['Size' , 'Warna' , 'Target' , 'Jumlah' , 'Reject'],
+        ];
+
+        foreach($production->items as $item) {
+            $exports[] = [
+                $item->size->name,
+                $item->color->name,
+                $item->target_quantity,
+                $item->finish_quantity,
+                $item->reject_quantity,
+            ];
+
+            foreach($item->results as $result) {
+                $exports[] = [
+                    '',
+                    $result->input_at,
+                    '',
+                    $result->finish_quantity,
+                    $result->reject_quantity,
+                ];
+            }
+        }
+
+        $now = now()->format('d-m-Y');
+
+        return (new FastExcel($exports))
+            ->withoutHeaders()
+            ->download("artikel-$production->code-$now.xlsx");
     }
 }
