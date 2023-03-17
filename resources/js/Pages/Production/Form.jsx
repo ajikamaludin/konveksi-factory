@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Head, useForm } from '@inertiajs/react';
-import { HiXCircle } from 'react-icons/hi';
+import { HiLockClosed, HiXCircle } from 'react-icons/hi';
 import { isEmpty } from 'lodash';
 
 import { useModalState } from '@/hooks';
@@ -166,7 +166,11 @@ export default function Form(props) {
                                                 {item.target_quantity}
                                             </td>
                                             <td>
-                                                <HiXCircle className="w-5 h-5 text-red-600" onClick={() => onItemRemove(index)}/>
+                                                {+item.lock === 0 ? (
+                                                    <HiXCircle className="w-5 h-5 text-red-600" onClick={() => onItemRemove(index)}/>
+                                                ) : (
+                                                    <HiLockClosed className="w-5 h-5 text-red-600"/>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

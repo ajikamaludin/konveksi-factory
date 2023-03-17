@@ -95,10 +95,11 @@ class ProductionController extends Controller
             'items.*.size_id' => 'required|exists:sizes,id',
             'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
+            'items.*.lock' => 'required|numeric',
         ]);
 
         DB::beginTransaction();
-        $production->items()->delete();
+        $production->items()->where('lock', 0)->delete();
         $production->update([
             'buyer_id' => $request->buyer_id,
             'brand_id' => $request->brand_id,
@@ -110,11 +111,13 @@ class ProductionController extends Controller
         ]);
 
         foreach($request->items as $item) {
-            $production->items()->create([
-                'size_id' => $item['size_id'],
-                'color_id' => $item['color_id'],
-                'target_quantity' => $item['target_quantity'],
-            ]);
+            if($item['lock'] == 0) {
+                $production->items()->create([
+                    'size_id' => $item['size_id'],
+                    'color_id' => $item['color_id'],
+                    'target_quantity' => $item['target_quantity'],
+                ]);
+            }
         }
 
         if($request->hasFile('sketch_image')) {

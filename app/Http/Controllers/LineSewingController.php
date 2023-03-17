@@ -40,6 +40,7 @@ class LineSewingController extends Controller
     {
         DB::beginTransaction();
         $item->update([
+            'lock' => 1,
             'finish_quantity' => $item->finish_quantity + $request->finish_quantity,
             'reject_quantity' => $item->reject_quantity + $request->reject_quantity,
         ]);

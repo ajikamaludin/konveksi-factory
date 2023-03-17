@@ -43,7 +43,7 @@ class DummySeeder extends Seeder
 
     public function color()
     {
-        foreach(['red', 'green', 'blue'] as $c) {
+        foreach(['Merah', 'Kuning', 'Hijau'] as $c) {
             Color::create(['name' => $c]);
         }
     }

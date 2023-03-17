@@ -13,6 +13,7 @@ class ProductionItem extends Model
         'target_quantity',
         'finish_quantity',
         'reject_quantity',
+        'lock'
     ];
 
     protected $appends = ['left_quantity'];

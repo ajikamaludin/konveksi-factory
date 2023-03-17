@@ -85,7 +85,8 @@ services:
     mem_reservation: 128M
     cpus: 0.5
     networks:
-      - template
+      template:
+        ipv4_address: 10.8.0.100
 
 volumes:
   mariadb: 

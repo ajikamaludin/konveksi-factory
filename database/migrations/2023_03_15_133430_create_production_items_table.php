@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('target_quantity', 14, 2)->default(0);
             $table->decimal('finish_quantity', 14, 2)->default(0);
             $table->decimal('reject_quantity', 14, 2)->default(0);
+            $table->smallInteger('lock')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

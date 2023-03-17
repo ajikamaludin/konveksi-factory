@@ -13,7 +13,8 @@ export default function FormModal(props) {
     const { data, setData, reset } = useForm({
         size: '',
         color: '',
-        target_quantity: 0
+        target_quantity: 0,
+        lock: 0
     })
 
     const handleOnChange = (event) => {
@@ -36,6 +37,7 @@ export default function FormModal(props) {
             color_id: data.color.id,
             color: data.color,
             target_quantity:data.target_quantity,
+            lock: data.lock,
         })
         reset()
         modalState.toggle()
