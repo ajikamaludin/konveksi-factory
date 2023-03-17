@@ -7,7 +7,7 @@ import ProductionSelectionInput from '../Production/SelectionInput';
 import ColorSelectionInput from '../Color/SelectionInput';
 import SizeSelectionInput from '../Size/SelectionInput';
 import { isEmpty } from 'lodash';
-import { HiOutlinePlusCircle } from 'react-icons/hi';
+import { HiOutlinePlusCircle, HiPlusCircle } from 'react-icons/hi';
 import FormInput from '@/Components/FormInput';
 
 export default function Index(props) {
@@ -64,6 +64,14 @@ export default function Index(props) {
 
     const handleReset = () => {
         reset()
+    }
+
+    const addQuantity = () => {
+        setData('finish_quantity', +data.finish_quantity + 1)
+    }
+    
+    const addReject = () => {
+        setData('reject_quantity', +data.reject_quantity + 1)
     }
 
     const handleSubmit = () => {
@@ -139,10 +147,9 @@ export default function Index(props) {
                                     <button 
                                         type="button" 
                                         className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
-                                        disabled={processing}
-                                        onClick={() => handleSubmit()}
+                                        onClick={() => addQuantity()}
                                     >
-                                        Simpan
+                                        <HiOutlinePlusCircle className='w-10 h-5'/>
                                     </button>
                                 </div>
                                 <div>
@@ -163,13 +170,19 @@ export default function Index(props) {
                                 </div>
                             </div>
                             <div className='flex flex-row gap-2 w-full justify-around'>
-                                <div className='pt-2 text-center w-24 invisible'>
-                                    Reject
+                                <div className='pt-2 text-center w-24'>
+                                    <button 
+                                        type="button" 
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
+                                        onClick={() => addReject()}
+                                    >
+                                        Reject
+                                    </button>
                                 </div>
                                 <div>
                                     <FormInput
                                         type="number"
-                                        label="Reject"
+                                        // label="Reject"
                                         value={data.reject_quantity}
                                         onChange={handleOnChange}
                                         name="reject_quantity"
@@ -199,6 +212,18 @@ export default function Index(props) {
                                         value={item?.left_quantity - (+data.finish_quantity + +data.reject_quantity)}
                                         readOnly={true}
                                     />
+                                </div>
+                            </div>
+                            <div className='w-full grid grid-cols-4'>
+                                <div className='w-full flex justify-center'>
+                                    <button 
+                                        type="button" 
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
+                                        disabled={processing}
+                                        onClick={() => handleSubmit()}
+                                    >
+                                        Simpan
+                                    </button>
                                 </div>
                             </div>
                             <div className='border-2 rounded-lg p-2'>
