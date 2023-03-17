@@ -226,7 +226,7 @@ export default function Index(props) {
                                     </button>
                                 </div>
                             </div>
-                            <div className='border-2 rounded-lg p-2'>
+                            <div className='border-2 rounded-lg p-2 w-full overflow-y-auto'>
                                 <label className='text-lg ml-2'>Hasil</label>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
