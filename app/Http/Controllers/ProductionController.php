@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use OpenSpout\Common\Entity\Style\Style;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class ProductionController extends Controller
@@ -143,7 +142,7 @@ class ProductionController extends Controller
     public function export(Production $production)
     {
         $exports = [
-            ['Kode', 'Nama', 'Buyer', 'Deadline', 'Bahan', 'Brand'],
+            ['Kode', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
             [
                 $production->code,
                 $production->name,
@@ -153,20 +152,28 @@ class ProductionController extends Controller
                 $production->brand?->name,
             ],
             [], [],
-            ['Size' , 'Warna' , 'Target' , 'Jumlah' , 'Reject'],
+            ['User',  'Warna' , 'Size' , 'Total PO' , 'Jumlah' , 'Reject'],
         ];
 
+        $target = 0;
+        $finish = 0;
+        $reject = 0;
         foreach($production->items as $item) {
             $exports[] = [
-                $item->size->name,
+                $item->creator->name,
                 $item->color->name,
+                $item->size->name,
                 $item->target_quantity,
                 $item->finish_quantity,
                 $item->reject_quantity,
             ];
+            $target += $item->target_quantity;
+            $finish += $item->finish_quantity;
+            $reject += $item->reject_quantity;
 
             foreach($item->results as $result) {
                 $exports[] = [
+                    $result->creator->name,
                     '',
                     $result->input_at,
                     '',
@@ -175,6 +182,14 @@ class ProductionController extends Controller
                 ];
             }
         }
+        $exports[] = [
+            'Total',
+            '',
+            '',
+            $target,
+            $finish,
+            $reject
+        ];
 
         $now = now()->format('d-m-Y');
 

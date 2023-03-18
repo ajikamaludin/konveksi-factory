@@ -9,6 +9,7 @@ import SizeSelectionInput from '../Size/SelectionInput';
 import { isEmpty } from 'lodash';
 import { HiOutlinePlusCircle, HiPlusCircle } from 'react-icons/hi';
 import FormInput from '@/Components/FormInput';
+import Input from '@/Components/Input';
 
 export default function Index(props) {
     const { item, _production, _color, _size } = props
@@ -142,83 +143,85 @@ export default function Index(props) {
                             </div>
                         </div>
                         {item && (<>
-                            <div className='flex flex-row gap-2 w-full justify-around pt-10'>
-                                <div className='flex items-end'>
+                            <div className='flex flex-row gap-2 w-full justify-around h-20'>
+                                <div className='w-1/3 flex items-end'>
                                     <button 
                                         type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full h-full flex items-center justify-center" 
                                         onClick={() => addQuantity()}
                                     >
-                                        <HiOutlinePlusCircle className='w-10 h-5'/>
+                                        <HiOutlinePlusCircle className='w-10 h-10'/>
                                     </button>
                                 </div>
-                                <div>
-                                    <FormInput
+                                <div className='w-1/3'>
+                                    <label className="block mb-2 font-medium text-gray-900">Quantity</label>
+                                    <Input
                                         type="number"
                                         label="Quantity"
                                         value={data.finish_quantity}
                                         onChange={handleOnChange}
                                         name="finish_quantity"
+                                        className={"text-lg"}
                                     />
                                 </div>
-                                <div className='flex flex-col justify-between'>
-                                    <FormInput
-                                        label="Sisa"
+                                <div className='w-1/3 flex flex-col justify-between'>
+                                    <label className="block mb-2 font-medium text-gray-900 dark:text-white">Sisa</label>
+                                    <Input
                                         value={item?.left_quantity}
                                         readOnly={true}
+                                        className={"text-lg"}
                                     />
                                 </div>
                             </div>
-                            <div className='flex flex-row gap-2 w-full justify-around'>
-                                <div className='pt-2 text-center w-24'>
+                            <div className='flex flex-row gap-2 w-full justify-around h-20 items-center'>
+                            <div className='w-1/3 flex items-end h-full'>
                                     <button 
                                         type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center w-full h-full flex items-center justify-center text-lg font-bold" 
                                         onClick={() => addReject()}
                                     >
                                         Reject
                                     </button>
                                 </div>
-                                <div>
-                                    <FormInput
+                                <div className='w-1/3'>
+                                    <Input
                                         type="number"
-                                        // label="Reject"
                                         value={data.reject_quantity}
                                         onChange={handleOnChange}
                                         name="reject_quantity"
+                                        className={"text-lg"}
                                     />
                                 </div>
-                                <div className='flex flex-col justify-between invisible'>
-                                    <FormInput
-                                        label="Sisa"
-                                        value={item?.left_quantity}
-                                        readOnly={true}
-                                    />
+                                <div className='w-1/3 flex flex-col justify-between invisible'>
+                                    <div>Kosong</div>
                                 </div>
                             </div>
-                            <div className='flex flex-row gap-2 w-full justify-around'>
-                                <div className='pt-2 flex text-center items-center'>
+                            <div className='flex flex-row gap-2 w-full justify-around h-20 items-center'>
+                                <div className='w-1/3 pt-2 flex text-center justify-center'>
                                     <div className='w-24 font-bold text-2xl'>Total</div>
                                 </div>
-                                <div>
-                                    <FormInput
+                                <div className='w-1/3'>
+                                    <Input
                                         type="number"
                                         value={+data.finish_quantity + +data.reject_quantity}
                                         readOnly={true}
+                                        className={"text-lg"}
                                     />
                                 </div>
-                                <div className='flex flex-col justify-between'>
-                                    <FormInput
+                                <div className='w-1/3 flex flex-col justify-between'>
+                                    <Input
+                                        type="number"
                                         value={item?.left_quantity - (+data.finish_quantity + +data.reject_quantity)}
                                         readOnly={true}
+                                        className={"text-lg"}
                                     />
                                 </div>
                             </div>
-                            <div className='w-full grid grid-cols-4'>
-                                <div className='w-full flex justify-center'>
+                            <div className='w-full flex flex-row h-20'>
+                                <div className='w-1/3 flex justify-center'>
                                     <button 
                                         type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2" 
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center h-full w-full text-lg font-bold" 
                                         disabled={processing}
                                         onClick={() => handleSubmit()}
                                     >
@@ -231,6 +234,9 @@ export default function Index(props) {
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
+                                            <th scope="col" className="py-3 px-6">
+                                                User
+                                            </th>
                                             <th scope="col" className="py-3 px-6">
                                                 Waktu
                                             </th>
@@ -249,6 +255,9 @@ export default function Index(props) {
                                         {item?.results?.map(item => (
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={item.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    {item.creator.name}
+                                                </td>
+                                                <td className="py-4 px-6">
                                                     {item.input_at}
                                                 </td>
                                                 <td className="py-4 px-6">

@@ -148,7 +148,7 @@ export default function Form(props) {
                                             Warna
                                         </th>
                                         <th scope="col" className="py-3 px-6">
-                                            Total Target
+                                            Total PO
                                         </th>
                                         <th scope="col" className="py-3 px-6"/>
                                     </tr>

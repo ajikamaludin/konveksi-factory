@@ -49,14 +49,7 @@ export default function FormModal(props) {
             toggle={handleClose}
             title={"Item Artikel"}
         >
-            <FormInput
-                type="number"
-                name="target_quantity"
-                value={data.target_quantity}
-                onChange={handleOnChange}
-                label="Total Target"
-            />
-            <div className='mb-2'>
+            <div>
                 <ColorSeletionInput
                     label="Warna"
                     itemSelected={data.color?.id}
@@ -70,6 +63,13 @@ export default function FormModal(props) {
                     onItemSelected={(item) => setData('size', item)}
                 />
             </div>
+            <FormInput
+                type="number"
+                name="target_quantity"
+                value={data.target_quantity}
+                onChange={handleOnChange}
+                label="Total PO"
+            />
             <div className="flex items-center">
                 <Button
                     onClick={handleSubmit}

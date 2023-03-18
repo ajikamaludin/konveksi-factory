@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Production extends Model
 {
+    public $cascadeDeletes = ['items'];
+
     protected $fillable = [
         'buyer_id',
         'brand_id',
@@ -17,7 +19,7 @@ class Production extends Model
         'sketch_image',
     ];
 
-    protected $appends = ['sketch_image_url'];
+    protected $appends = ['sketch_image_url', 'total', 'reject', 'left'];
 
     public function buyer() 
     {
@@ -44,6 +46,42 @@ class Production extends Model
         return Attribute::make(
             get: function () {
                 return asset($this->sketch_image);
+            }
+        );
+    }
+
+    public function total(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->items()->sum('target_quantity');
+            }
+        );
+    }
+
+    public function finish(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->items()->sum('finish_quantity');
+            }
+        );
+    }
+
+    public function reject(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->items()->sum('reject_quantity');
+            }
+        );
+    }
+
+    public function left(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->total - $this->reject - $this->finish;
             }
         );
     }

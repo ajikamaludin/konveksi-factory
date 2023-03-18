@@ -21,7 +21,7 @@ class LineSewingController extends Controller
             $production = Production::find($request->production_id);
             $color = Color::find($request->color_id);
             $size = Size::find($request->size_id);
-            $item = ProductionItem::with(['results'])->where([
+            $item = ProductionItem::with(['results.creator'])->where([
                 ['production_id', '=', $request->production_id],
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],

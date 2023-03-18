@@ -11,7 +11,7 @@ import Pagination from '@/Components/Pagination';
 import ModalConfirm from '@/Components/ModalConfirm';
 import FormModal from './FormModal';
 import SearchInput from '@/Components/SearchInput';
-import { formatDate, hasPermission } from '@/utils';
+import { formatDate, formatIDDate, formatIDR, hasPermission } from '@/utils';
 
 export default function Index(props) {
     const { query: { links, data }, auth } = props
@@ -89,7 +89,16 @@ export default function Index(props) {
                                                 Kode
                                             </th>
                                             <th scope="col" className="py-3 px-6">
-                                                Name
+                                                Nama
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Total PO
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Reject
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Sisa
                                             </th>
                                             <th scope="col" className="py-3 px-6">
                                                 Deadline
@@ -105,6 +114,15 @@ export default function Index(props) {
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     {production.name}
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.total)}
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.reject)}
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.left)}
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     {formatDate(production.deadline)}

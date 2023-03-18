@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ProductionItem extends Model
 {
+    public $cascadeDeletes = ['results'];
+
     protected $fillable = [
         'production_id',
         'size_id',
