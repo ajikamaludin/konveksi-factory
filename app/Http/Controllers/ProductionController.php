@@ -149,7 +149,7 @@ class ProductionController extends Controller
     public function export(Production $production)
     {
         $exports = [
-            ['Kode', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
+            ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
             [
                 $production->code,
                 $production->name,

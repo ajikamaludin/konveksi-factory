@@ -86,7 +86,7 @@ export default function Form(props) {
                             name="code"
                             value={data.code}
                             onChange={handleOnChange}
-                            label="Kode Artikel"
+                            label="Style"
                             error={errors.code}
                         />
                         <FormInput
