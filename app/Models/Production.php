@@ -19,7 +19,7 @@ class Production extends Model
         'sketch_image',
     ];
 
-    protected $appends = ['sketch_image_url', 'total', 'reject', 'left'];
+    protected $appends = ['sketch_image_url', 'total', 'reject', 'left', 'active_line'];
 
     public function buyer() 
     {
@@ -84,5 +84,18 @@ class Production extends Model
                 return $this->total - $this->reject - $this->finish;
             }
         );
+    }
+
+    public function activeLine(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $item = $this->items()->orderBy('updated_at', 'desc')->first();
+                if($item != null) {
+                    return $item->editor?->name; 
+                }
+                return '';
+            }
+        ); 
     }
 }

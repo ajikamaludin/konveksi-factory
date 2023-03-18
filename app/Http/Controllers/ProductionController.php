@@ -159,13 +159,16 @@ class ProductionController extends Controller
                 $production->brand?->name,
             ],
             [], [],
-            ['User',  'Warna' , 'Size' , 'Total PO' , 'Jumlah' , 'Reject'],
+            ['User',  'Warna' , 'Size' , 'Total PO' , 'Jumlah' , 'Reject', 'Sisa'],
         ];
 
         $target = 0;
         $finish = 0;
         $reject = 0;
+        $leftTotal = 0;
         foreach($production->items as $item) {
+            $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
+            $leftTotal += $left;
             $exports[] = [
                 $item->creator->name,
                 $item->color->name,
@@ -173,6 +176,7 @@ class ProductionController extends Controller
                 $item->target_quantity,
                 $item->finish_quantity,
                 $item->reject_quantity,
+                $left
             ];
             $target += $item->target_quantity;
             $finish += $item->finish_quantity;
@@ -186,6 +190,7 @@ class ProductionController extends Controller
                     '',
                     $result->finish_quantity,
                     $result->reject_quantity,
+                    ''
                 ];
             }
         }
@@ -195,7 +200,8 @@ class ProductionController extends Controller
             '',
             $target,
             $finish,
-            $reject
+            $reject,
+            $leftTotal
         ];
 
         $now = now()->format('d-m-Y');

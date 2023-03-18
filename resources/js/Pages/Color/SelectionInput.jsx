@@ -17,6 +17,7 @@ export default function SelectionInput(props) {
         placeholder = '',
         error = '',
         all = 0,
+        selectedProductionId=''
     } = props
 
     const [showItems, setShowItem] = useState([])
@@ -78,7 +79,11 @@ export default function SelectionInput(props) {
 
     const fetch = (q = '') => {
         setLoading(true)
-        axios.get(route('api.color.index', { 'q': q, 'all': all }), {
+        axios.get(route('api.color.index', { 
+            'q': q, 
+            'prod_id': selectedProductionId,
+            'all': all 
+        }), {
             headers: {
                 'Content-Type': 'application/json',
                 // 'Authorization': 'Bearer ' + auth.user.jwt_token

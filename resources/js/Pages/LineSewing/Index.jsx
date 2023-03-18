@@ -128,6 +128,7 @@ export default function Index(props) {
                                 <ColorSelectionInput
                                     itemSelected={color?.id}
                                     onItemSelected={(item) => handleSelectColor(item)}
+                                    selectedProductionId={production?.id}
                                 />
                             </div>
                             <div className='border-r-2 px-2'>
@@ -135,6 +136,7 @@ export default function Index(props) {
                                 <SizeSelectionInput
                                     itemSelected={size?.id}
                                     onItemSelected={(item) => handleSize(item)}
+                                    selectedProductionId={production?.id}
                                 />
                             </div>
                             <div className='border-r-2 px-2'>

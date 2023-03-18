@@ -101,6 +101,9 @@ export default function Index(props) {
                                                 Sisa
                                             </th>
                                             <th scope="col" className="py-3 px-6">
+                                                Line Sewing
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
                                                 Deadline
                                             </th>
                                             <th scope="col" className="py-3 px-6"/>
@@ -123,6 +126,9 @@ export default function Index(props) {
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     {formatIDR(production.left)}
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {production.active_line}
                                                 </td>
                                                 <td className="py-4 px-6">
                                                     {formatDate(production.deadline)}
