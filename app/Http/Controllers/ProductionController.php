@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Production;
+use App\Models\ProductionItemResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -134,7 +135,13 @@ class ProductionController extends Controller
 
     public function destroy(Production $production)
     {
+        DB::beginTransaction();
+        $itemIds = $production->items()->pluck('id')->toArray();
+        ProductionItemResult::whereIn('production_item_id', $itemIds)->delete();
+
+        $production->items()->delete();
         $production->delete();
+        DB::commit();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }
