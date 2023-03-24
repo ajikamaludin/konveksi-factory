@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\HttpSecureAware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -20,7 +21,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+	\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+	HttpSecureAware::class
     ];
 
     /**
