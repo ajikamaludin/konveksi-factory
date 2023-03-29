@@ -31,7 +31,7 @@ export default function Authenticated({ auth, children, flash, page = '', action
 
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ml-6">
+                        <div className="hidden lg:flex lg:items-center lg:ml-6">
                             <div className="ml-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -56,7 +56,7 @@ export default function Authenticated({ auth, children, flash, page = '', action
                             </div>
                         </div>
 
-                        <div className="-mr-2 flex items-center sm:hidden space-x-2">
+                        <div className="-mr-2 flex items-center lg:hidden space-x-2">
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
@@ -70,7 +70,7 @@ export default function Authenticated({ auth, children, flash, page = '', action
             </nav>
 
             <div className='flex-1 flex flex-row'>
-                <div className={`w-fit ${showingNavigationDropdown ? 'absolute h-screen z-10' : 'md:block hidden'}`}>
+                <div className={`w-fit ${showingNavigationDropdown ? 'absolute h-screen z-10' : 'lg:block hidden'}`}>
                     <SidebarNav user={auth.user}/>
                 </div>
                 <main className='w-full'>

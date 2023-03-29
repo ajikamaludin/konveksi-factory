@@ -111,12 +111,18 @@ export default function Index(props) {
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-white space-y-6 min-h-screen">
-                        <div className='grid grid-cols-5 text-center'>
+                        <div className='grid grid-cols-2 text-center'>
                             <div className='border-x-2'>
                                 <div className='mb-2'>Buyer</div>
                                 <div className='font-bold'>{buyer}</div>
                             </div>
                             <div className='border-r-2 px-2'>
+                                <div className='mb-2'>Quantity</div>
+                                <div className='font-bold'>{item?.target_quantity}</div>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-3 text-center'>
+                            <div className='border-x-2 px-2'>
                                 <div className='mb-2'>Artikel</div>
                                 <ProductionSelectionInput
                                     itemSelected={production?.id}
@@ -138,10 +144,6 @@ export default function Index(props) {
                                     onItemSelected={(item) => handleSize(item)}
                                     selectedProductionId={production?.id}
                                 />
-                            </div>
-                            <div className='border-r-2 px-2'>
-                                <div className='mb-2'>Quantity</div>
-                                <div className='font-bold'>{item?.target_quantity}</div>
                             </div>
                         </div>
                         {item && (<>
