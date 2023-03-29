@@ -7,8 +7,8 @@ services:
           uid: 1000
         context: ./
         dockerfile: ./Dockerfile
-      image: template
-      container_name: template-app
+      image: konveksi
+      container_name: konveksi-app
       working_dir: /var/www/
       volumes:
         - ./:/var/www
@@ -19,10 +19,10 @@ services:
       mem_reservation: 128M
       cpus: 0.5
       networks:
-        - template
+        - konveksi
   nginx:
     image: nginx:1.17-alpine
-    container_name: template-nginx
+    container_name: konveksi-nginx
     ports:
       - 8000:80
     volumes:
@@ -32,10 +32,10 @@ services:
     mem_reservation: 128M
     cpus: 0.5
     networks:
-      - template
+      - konveksi
   # mariadb:
   #   image: mariadb:latest
-  #   container_name: template-mariadb
+  #   container_name: konveksi-mariadb
   #   ports:
   #     - 3306:3306
   #   volumes:
@@ -50,12 +50,12 @@ services:
   #   mem_reservation: 128M
   #   cpus: 0.5
   #   networks:
-  #     template:
+  #     konveksi:
   #       ipv4_address: 10.8.0.99
   # postgresql:
   #   # image: postgres:latest
   #   image: postgres:14-alpine3.17
-  #   container_name: template-postgres
+  #   container_name: konveksi-postgres
   #   restart: always
   #   ports:
   #     - 5432:5432
@@ -70,11 +70,11 @@ services:
   #   mem_reservation: 128M
   #   cpus: 0.5
   #   networks:
-  #     template:
+  #     konveksi:
   #       ipv4_address: 10.8.0.96
   nodejs:
     image: node:16-alpine
-    container_name: template-node
+    container_name: konveksi-node
     ports:
       - 5173:5173
     volumes:
@@ -85,8 +85,8 @@ services:
     mem_reservation: 128M
     cpus: 0.5
     networks:
-      template:
-        ipv4_address: 10.8.0.100
+      konveksi:
+        ipv4_address: 10.11.0.100
 
 volumes:
   mariadb: 
@@ -95,10 +95,10 @@ volumes:
     driver: local
 
 networks:
-  template:
+  konveksi:
     driver: bridge
     ipam:
       driver: default
       config:
-          - subnet: 10.8.0.0/24
-            gateway: 10.8.0.1
+          - subnet: 10.11.0.0/24
+            gateway: 10.11.0.1
