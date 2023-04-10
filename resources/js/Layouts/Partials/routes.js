@@ -19,7 +19,8 @@ import {
     HiInboxIn,
     HiOutlineCash,
     HiOutlineTable,
-    HiOutlineCog
+    HiOutlineCog,
+    HiDocument
 } from "react-icons/hi";
 
 export default [
@@ -30,6 +31,14 @@ export default [
         route: route("dashboard"),
         active: "dashboard",
         permission: "view-dashboard",
+    },
+    {
+        name: "Kain",
+        show: true,
+        icon: HiDocument,
+        route: route("fabric.index"),
+        active: "fabric.*",
+        permission: "view-fabric",
     },
     {
         name: "Artikel",
@@ -91,6 +100,22 @@ export default [
                 route: route("buyer.index"),
                 active: "buyer.*",
                 permission: "view-buyer",
+            },
+            {
+                name: "Supplier",
+                show: true,
+                icon: HiClipboardList,
+                route: route("supplier.index"),
+                active: "supplier.*",
+                permission: "view-supplier",
+            },
+            {
+                name: "Ratio",
+                show: true,
+                icon: HiClipboardList,
+                route: route("ratio.index"),
+                active: "ratio.*",
+                permission: "view-ratio",
             },
         ],
     },

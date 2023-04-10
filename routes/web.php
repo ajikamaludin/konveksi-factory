@@ -3,13 +3,16 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\FabricController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\LineSewingController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RatioController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +86,28 @@ Route::middleware(['auth'])->group(function () {
     // line-sewing
     Route::get('/line/sewing', [LineSewingController::class, 'index'])->name('line.sewing.index');
     Route::post('/line/sewing/{item}', [LineSewingController::class, 'store'])->name('line.sewing.create');
+
+    // supplier
+    Route::get('/suppliers', [SupplierController::class, 'index'])->name('supplier.index');
+    Route::post('/suppliers', [SupplierController::class, 'store'])->name('supplier.store');
+    Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('supplier.update');
+    Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+
+    //fabric
+    Route::get('/fabrics', [FabricController::class, 'index'])->name('fabric.index');
+    Route::get('/fabrics/create', [FabricController::class, 'create'])->name('fabric.create');
+    Route::post('/fabrics', [FabricController::class, 'store'])->name('fabric.store');
+    Route::get('/fabrics/{fabric}/edit', [FabricController::class, 'edit'])->name('fabric.edit');
+    Route::put('/fabrics/{fabric}', [FabricController::class, 'update'])->name('fabric.update');
+    Route::delete('/fabrics/{fabric}', [FabricController::class, 'delete'])->name('fabric.destroy');
+
+    //ration 
+    Route::get('/ratios', [RatioController::class, 'index'])->name('ratio.index');
+    Route::get('/ratios/create', [RatioController::class, 'create'])->name('ratio.create');
+    Route::post('/ratios', [RatioController::class, 'store'])->name('ratio.store');
+    Route::get('/ratios/{ratio}/edit', [RatioController::class, 'edit'])->name('ratio.edit');
+    Route::put('/ratios/{ratio}', [RatioController::class, 'update'])->name('ratio.update');
+    Route::delete('/ratios/{ratio}', [RatioController::class, 'destroy'])->name('ratio.destroy');
 });
 
 Route::middleware('auth')->group(function () {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\ProductionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SizeController;
+use App\Http\Controllers\Api\SupplierController;
 use App\Models\Color;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,4 @@ Route::get('/materials', [MaterialController::class, 'index'])->name('api.materi
 Route::get('/colors', [ColorController::class, 'index'])->name('api.color.index');
 Route::get('/sizes', [SizeController::class, 'index'])->name('api.size.index');
 Route::get('/productions', [ProductionController::class, 'index'])->name('api.production.index');
+Route::get('/suppliers', [SupplierController::class, 'index'])->name('api.suppliers.index');

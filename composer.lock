@@ -1055,16 +1055,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.5.0",
+            "version": "v10.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "56dd3b190ec1b8ad5ae8efd6fea65bc272f2dd52"
+                "reference": "485f22333e8c1dff5bae0fe0421c1e2e139713de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/56dd3b190ec1b8ad5ae8efd6fea65bc272f2dd52",
-                "reference": "56dd3b190ec1b8ad5ae8efd6fea65bc272f2dd52",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/485f22333e8c1dff5bae0fe0421c1e2e139713de",
+                "reference": "485f22333e8c1dff5bae0fe0421c1e2e139713de",
                 "shasum": ""
             },
             "require": {
@@ -1251,7 +1251,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-03-28T14:40:18+00:00"
+            "time": "2023-03-29T15:09:16+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -2277,16 +2277,16 @@
         },
         {
             "name": "openspout/openspout",
-            "version": "v4.13.0",
+            "version": "v4.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openspout/openspout.git",
-                "reference": "e01cab951c04ef184c567a880290997e94386f94"
+                "reference": "dd73318406b1fffdeaa333a32e175149d28224f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openspout/openspout/zipball/e01cab951c04ef184c567a880290997e94386f94",
-                "reference": "e01cab951c04ef184c567a880290997e94386f94",
+                "url": "https://api.github.com/repos/openspout/openspout/zipball/dd73318406b1fffdeaa333a32e175149d28224f7",
+                "reference": "dd73318406b1fffdeaa333a32e175149d28224f7",
                 "shasum": ""
             },
             "require": {
@@ -2354,7 +2354,7 @@
             ],
             "support": {
                 "issues": "https://github.com/openspout/openspout/issues",
-                "source": "https://github.com/openspout/openspout/tree/v4.13.0"
+                "source": "https://github.com/openspout/openspout/tree/v4.13.1"
             },
             "funding": [
                 {
@@ -2366,7 +2366,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-13T14:32:53+00:00"
+            "time": "2023-03-30T15:40:03+00:00"
         },
         {
             "name": "phpoption/phpoption",
