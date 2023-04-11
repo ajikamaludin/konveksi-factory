@@ -7,12 +7,22 @@ import { useModalState } from '@/hooks';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Button from '@/Components/Button';
 import FormInput from '@/Components/FormInput';
+import FormInputDate from '@/Components/FormInputDate';
+import BrandSelectionInput from '../Brand/SelectionInput'; 
+import BuyerSelectionInput from '../Buyer/SelectionInput';
+import MaterialSelectionInput from '../Material/SelectionInput';
 import FormModal from './FormModal';
 
 export default function Form(props) {
-    const { ratio } = props
+    const { cutting } = props
 
     const {data, setData, post, put, processing, errors} = useForm({
+        style:'',
+        buyer_id: '',
+        brand_id: '',
+        material_id: '',
+        consumsion: '',
+        deadline: '',
         name: '',
         items: [],
     })
@@ -32,21 +42,28 @@ export default function Form(props) {
     }
 
     const handleSubmit = () => {
-        if(isEmpty(ratio) === false) {
-            put(route('ratio.update', ratio))
+        if(isEmpty(cutting) === false) {
+            put(route('cutting.update', cutting))
             return
         }
-        post(route('ratio.store'))
+        post(route('cutting.store'))
     }
 
     useEffect(() => {
-        if(isEmpty(ratio) === false) {
+        if(isEmpty(cutting) === false) {
             setData({
-                name: ratio.name,
-                items: ratio.details_ratio,
+                style: cutting.style,
+                name: cutting.name,
+                buyer_id: cutting.buyer_id,
+                brand_id: cutting.brand_id,
+                material_id: cutting.material_id,
+                description: cutting.description,
+                deadline: cutting.deadline,
+                consumsion:cutting.consumsion,
+                items: cutting.cutting_items,
             })
         }
-    }, [ratio]) 
+    }, [cutting]) 
 
     return (
         <AuthenticatedLayout
@@ -54,15 +71,21 @@ export default function Form(props) {
             errors={props.errors}
             flash={props.flash}
             page={"Dashboard"}
-            action={"Ratio"}
+            action={"Cutting"}
         >
-            <Head title={"Ratio"} />
+            <Head title={"Cutting"} />
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8">
                     <div className="overflow-hidden p-4 shadow-sm sm:rounded-lg bg-white dark:bg-gray-800 flex flex-col ">
-                        <div className='text-xl font-bold mb-4'>Ratio</div>
-                        
+                        <div className='text-xl font-bold mb-4'>Cutting</div>
+                        <FormInput
+                            name="style"
+                            value={data.style}
+                            onChange={handleOnChange}
+                            label="Style"
+                            error={errors.style}
+                        />
                         <FormInput
                             name="name"
                             value={data.name}
@@ -70,6 +93,37 @@ export default function Form(props) {
                             label="Nama"
                             error={errors.name}
                         />
+                        <FormInputDate
+                            name="deadline"
+                            selected={data.deadline}
+                            onChange={date => setData("deadline", date)}
+                            label="Deadline"
+                            error={errors.deadline}
+                        />
+                        <div className='mb-2'>
+                            <BrandSelectionInput
+                                label="Brand"
+                                itemSelected={data.brand_id}
+                                onItemSelected={(id) => setData('brand_id', id)}
+                                error={errors.brand_id}
+                            />
+                        </div>
+                        <div className='mb-2'>
+                            <BuyerSelectionInput
+                                label="Pembeli"
+                                itemSelected={data.buyer_id}
+                                onItemSelected={(id) => setData('buyer_id', id)}
+                                error={errors.buyer_id}
+                            />
+                        </div>
+                        <div className='mb-2'>
+                            <MaterialSelectionInput
+                                label="Bahan"
+                                itemSelected={data.material_id}
+                                onItemSelected={(id) => setData('material_id', id)}
+                                error={errors.material_id}
+                            />
+                        </div>
                        
                         <label>Size</label>
                         <div className='w-full flex flex-col border-2 rounded-lg p-2'>

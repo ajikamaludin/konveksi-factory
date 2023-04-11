@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\FabricController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\LineSewingController;
@@ -108,6 +109,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ratios/{ratio}/edit', [RatioController::class, 'edit'])->name('ratio.edit');
     Route::put('/ratios/{ratio}', [RatioController::class, 'update'])->name('ratio.update');
     Route::delete('/ratios/{ratio}', [RatioController::class, 'destroy'])->name('ratio.destroy');
+
+    //cutting
+    Route::get('/cuttings', [CuttingController::class, 'index'])->name('cutting.index');
+    Route::get('/cuttings/create', [CuttingController::class, 'create'])->name('cutting.create');
+    Route::post('/cuttings', [CuttingController::class, 'store'])->name('cutting.store');
+    Route::get('/cuttings/{cutting}/edit', [CuttingController::class, 'edit'])->name('cutting.edit');
+    Route::put('/cuttings/{cutting}', [CuttingController::class, 'update'])->name('cutting.update');
+    Route::delete('/cuttings/{cutting}', [CuttingController::class, 'destroy'])->name('cutting.destroy');
+
 });
 
 Route::middleware('auth')->group(function () {

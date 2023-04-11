@@ -5,6 +5,7 @@ namespace App\Models;
 
 class Ratio extends Model
 {
+    public $cascadeDeletes = ['detailsRatio'];
     protected $fillable = [
         'name',
     ];

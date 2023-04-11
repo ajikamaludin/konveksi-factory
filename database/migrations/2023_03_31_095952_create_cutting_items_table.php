@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cutting_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('size');
+            $table->uuid('size_id');
             $table->decimal('qty', 14, 2)->default(0);
             $table->uuid('cutting_id');
             $table->timestamps();

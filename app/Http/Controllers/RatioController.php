@@ -72,10 +72,10 @@ class RatioController extends Controller
     }
 
     public function destroy(Ratio $ratio){
-        DB::beginTransaction();
-        $ratio->detailsRatio()->delete();
+        // DB::beginTransaction();
+        // $ratio->detailsRatio()->delete();
         $ratio->delete();
-        DB::commit();
+        // DB::commit();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }

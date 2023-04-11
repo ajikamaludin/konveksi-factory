@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('deadline');
             $table->decimal('consumsion', 14, 2)->default(0);
+            $table->uuid('material_id');
             $table->uuid('buyer_id');
             $table->uuid('brand_id');
             $table->timestamps();

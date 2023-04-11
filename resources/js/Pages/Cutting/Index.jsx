@@ -22,19 +22,19 @@ export default function Index(props) {
     const confirmModal = useModalState()
     const formModal = useModalState()
 
-    const toggleFormModal = (ratio = null) => {
-        formModal.setData(ratio)
+    const toggleFormModal = (cutting = null) => {
+        formModal.setData(cutting)
         formModal.toggle()
     }
 
-    const handleDeleteClick = (ratio) => {
-        confirmModal.setData(ratio)
+    const handleDeleteClick = (cutting) => {
+        confirmModal.setData(cutting)
         confirmModal.toggle()
     }
 
     const onDelete = () => {
         if(confirmModal.data !== null) {
-            router.delete(route('ratio.destroy', confirmModal.data.id))
+            router.delete(route('cutting.destroy', confirmModal.data.id))
         }
     }
 
@@ -52,24 +52,25 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-ratio')
-    const canUpdate = hasPermission(auth, 'update-ratio')
-    const canDelete = hasPermission(auth, 'delete-ratio')
+    const canCreate = hasPermission(auth, 'create-cutting')
+    const canUpdate = hasPermission(auth, 'update-cutting')
+    const canDelete = hasPermission(auth, 'delete-cutting')
+    console.log(data)
     return (
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
             flash={props.flash}
             page={'Dashboard'}
-            action={'Ratio'}
+            action={'Cutting'}
         >
-            <Head title="Ratio"/>
+            <Head title="Cutting"/>
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-gray-200 dark:bg-gray-800 space-y-4">
                         <div className='flex justify-between'>
                         {canCreate && (
-                                <Link href={route("ratio.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
+                                <Link href={route("cutting.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
                             )}
                             <div className="flex items-center">
                                 <SearchInput
@@ -87,21 +88,40 @@ export default function Index(props) {
                                                 Nama
                                             </th>
                                             <th scope="col" className="py-3 px-6">
-                                                Size
+                                                Total PO
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Hasil Cutting
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Sisa
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                User
                                             </th>
                                             <th scope="col" className="py-3 px-6"/>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map(ratio => (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={ratio.id}>
+                                        {data.map(cutting => (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={cutting.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {ratio.name}
+                                                    {cutting.name}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {ratio?.details_ratio.map((detail,index)=>(
-                                                        <div key={index}> {detail.size.name} : {detail.qty} </div>
-                                                    ))}
+                                                    {
+                                                    cutting.cutting_items.reduce((sum,val)=>
+                                                       sum+=val.qty,0
+                                                        )}
+                                                </td>
+                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    0
+                                                </td>
+                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    0
+                                                </td>
+                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    -
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown
@@ -113,14 +133,14 @@ export default function Index(props) {
                                                     >
                                                         {canUpdate && (
                                                             <Dropdown.Item>
-                                                            <Link href={route("ratio.edit", ratio)} className="flex space-x-1 items-center">
+                                                            <Link href={route("cutting.edit", cutting)} className="flex space-x-1 items-center">
                                                                 <HiPencil/> 
                                                                 <div>Ubah</div>
                                                             </Link>
                                                         </Dropdown.Item>
                                                         )}
                                                         {canDelete && (
-                                                            <Dropdown.Item onClick={() => handleDeleteClick(ratio)}>
+                                                            <Dropdown.Item onClick={() => handleDeleteClick(cutting)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 
                                                                     <div>Hapus</div>

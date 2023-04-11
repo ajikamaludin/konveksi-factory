@@ -41,6 +41,14 @@ export default [
         permission: "view-fabric",
     },
     {
+        name: "Cutting",
+        show: true,
+        icon: HiClipboardList,
+        route: route("cutting.index"),
+        active: "cutting.index",
+        permission: "view-cutting",
+    },
+    {
         name: "Artikel",
         show: true,
         icon: HiClipboardList,

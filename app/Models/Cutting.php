@@ -2,10 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
 
 class Cutting extends Model
 {
-    use HasFactory;
+    public $cascadeDeletes = ['cuttingItems'];
+    protected $fillable = [
+        'buyer_id',
+        'brand_id',
+        'material_id',
+        'style',
+        'name',
+        'consumsion',
+        'deadline',
+    ];
+    public function cuttingItems(){
+        return $this->hasMany(CuttingItem::class);
+    }
 }
