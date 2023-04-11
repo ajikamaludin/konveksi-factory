@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cutting;
+use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -39,10 +40,24 @@ class CuttingController extends Controller
             'name' => $request->name,
             'deadline' => $request->deadline,
         ]);
+
+        $production = Production::create([
+            'buyer_id' => $request->buyer_id,
+            'brand_id' => $request->brand_id,
+            'material_id' => $request->material_id,
+            'code' => $request->style,
+            'name' => $request->name,
+            'deadline' => $request->deadline,
+        ]);
+
         foreach($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
                 'qty' => $item['qty'],
+            ]);
+            $production->items()->create([
+                'size_id' => $item['size_id'],
+                'target_quantity' => $item['qty'],
             ]);
         }
         DB::commit();
