@@ -49,6 +49,14 @@ export default [
         permission: "view-cutting",
     },
     {
+        name: "User Cutting",
+        show: true,
+        icon: HiCollection,
+        route: route("user-cutting.index"),
+        active: "user-cutting.index",
+        permission: "view-user-cutting",
+    },
+    {
         name: "Artikel",
         show: true,
         icon: HiClipboardList,

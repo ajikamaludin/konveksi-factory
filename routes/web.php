@@ -15,6 +15,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserCuttingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -117,6 +118,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cuttings/{cutting}/edit', [CuttingController::class, 'edit'])->name('cutting.edit');
     Route::put('/cuttings/{cutting}', [CuttingController::class, 'update'])->name('cutting.update');
     Route::delete('/cuttings/{cutting}', [CuttingController::class, 'destroy'])->name('cutting.destroy');
+
+    // User Cutting
+    Route::get('/user-cuttings', [UserCuttingController::class, 'index'])->name('user-cutting.index');
+    Route::post('/user-cuttings', [UserCuttingController::class, 'store'])->name('user-cutting.store');
+
 
 });
 
