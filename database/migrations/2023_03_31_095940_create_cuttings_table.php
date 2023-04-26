@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('style');
             $table->string('name');
             $table->date('deadline');
+            $table->decimal('result_quantity', 14, 2)->default(0);
+            $table->decimal('fritter_quantity', 14, 2)->default(0);
             $table->decimal('consumsion', 14, 2)->default(0);
             $table->uuid('material_id');
             $table->uuid('buyer_id');

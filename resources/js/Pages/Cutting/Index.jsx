@@ -55,7 +55,7 @@ export default function Index(props) {
     const canCreate = hasPermission(auth, 'create-cutting')
     const canUpdate = hasPermission(auth, 'update-cutting')
     const canDelete = hasPermission(auth, 'delete-cutting')
-    console.log(data)
+    // console.log(data)
     return (
         <AuthenticatedLayout
             auth={props.auth}

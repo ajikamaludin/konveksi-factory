@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
 class UserCutting extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'fabric_item_id',
+        'artikel_id',
+        'ratio_id',
+    ];
+
+    public function userCuttingItem(){
+        return $this->hasMany(UserCuttingItem::class);
+    }
 }

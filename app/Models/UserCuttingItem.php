@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class UserCuttingItem extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'qty',
+        'qty_sheet',
+        'qty_fabric',
+        'user_cutting_id',
+        'fritter',
+    ];
 }

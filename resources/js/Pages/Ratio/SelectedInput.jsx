@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { useDebounce, useModalState } from '@/hooks'
+import { useDebounce } from '@/hooks'
 import axios from 'axios'
 import { HiChevronDown, HiChevronUp, HiOutlinePlusCircle, HiX } from 'react-icons/hi'
 import { Spinner } from 'flowbite-react'
-import FormModal from './FormModal';
+import { router } from '@inertiajs/react'
+
 
 
 export default function SelectionInput(props) {
@@ -95,14 +96,10 @@ export default function SelectionInput(props) {
             })
             .finally(() => setLoading(false))
     }
-    const formModal = useModalState()
-    const toggleFormModal = (supplier = null) => {
-        formModal.setData(supplier)
-        formModal.toggle()
-    }
+    
 
     const create = () => {
-
+        router.visit(route('ratio.index'))
     }
 
     // every select item open
@@ -238,7 +235,7 @@ export default function SelectionInput(props) {
                                                 <div>
                                                     <div
                                                         className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-neutral-content hover:bg-gray-400"
-                                                        onClick={() => toggleFormModal()}
+                                                        onClick={() => create()}
                                                     >
                                                         <div className="w-full items-center justify-center flex mx-2 gap-2">
                                                             <HiOutlinePlusCircle className='w-5 h-5' />
@@ -265,9 +262,6 @@ export default function SelectionInput(props) {
                     </div>
                 </div>
             </div>
-            <FormModal
-                modalState={formModal}
-            />
         </div>
     )
 }

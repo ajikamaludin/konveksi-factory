@@ -3,7 +3,7 @@ import { useDebounce,useModalState } from '@/hooks'
 import axios from 'axios'
 import { HiChevronDown, HiChevronUp, HiOutlinePlusCircle, HiX } from 'react-icons/hi'
 import { Spinner } from 'flowbite-react'
-import FormModal from './FormModal';
+import { router } from '@inertiajs/react'
 
 
 export default function SelectedInputFabricItem(props) {
@@ -91,14 +91,10 @@ export default function SelectedInputFabricItem(props) {
         })
         .finally(() => setLoading(false))
     }
-    const formModal = useModalState()
-    const toggleFormModal = (fabricitems = null) => {
-        formModal.setData(fabricitems)
-        formModal.toggle()
-    }
+    
 
     const create = () => {
-      
+        router.visit(route('fabric.index'))
     }
 
     // every select item open
@@ -229,7 +225,7 @@ export default function SelectedInputFabricItem(props) {
                                                 <div>
                                                     <div 
                                                         className="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative hover:border-neutral-content hover:bg-gray-400" 
-                                                        onClick={() => toggleFormModal()}
+                                                        onClick={() => create()}
                                                     >
                                                         <div className="w-full items-center justify-center flex mx-2 gap-2">
                                                             <HiOutlinePlusCircle className='w-5 h-5'/>
@@ -256,9 +252,7 @@ export default function SelectedInputFabricItem(props) {
                     </div>
                 </div>
             </div>
-            <FormModal
-                modalState={formModal}
-            />
+            
         </div>
     )
 }

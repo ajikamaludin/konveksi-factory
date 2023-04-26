@@ -6,6 +6,7 @@ use App\Models\Cutting;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 
 class CuttingController extends Controller
 {
@@ -32,6 +33,7 @@ class CuttingController extends Controller
             'items.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
+       
         $cutting=Cutting::create([
             'buyer_id' => $request->buyer_id,
             'brand_id' => $request->brand_id,
@@ -42,6 +44,7 @@ class CuttingController extends Controller
         ]);
 
         $production = Production::create([
+            'id'=>$cutting->id,
             'buyer_id' => $request->buyer_id,
             'brand_id' => $request->brand_id,
             'material_id' => $request->material_id,

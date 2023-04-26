@@ -15,6 +15,9 @@ class Cutting extends Model
         'name',
         'consumsion',
         'deadline',
+        'result_quantity',
+        'fritter_quantity',
+        
     ];
     public function cuttingItems(){
         return $this->hasMany(CuttingItem::class);
