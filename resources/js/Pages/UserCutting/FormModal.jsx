@@ -10,7 +10,7 @@ import SeletedInputDetailFabric from "../Fabric/SeletedInputDetailFabric";
 export default function FormModal(props) {
     const { modalState, onItemAdd,detailFabric,ratio_qty } = props
     const { data, setData, reset } = useForm({
-        detail_fabric: '',
+        detail_fabric: null,
         quantity: 0,
         total_qty:0,
     })
@@ -25,7 +25,8 @@ export default function FormModal(props) {
     }
 
     const handleSubmit = () => {
-        if(data.detail_fabric === ''  +data.quantity === 0) {
+        
+        if(data.detail_fabric === '' || data.quantity === 0) {
             toast.error('Periksa kembali data anda')
             return 
         }

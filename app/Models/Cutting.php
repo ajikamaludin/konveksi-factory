@@ -17,6 +17,7 @@ class Cutting extends Model
         'deadline',
         'result_quantity',
         'fritter_quantity',
+        'production_id'
         
     ];
     public function cuttingItems(){

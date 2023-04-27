@@ -98,4 +98,7 @@ class Production extends Model
             }
         ); 
     }
+    public function cuttings(){
+        return $this->hasMany(Cutting::class);
+    }
 }

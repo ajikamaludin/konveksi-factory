@@ -22,6 +22,7 @@ return new class extends Migration
             $table->uuid('material_id');
             $table->uuid('buyer_id');
             $table->uuid('brand_id');
+            $table->uuid('production_id');
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

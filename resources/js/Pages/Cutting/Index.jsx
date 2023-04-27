@@ -55,7 +55,7 @@ export default function Index(props) {
     const canCreate = hasPermission(auth, 'create-cutting')
     const canUpdate = hasPermission(auth, 'update-cutting')
     const canDelete = hasPermission(auth, 'delete-cutting')
-    // console.log(data)
+    
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -97,7 +97,7 @@ export default function Index(props) {
                                                 Sisa
                                             </th>
                                             <th scope="col" className="py-3 px-6">
-                                                User
+                                                Konsumsi
                                             </th>
                                             <th scope="col" className="py-3 px-6"/>
                                         </tr>
@@ -115,13 +115,13 @@ export default function Index(props) {
                                                         )}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    0
+                                                    {cutting.result_quantity}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    0
+                                                {cutting.fritter_quantity}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    -
+                                                    {parseFloat(cutting.consumsion).toFixed(2)}
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown

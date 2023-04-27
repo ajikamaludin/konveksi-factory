@@ -14,14 +14,14 @@ import Button from '@/Components/Button';
 import { formatDate } from '@/utils';
 
 export default function Index(props) {
-    const { _userCutting } = props
+    const { userCutting } = props
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         ratio_id: '',
         production_id: '',
         fabric_item_id: '',
         total_po: 0,
-        fritter:0,
         items: [],
+       
     })
     const [search, setSearch] = useState('')
     const [ratio_qty, setRatioQty] = useState(1)
@@ -34,20 +34,22 @@ export default function Index(props) {
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
            
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.id, ratio_id: data.ratio_id, total_po: production.total })
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.id, ratio_id: data.ratio_id, total_po: production.total})
             setSearch({ ...search, production_id: production.id })
+            return
         } else {
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0 })
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0})
             setSearch({ ...search, production_id: '' })
         }
     }
     const onSeletedFabric = (fabric) => {
         if (isEmpty(fabric) === false) {
-            setData({ fabric_item_id: fabric.id, items: data.items, production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po })
+            setData({ fabric_item_id: fabric.id, items: data.items, production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po})
             setDetailFabric(fabric.detail_fabrics)
             setSearch({ ...search, fabric_item_id: fabric.id })
+            return
         } else {
-            setData({ fabric_item_id: '', items: [], production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po  })
+            setData({ fabric_item_id: '', items: [], production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po})
             setSearch({ ...search, fabric_item_id: '' })
         }
     }
@@ -56,18 +58,13 @@ export default function Index(props) {
             const qtyratio = ratio.details_ratio.reduce((sum, val) =>
                 sum += val.qty, 0
             )
-            let leftPO=data.total_po
-            if (_userCutting?.length>0){
-                leftPO=_userCutting[_userCutting?.length-1]?.user_cutting_item[_userCutting[_userCutting?.length-1]?.user_cutting_item.length-1].fritter
-            }
             setRatioQty(qtyratio)
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po,fritter:leftPO })
-            setSearch({ ...search, ratio_id: ratio.id })
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po})
+            setSearch({ ...search, ratio_id: ratio?.id })
+            return
         } else {
-            console.log(data)
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: 0 })
             setSearch({ ...search, ratio_id: '' })
-
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po})
         }
     }
     const handleReset = () => {
@@ -97,11 +94,11 @@ export default function Index(props) {
                     preserveState: true,
                 }
             )
-
-
+            
+          
         }
-    }, [data.production_id, data.fabric_item_id, data.ratio_id])
-    console.log(_userCutting)
+    }, [data])
+//   console.log(userCutting)
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -214,7 +211,7 @@ export default function Index(props) {
                             </>
                             )
                         }
-                        {_userCutting?.length>0 && (<>
+                        {userCutting?.length>0 && (<>
                             <div className='border-2 rounded-lg p-2 w-full overflow-y-auto'>
                                 <label className='text-lg ml-2'>Hasil</label>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
@@ -236,7 +233,7 @@ export default function Index(props) {
                                     </thead>
                                     <tbody>
                                         {
-                                            _userCutting.map((val) => (
+                                            userCutting.map((val) => (
                                                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={val.id}>
                                                     <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         {val?.user_cutting_item[0].creator.name}

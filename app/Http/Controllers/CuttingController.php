@@ -6,12 +6,13 @@ use App\Models\Cutting;
 use App\Models\Production;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
 class CuttingController extends Controller
 {
     public function index(Request $request){
-        $query =Cutting::query()->with('cuttingItems.size');
+        $query =Cutting::query()->with('cuttingItems.size','creator');
         return inertia('Cutting/Index', [
             'query' => $query->paginate(10),
         ]);
@@ -33,18 +34,7 @@ class CuttingController extends Controller
             'items.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
-       
-        $cutting=Cutting::create([
-            'buyer_id' => $request->buyer_id,
-            'brand_id' => $request->brand_id,
-            'material_id' => $request->material_id,
-            'style' => $request->style,
-            'name' => $request->name,
-            'deadline' => $request->deadline,
-        ]);
-
         $production = Production::create([
-            'id'=>$cutting->id,
             'buyer_id' => $request->buyer_id,
             'brand_id' => $request->brand_id,
             'material_id' => $request->material_id,
@@ -53,10 +43,22 @@ class CuttingController extends Controller
             'deadline' => $request->deadline,
         ]);
 
+       $cutting= $production->cuttings()->create([
+            'buyer_id' => $request->buyer_id,
+            'brand_id' => $request->brand_id,
+            'material_id' => $request->material_id,
+            'style' => $request->style,
+            'name' => $request->name,
+            'deadline' => $request->deadline,
+        ]);
+
+        
+
         foreach($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
                 'qty' => $item['qty'],
+                
             ]);
             $production->items()->create([
                 'size_id' => $item['size_id'],
