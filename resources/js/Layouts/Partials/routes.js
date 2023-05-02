@@ -54,7 +54,7 @@ export default [
         icon: HiCollection,
         route: route("user-cutting.index"),
         active: "user-cutting.index",
-        permission: "view-user-cutting",
+        permission: "create-user-cutting",
     },
     {
         name: "Artikel",
@@ -71,6 +71,14 @@ export default [
         route: route("line.sewing.index"),
         active: "line.sewing.index",
         permission: "create-production-result",
+    },
+    {
+        name: "TV",
+        show: true,
+        icon: HiOutlineCog,
+        route: route("tv.index"),
+        active: "tv.index",
+        permission: "view-tv",
     },
     {
         name: "Master",
@@ -132,6 +140,14 @@ export default [
                 route: route("ratio.index"),
                 active: "ratio.*",
                 permission: "view-ratio",
+            },
+            {
+                name: "Setting",
+                show: true,
+                icon: HiCurrencyDollar,
+                route: route("setting.index"),
+                active: "setting.*",
+                permission: "create-setting",
             },
         ],
     },

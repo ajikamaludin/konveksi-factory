@@ -6,8 +6,11 @@ use App\Models\Color;
 use App\Models\Production;
 use App\Models\ProductionItem;
 use App\Models\Size;
+use App\Models\Operator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class LineSewingController extends Controller
 {
@@ -17,14 +20,24 @@ class LineSewingController extends Controller
         $color = null;
         $size = null;
         $item = null;
-        if($request->production_id != '' && $request->color_id != '' &&  $request->size_id != '') {
+        if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
             $color = Color::find($request->color_id);
             $size = Size::find($request->size_id);
-            
+
             $item = ProductionItem::with(['results.creator'])->where([
                 ['production_id', '=', $request->production_id],
                 ['color_id', '=', $request->color_id],
+                ['size_id', '=', $request->size_id],
+            ])->first();
+        }else if  ($request->production_id != ''  && $request->size_id != '') {
+            $production = Production::find($request->production_id);
+           
+            $size = Size::find($request->size_id);
+
+            $item = ProductionItem::with(['results.creator'])->where([
+                ['production_id', '=', $request->production_id],
+             
                 ['size_id', '=', $request->size_id],
             ])->first();
         }
@@ -39,22 +52,37 @@ class LineSewingController extends Controller
 
     public function store(Request $request, ProductionItem $item)
     {
+        $request->validate([
+            'finish_quantity' => 'required|numeric',
+        ]);
         DB::beginTransaction();
-        $item->update([
-            'lock' => 1,
-            'finish_quantity' => $item->finish_quantity + $request->finish_quantity,
-            'reject_quantity' => $item->reject_quantity + $request->reject_quantity,
-        ]);
 
-        $item->results()->create([
-            'input_at' => now(),
-            'finish_quantity' => $request->finish_quantity,
-            'reject_quantity' => $request->reject_quantity,
-        ]);
+        $qtyinput = $request->finish_quantity + $request->reject_quantity;
+        $lastqty = $item->target_quantity - $item->finish_quantity + $item->reject_quantity;
+        if ($qtyinput <= $lastqty) {
+            $date = Carbon::now()->toDateString();
+            $item->update([
+                'lock' => 1,
+                'finish_quantity' => $item->finish_quantity + $request->finish_quantity,
+                'reject_quantity' => $item->reject_quantity + $request->reject_quantity,
+            ]);
 
-        DB::commit();
+            $resultItem=$item->results()->create([
+                'input_at' => now(),
+                'finish_quantity' => $request->finish_quantity,
+                'reject_quantity' => $request->reject_quantity,
+            ]);
+            Operator::where('input_date', $date)->updateOrCreate([
+                'qty' => $request->qty,
+                'input_date' => $resultItem->input_at,
+               
+            ]);
 
-        session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
+            DB::commit();
+            session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
+        }else{
+            session()->flash('message', ['type' => 'Faield', 'message' => 'Your Quantity is more than PO']);
+        }
 
     }
 }

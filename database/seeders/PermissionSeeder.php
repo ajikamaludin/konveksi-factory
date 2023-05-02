@@ -76,9 +76,7 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Hapus Cutting', 'name' => 'delete-cutting'],
             // setting User Cutting
             ['id' => Str::uuid(), 'label' => 'Buat User Cutting', 'name' => 'create-user-cutting'],
-            ['id' => Str::uuid(), 'label' => 'Edit User Cutting', 'name' => 'update-user-cutting'],
-            ['id' => Str::uuid(), 'label' => 'Lihat User Cutting', 'name' => 'view-user-cutting'],
-            ['id' => Str::uuid(), 'label' => 'Hapus User  Cutting', 'name' => 'delete-user-cutting'],
+           
             // setting suplier
             ['id' => Str::uuid(), 'label' => 'Buat Supplier', 'name' => 'create-supplier'],
             ['id' => Str::uuid(), 'label' => 'Edit Supplier', 'name' => 'update-supplier'],
@@ -89,11 +87,11 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Edit Rasio', 'name' => 'update-ratio'],
             ['id' => Str::uuid(), 'label' => 'Lihat Rasio', 'name' => 'view-ratio'],
             ['id' => Str::uuid(), 'label' => 'Hapus Rasio', 'name' => 'delete-ratio'],
-            // setting payroll
-            ['id' => Str::uuid(), 'label' => 'Buat Payroll', 'name' => 'create-payroll'],
-            ['id' => Str::uuid(), 'label' => 'Edit Payroll', 'name' => 'update-payroll'],
-            ['id' => Str::uuid(), 'label' => 'Lihat Payroll', 'name' => 'view-payroll'],
-            ['id' => Str::uuid(), 'label' => 'Hapus Payroll', 'name' => 'delete-payroll'],
+            // setting 
+            ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
+            // tv
+            ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
+           
             // Finishing
             ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
 

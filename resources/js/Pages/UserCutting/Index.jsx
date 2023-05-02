@@ -98,7 +98,7 @@ export default function Index(props) {
           
         }
     }, [data])
-//   console.log(userCutting)
+  
     return (
         <AuthenticatedLayout
             auth={props.auth}

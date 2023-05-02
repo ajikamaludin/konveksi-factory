@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('setting_payrolls', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->decimal('qty', 14, 2)->default(0);
+            $table->decimal('payroll', 14, 2)->default(0);
             $table->decimal('workhours_sunday', 14, 2)->default(0);
             $table->decimal('workhours_monday', 14, 2)->default(0);
             $table->decimal('workhours_tuesday', 14, 2)->default(0);

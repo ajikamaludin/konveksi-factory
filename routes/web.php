@@ -8,12 +8,14 @@ use App\Http\Controllers\FabricController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\LineSewingController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatioController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TvController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserCuttingController;
 use Illuminate\Support\Facades\Route;
@@ -123,6 +125,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user-cuttings', [UserCuttingController::class, 'index'])->name('user-cutting.index');
     Route::post('/user-cuttings', [UserCuttingController::class, 'store'])->name('user-cutting.store');
 
+    //Setting Payroll
+    Route::get('/settings', [PayrollController::class, 'index'])->name('setting.index');
+    Route::put('/settings/{settingPayroll}', [PayrollController::class, 'store'])->name('setting.create');
+    // Tv
+    Route::get('/tv', [TvController::class, 'index'])->name('tv.index');
 
 });
 

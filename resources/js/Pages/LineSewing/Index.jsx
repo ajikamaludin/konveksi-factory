@@ -7,7 +7,7 @@ import ProductionSelectionInput from '../Production/SelectionInput';
 import ColorSelectionInput from '../Color/SelectionInput';
 import SizeSelectionInput from '../Size/SelectionInput';
 import { isEmpty } from 'lodash';
-import { HiOutlinePlusCircle, HiPlusCircle } from 'react-icons/hi';
+import { HiOutlinePlusCircle } from 'react-icons/hi';
 import FormInput from '@/Components/FormInput';
 import Input from '@/Components/Input';
 
@@ -17,6 +17,7 @@ export default function Index(props) {
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         finish_quantity: 0,
         reject_quantity: 0,
+        qty: 0,
     })
 
     const handleOnChange = (event) => {
@@ -32,34 +33,34 @@ export default function Index(props) {
     const [size, setSize] = useState(_size)
 
     const handleSelectProduction = (production) => {
-        if(isEmpty(production) === false) {
+        if (isEmpty(production) === false) {
             setBuyer(production?.buyer?.name)
             setProduction(production)
-            setSearch({...search, production_id: production.id})
+            setSearch({ ...search, production_id: production.id })
             return
         }
-        setSearch({...search, production_id: ''})
+        setSearch({ ...search, production_id: '' })
         setBuyer('-')
         setProduction('')
     }
 
     const handleSelectColor = (color) => {
-        if(isEmpty(color) === false) {
+        if (isEmpty(color) === false) {
             setColor(color)
-            setSearch({ ...search, color_id: color.id})
+            setSearch({ ...search, color_id: color.id })
             return
         }
         setColor('')
-        setSearch({ ...search, color_id: ''})
+        setSearch({ ...search, color_id: '' })
     }
 
     const handleSize = (size) => {
-        if(isEmpty(size) === false) {
+        if (isEmpty(size) === false) {
             setSize(size)
-            setSearch({...search,size_id: size.id})
+            setSearch({ ...search, size_id: size.id })
             return
         }
-        setSearch({...search,size_id: ''})
+        setSearch({ ...search, size_id: '' })
         setSize('')
     }
 
@@ -70,7 +71,7 @@ export default function Index(props) {
     const addQuantity = () => {
         setData('finish_quantity', +data.finish_quantity + 1)
     }
-    
+
     const addReject = () => {
         setData('reject_quantity', +data.reject_quantity + 1)
     }
@@ -93,7 +94,8 @@ export default function Index(props) {
             )
             setData({
                 finish_quantity: 0,
-                reject_quantity: 0
+                reject_quantity: 0,
+                
             })
         }
     }, [search])
@@ -106,7 +108,7 @@ export default function Index(props) {
             page={'Dashboard'}
             action={'Line Sewing'}
         >
-            <Head title="Line Sewing"/>
+            <Head title="Line Sewing" />
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
@@ -122,6 +124,7 @@ export default function Index(props) {
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>
+                            
                             <div className='border-x-2 px-2'>
                                 <div className='mb-2'>Artikel</div>
                                 <ProductionSelectionInput
@@ -147,14 +150,23 @@ export default function Index(props) {
                             </div>
                         </div>
                         {item && (<>
+                            <FormInput
+                                type="number"
+                                name="qty"
+                                value={data.qty}
+                                onChange={handleOnChange}
+                                label="Operator"
+                                error={errors.qty}
+                            />
                             <div className='flex flex-row gap-2 w-full justify-around h-20'>
+                               
                                 <div className='w-1/3 flex items-end'>
-                                    <button 
-                                        type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full h-full flex items-center justify-center" 
+                                    <button
+                                        type="button"
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full h-full flex items-center justify-center"
                                         onClick={() => addQuantity()}
                                     >
-                                        <HiOutlinePlusCircle className='w-10 h-10'/>
+                                        <HiOutlinePlusCircle className='w-10 h-10' />
                                     </button>
                                 </div>
                                 <div className='w-1/3'>
@@ -178,10 +190,10 @@ export default function Index(props) {
                                 </div>
                             </div>
                             <div className='flex flex-row gap-2 w-full justify-around h-20 items-center'>
-                            <div className='w-1/3 flex items-end h-full'>
-                                    <button 
-                                        type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center w-full h-full flex items-center justify-center text-lg font-bold" 
+                                <div className='w-1/3 flex items-end h-full'>
+                                    <button
+                                        type="button"
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center w-full h-full flex items-center justify-center text-lg font-bold"
                                         onClick={() => addReject()}
                                     >
                                         Reject
@@ -223,9 +235,9 @@ export default function Index(props) {
                             </div>
                             <div className='w-full flex flex-row h-20'>
                                 <div className='w-1/3 flex justify-center'>
-                                    <button 
-                                        type="button" 
-                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center h-full w-full text-lg font-bold" 
+                                    <button
+                                        type="button"
+                                        className="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-5 py-2.5 text-center h-full w-full text-lg font-bold"
                                         disabled={processing}
                                         onClick={() => handleSubmit()}
                                     >

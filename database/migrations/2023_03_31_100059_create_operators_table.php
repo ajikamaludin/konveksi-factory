@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('operators', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->decimal('qty', 14, 2)->default(0);
+            $table->dateTime('input_date');
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

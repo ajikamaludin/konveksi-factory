@@ -47,7 +47,7 @@ export default function FormModal(props) {
         <Modal
             isOpen={modalState.isOpen}
             toggle={handleClose}
-            title={"Ratio"}
+            title={"Item"}
         >
             
             <SizeSelectionInput
