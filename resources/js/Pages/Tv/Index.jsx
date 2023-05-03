@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { usePrevious } from 'react-use';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import ProductionSelectionInput from '../Production/SelectionInput';
-import FormInput from '@/Components/FormInput';
+import { Head,router } from '@inertiajs/react';
+import { formatIDR } from '@/utils';
 export default function Index(props) {
-    const { _production } = props
-    const [search, setSearch] = useState('')
-    const preValue = usePrevious(search)
-    const [production, setProduction] = useState(_production)
-    const handleSelectProduction = (production) => {
-        if (isEmpty(production) === false) {
-            setProduction(production)
-            setSearch({ ...search, production_id: production.id })
-            return
-        }
-        setSearch({ ...search, production_id: '' })
-        setProduction('')
-    }
-    console.log(_production)
+    const { _production, hourline, target, operator,hpp,hasil } = props
+   
+    useEffect(()=>{
+        setTimeout(()=>
+        router.get(
+            route(route().current())
+        )
+        ,30000);
+    },[_production])
+   console.log(_production);
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -31,93 +25,46 @@ export default function Index(props) {
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-white space-y-6 min-h-screen">
-                        <div className='grid grid-cols-3 text-center'>
+                        <div className='grid grid-cols-4 text-center'>
                             <div className='border-r-2'>
-                                <div className='mb-2'>Artikel</div>
-                                <ProductionSelectionInput
-                                    itemSelected={production?.id}
-                                    onItemSelected={(item) => handleSelectProduction(item)}
-                                />
+                                <div className='mb-2'>{_production.name}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div className='mb-2'>Line</div>
-                                <ProductionSelectionInput
-                                    itemSelected={production?.id}
-                                    onItemSelected={(item) => handleSelectProduction(item)}
-                                />
+                                <div className='mb-2'>{_production.active_line}</div>
                             </div>
                             <div className='border-r-2 mt-1'>
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Jam"
-                                />
+                                <div div className='mb-2'>PO {formatIDR(_production.total)}</div>
+                            </div>
+                            <div className='border-r-2 mt-1'>
+                                <div div className='mb-2'>Jam {hourline}</div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>
                             <div className='border-r-2'>
-                               
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Target"
-                                />
+                                <div div className='mb-2'>Target</div>
+                                <div div className='mb-2'>{target}</div>
                             </div>
                             <div className='border-r-2'>
-                                
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Hasil"
-                                />
+                                <div div className='mb-2'>Hasil</div>
+                                <div div className='mb-2'>{hasil}</div>
                             </div>
                             <div className='border-r-2'>
-                               
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Sisa PO"
-                                />
+                            <div div className='mb-2'>Sisa PO</div>
+                                <div div className='mb-2'>{formatIDR(_production.left)}</div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>
                             <div className='border-r-2'>
-                               
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Operator"
-                                />
+                                <div div className='mb-2'>Operator</div>
+                                <div div className='mb-2'>{operator}</div>
                             </div>
                             <div className='border-r-2'>
-                               
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="Perkiraan"
-                                />
+                                <div div className='mb-2'>Perkiraan</div>
+                                <div div className='mb-2'>{target}</div>
                             </div>
                             <div className='border-r-2'>
-                              
-                                <FormInput
-                                    type="number"
-                                    name="qty"
-                                    value={0}
-                                    readOnly={true}
-                                    label="HPP"
-                                />
+                                <div div className='mb-2'>HPP</div>
+                                <div div className='mb-2'>{formatIDR(hpp)}</div>
                             </div>
                         </div>
                     </div>

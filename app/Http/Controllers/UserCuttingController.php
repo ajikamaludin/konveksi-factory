@@ -70,6 +70,7 @@ class UserCuttingController extends Controller
         }
 
         foreach ($request->items as $item) {
+           
             $result_quantity = $item['total_qty'] + $result_quantity;
             $qty_fabric = $item['detail_fabric']['qty'];
             $total_po = $total_po - $item['total_qty'];
@@ -82,8 +83,6 @@ class UserCuttingController extends Controller
             $total_qty = $total_qty + $qty_fabric;
            
         }
-
-
         $consumsion = $total_qty / $result_quantity;
         Cutting::where('production_id', $request->production_id)->update([
             'result_quantity' => $result_quantity,

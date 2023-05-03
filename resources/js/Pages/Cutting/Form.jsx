@@ -51,6 +51,7 @@ export default function Form(props) {
 
     useEffect(() => {
         if(isEmpty(cutting) === false) {
+            console.log(cutting);
             setData({
                 style: cutting.style,
                 name: cutting.name,

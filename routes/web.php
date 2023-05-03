@@ -120,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cuttings/{cutting}/edit', [CuttingController::class, 'edit'])->name('cutting.edit');
     Route::put('/cuttings/{cutting}', [CuttingController::class, 'update'])->name('cutting.update');
     Route::delete('/cuttings/{cutting}', [CuttingController::class, 'destroy'])->name('cutting.destroy');
+    Route::get('/cuttings/{cutting}/export', [CuttingController::class, 'export'])->name('cutting.export');
 
     // User Cutting
     Route::get('/user-cuttings', [UserCuttingController::class, 'index'])->name('user-cutting.index');

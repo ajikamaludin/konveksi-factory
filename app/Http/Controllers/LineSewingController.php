@@ -32,9 +32,7 @@ class LineSewingController extends Controller
             ])->first();
         }else if  ($request->production_id != ''  && $request->size_id != '') {
             $production = Production::find($request->production_id);
-           
             $size = Size::find($request->size_id);
-
             $item = ProductionItem::with(['results.creator'])->where([
                 ['production_id', '=', $request->production_id],
              
@@ -54,6 +52,7 @@ class LineSewingController extends Controller
     {
         $request->validate([
             'finish_quantity' => 'required|numeric',
+            'qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
 

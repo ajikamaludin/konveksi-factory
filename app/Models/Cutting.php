@@ -23,4 +23,22 @@ class Cutting extends Model
     public function cuttingItems(){
         return $this->hasMany(CuttingItem::class);
     }
+    public function buyer() 
+    {
+        return $this->belongsTo(Buyer::class);
+    }
+
+    public function brand() 
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function material() 
+    {
+        return $this->belongsTo(Material::class);
+    }
+    public function supplier() 
+    {
+        return $this->belongsTo(Supplier::class);
+    }
 }

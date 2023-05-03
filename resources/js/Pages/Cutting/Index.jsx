@@ -3,7 +3,7 @@ import { Link, router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
 import { Button, Dropdown } from 'flowbite-react';
-import { HiPencil, HiTrash } from 'react-icons/hi';
+import { HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -55,7 +55,7 @@ export default function Index(props) {
     const canCreate = hasPermission(auth, 'create-cutting')
     const canUpdate = hasPermission(auth, 'update-cutting')
     const canDelete = hasPermission(auth, 'delete-cutting')
-    
+    console.log(data);
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -131,6 +131,12 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
+                                                        <Dropdown.Item>
+                                                            <a href={route("cutting.export", cutting)} target="_blank" className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
+                                                                <div>Excel</div>
+                                                            </a>
+                                                        </Dropdown.Item>
                                                         {canUpdate && (
                                                             <Dropdown.Item>
                                                             <Link href={route("cutting.edit", cutting)} className="flex space-x-1 items-center">
