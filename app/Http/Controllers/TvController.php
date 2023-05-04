@@ -20,6 +20,7 @@ class TvController extends Controller
         $hourline=null;
         $salary=SettingPayroll::first();
         $hasil=0;
+        $hpp=0;
         $prod = Production::query()->with('items.results')->orderBy('created_at', 'desc')
         ->where('created_by',Auth::user()->id)->first();
        
