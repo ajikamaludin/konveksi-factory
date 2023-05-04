@@ -23,6 +23,7 @@ return new class extends Migration
             $table->uuid('buyer_id');
             $table->uuid('brand_id');
             $table->uuid('production_id');
+            $table->smallInteger('lock')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

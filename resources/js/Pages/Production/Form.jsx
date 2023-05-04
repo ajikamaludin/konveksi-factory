@@ -160,7 +160,7 @@ export default function Form(props) {
                                                 {item.size.name}
                                             </td>
                                             <td className="py-4 px-6">
-                                                {item.color.name}
+                                                {item?.color?.name}
                                             </td>
                                             <td className="py-4 px-6">
                                                 {item.target_quantity}

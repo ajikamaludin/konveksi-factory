@@ -55,7 +55,7 @@ export default function Index(props) {
     const canCreate = hasPermission(auth, 'create-cutting')
     const canUpdate = hasPermission(auth, 'update-cutting')
     const canDelete = hasPermission(auth, 'delete-cutting')
-    console.log(data);
+   
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -145,7 +145,7 @@ export default function Index(props) {
                                                             </Link>
                                                         </Dropdown.Item>
                                                         )}
-                                                        {canDelete && (
+                                                        {canDelete&&cutting.consumsion==0 && (
                                                             <Dropdown.Item onClick={() => handleDeleteClick(cutting)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 

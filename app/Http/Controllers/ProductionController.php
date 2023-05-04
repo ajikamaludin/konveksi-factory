@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cutting;
 use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
@@ -46,7 +47,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            'items.*.color_id' => 'required|exists:colors,id',
+            // 'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
         ]);
 
@@ -99,7 +100,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            'items.*.color_id' => 'required|exists:colors,id',
+            // 'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
             'items.*.lock' => 'required|numeric',
         ]);
@@ -145,6 +146,11 @@ class ProductionController extends Controller
 
         $production->items()->delete();
         $production->delete();
+        $cutting=Cutting::where('production_id',$production->id)->first();
+        if ($cutting!=null){
+            $cutting->delete();
+        }
+       
         DB::commit();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
@@ -179,7 +185,7 @@ class ProductionController extends Controller
             $leftTotal += $left;
             $exports[] = [
                 $item->creator->name,
-                $item->color->name,
+                $item?->color?->name,
                 $item->size->name,
                 $item->target_quantity,
                 $item->finish_quantity,
@@ -192,7 +198,7 @@ class ProductionController extends Controller
             $hpp=0;
             $count=0;
             foreach ($item->results as $result) {
-                $count++;
+                
                 $workhours=SettingPayroll::getdays($result->input_date);
                 $operator=Operator::where(['input_date'=>$result->input_at])->first();
                 $linehpp=($salary->payroll*$operator->qty)/($result->finish_quantity+$result->reject_quantity)*$workhours;
@@ -207,6 +213,7 @@ class ProductionController extends Controller
                     $linehpp
                 ];
                 $hpp+=$linehpp;
+                $count++;
             }
             
         }
@@ -220,6 +227,9 @@ class ProductionController extends Controller
             $reject,
             $leftTotal
         ];
+        if ($count==0){
+            $count=1;
+        }
         $exports[] = [
             'HPP',
             '',

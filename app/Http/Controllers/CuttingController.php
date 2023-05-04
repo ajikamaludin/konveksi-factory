@@ -6,6 +6,7 @@ use App\Models\Cutting;
 use App\Models\Fabric;
 use App\Models\FabricItem;
 use App\Models\Production;
+use App\Models\ProductionItemResult;
 use App\Models\Ratio;
 use App\Models\UserCutting;
 use Illuminate\Http\Request;
@@ -68,6 +69,7 @@ class CuttingController extends Controller
             $production->items()->create([
                 'size_id' => $item['size_id'],
                 'target_quantity' => $item['qty'],
+                'lock'=>'1',
             ]);
         }
         DB::commit();
@@ -115,7 +117,17 @@ class CuttingController extends Controller
 
     public function destroy(Cutting $cutting)
     {
+       
+        $production=Production::where('id',$cutting->production_id)->first();
+        DB::beginTransaction();
+        $itemIds = $production->items()->pluck('id')->toArray();
+        ProductionItemResult::whereIn('production_item_id', $itemIds)->delete();
+
+        $production->items()->delete();
+        $production->delete();
         $cutting->delete();
+        DB::commit();
+        
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }
 

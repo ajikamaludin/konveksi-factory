@@ -88,6 +88,7 @@ class UserCuttingController extends Controller
             'result_quantity' => $result_quantity,
             'fritter_quantity' => $total_po,
             'consumsion' => $consumsion,
+            'lock'=>'1'
         ]);
         DB::commit();
 
