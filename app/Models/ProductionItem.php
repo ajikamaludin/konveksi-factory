@@ -15,7 +15,7 @@ class ProductionItem extends Model
         'target_quantity',
         'finish_quantity',
         'reject_quantity',
-        'lock'
+        'lock',
     ];
 
     protected $appends = ['left_quantity'];
@@ -30,7 +30,7 @@ class ProductionItem extends Model
         return $this->belongsTo(Color::class);
     }
 
-    public function results() 
+    public function results()
     {
         return $this->hasMany(ProductionItemResult::class);
     }
@@ -38,7 +38,7 @@ class ProductionItem extends Model
     public function leftQuantity(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->target_quantity - $this->finish_quantity - $this->reject_quantity,
+            get: fn () => $this->target_quantity - $this->finish_quantity - $this->reject_quantity,
         );
     }
 }

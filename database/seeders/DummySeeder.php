@@ -29,7 +29,7 @@ class DummySeeder extends Seeder
         $this->setting();
     }
 
-    public function size() 
+    public function size()
     {
         $sizes = [
             ['id' => Str::uuid(), 'name' => 'XS'],
@@ -46,52 +46,53 @@ class DummySeeder extends Seeder
 
     public function color()
     {
-        foreach(['Merah', 'Kuning', 'Hijau'] as $c) {
+        foreach (['Merah', 'Kuning', 'Hijau'] as $c) {
             Color::create(['name' => $c]);
         }
     }
 
     public function brand()
     {
-        foreach(['Brand A', 'Brand B', 'Brand C'] as $b) {
+        foreach (['Brand A', 'Brand B', 'Brand C'] as $b) {
             Brand::create(['name' => $b]);
         }
     }
 
     public function buyer()
     {
-        foreach(['Buyer A', 'Buyer B', 'Buyer C'] as $b) {
+        foreach (['Buyer A', 'Buyer B', 'Buyer C'] as $b) {
             Buyer::create(['name' => $b]);
         }
     }
 
     public function material()
     {
-        foreach(['Material A', 'Material B', 'Material C'] as $b) {
+        foreach (['Material A', 'Material B', 'Material C'] as $b) {
             Material::create(['name' => $b]);
         }
     }
+
     public function supplier()
     {
         Supplier::create([
-            'name'=>'PT Maju Lancar',
-            'address'=>'Jl pandega sakti',
-            'phonenumber'=>'081231237821',
-            'emails'=>'maju@mail.com'
+            'name' => 'PT Maju Lancar',
+            'address' => 'Jl pandega sakti',
+            'phonenumber' => '081231237821',
+            'emails' => 'maju@mail.com',
         ]);
     }
 
     public function setting()
     {
         SettingPayroll::create([
-            'payroll'=>'100000',
-            'workhours_sunday'=>'8',
-            'workhours_monday'=>'9',
-            'workhours_tuesday'=>'9',
-            'workhours_wednesday'=>'9',
-            'workhours_thusday'=>'9',
-            'workhours_friday'=>'9',
-            'workhours_saturday'=>'8',
+            'payroll' => '100000',
+            'workhours_sunday' => '8',
+            'workhours_monday' => '9',
+            'workhours_tuesday' => '9',
+            'workhours_wednesday' => '9',
+            'workhours_thusday' => '9',
+            'workhours_friday' => '9',
+            'workhours_saturday' => '8',
         ]);
     }
 }

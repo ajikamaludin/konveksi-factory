@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Color;
+use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItem;
 use App\Models\Size;
-use App\Models\Operator;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 
 class LineSewingController extends Controller
 {
@@ -30,12 +29,12 @@ class LineSewingController extends Controller
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],
             ])->first();
-        }else if  ($request->production_id != ''  && $request->size_id != '') {
+        } elseif ($request->production_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
             $size = Size::find($request->size_id);
             $item = ProductionItem::with(['results.creator'])->where([
                 ['production_id', '=', $request->production_id],
-             
+
                 ['size_id', '=', $request->size_id],
             ])->first();
         }
@@ -66,7 +65,7 @@ class LineSewingController extends Controller
                 'reject_quantity' => $item->reject_quantity + $request->reject_quantity,
             ]);
 
-            $resultItem=$item->results()->create([
+            $resultItem = $item->results()->create([
                 'input_at' => now(),
                 'finish_quantity' => $request->finish_quantity,
                 'reject_quantity' => $request->reject_quantity,
@@ -74,12 +73,12 @@ class LineSewingController extends Controller
             Operator::where('input_date', $date)->updateOrCreate([
                 'qty' => $request->qty,
                 'input_date' => $resultItem->input_at,
-               
+
             ]);
 
             DB::commit();
             session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
-        }else{
+        } else {
             session()->flash('message', ['type' => 'Faield', 'message' => 'Your Quantity is more than PO']);
         }
 

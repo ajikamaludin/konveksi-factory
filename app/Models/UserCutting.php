@@ -10,7 +10,8 @@ class UserCutting extends Model
         'ratio_id',
     ];
 
-    public function userCuttingItem(){
+    public function userCuttingItem()
+    {
         return $this->hasMany(UserCuttingItem::class);
     }
 }

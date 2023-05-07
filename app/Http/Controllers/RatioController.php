@@ -8,28 +8,33 @@ use Illuminate\Support\Facades\DB;
 
 class RatioController extends Controller
 {
-    public function index(Request $request){
-        $query =Ratio::query()->with('detailsRatio.size');
+    public function index(Request $request)
+    {
+        $query = Ratio::query()->with('detailsRatio.size');
+
         return inertia('Ratio/Index', [
             'query' => $query->paginate(10),
         ]);
     }
+
     public function create()
     {
         return inertia('Ratio/Form', []);
     }
-    public function store(Request $request){
+
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required|string',
-            'items'=>'required|array',
+            'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
             'items.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
-        $ratio=Ratio::create([
-            'name'=>$request->name
+        $ratio = Ratio::create([
+            'name' => $request->name,
         ]);
-        foreach($request->items as $item) {
+        foreach ($request->items as $item) {
             $ratio->detailsRatio()->create([
                 'size_id' => $item['size_id'],
                 'qty' => $item['qty'],
@@ -48,30 +53,33 @@ class RatioController extends Controller
         ]);
     }
 
-    public function update(Request $request, Ratio $ratio){
+    public function update(Request $request, Ratio $ratio)
+    {
         $request->validate([
             'name' => 'required|string',
-            'items'=>'required|array',
+            'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
             'items.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
         $ratio->detailsRatio()->delete();
-        $ratio->update([  
+        $ratio->update([
             'name' => $request->name,
         ]);
-        foreach($request->items as $item) {
+        foreach ($request->items as $item) {
             $ratio->detailsRatio()->create([
                 'size_id' => $item['size_id'],
                 'qty' => $item['qty'],
             ]);
         }
         DB::commit();
+
         return redirect()->route('ratio.index')
-        ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
+            ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
     }
 
-    public function destroy(Ratio $ratio){
+    public function destroy(Ratio $ratio)
+    {
         // DB::beginTransaction();
         // $ratio->detailsRatio()->delete();
         $ratio->delete();

@@ -18,5 +18,4 @@ class BrandController extends Controller
 
         return $query->orderBy('created_at', 'desc')->get();
     }
-
 }

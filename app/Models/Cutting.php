@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-
-
 class Cutting extends Model
 {
     public $cascadeDeletes = ['cuttingItems'];
+
     protected $fillable = [
         'buyer_id',
         'brand_id',
@@ -19,26 +18,30 @@ class Cutting extends Model
         'fritter_quantity',
         'production_id',
         'lock',
-        
+
     ];
-    public function cuttingItems(){
+
+    public function cuttingItems()
+    {
         return $this->hasMany(CuttingItem::class);
     }
-    public function buyer() 
+
+    public function buyer()
     {
         return $this->belongsTo(Buyer::class);
     }
 
-    public function brand() 
+    public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function material() 
+    public function material()
     {
         return $this->belongsTo(Material::class);
     }
-    public function supplier() 
+
+    public function supplier()
     {
         return $this->belongsTo(Supplier::class);
     }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class CuttingItem extends Model
 {
     protected $fillable = [
@@ -11,7 +10,8 @@ class CuttingItem extends Model
         'qty',
     ];
 
-    public function size(){
+    public function size()
+    {
         return $this->belongsTo(Size::class);
     }
 }

@@ -62,7 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/brands', [BrandController::class, 'store'])->name('brand.store');
     Route::put('/brands/{brand}', [BrandController::class, 'update'])->name('brand.update');
     Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brand.destroy');
-    
+
     // Brand
     Route::get('/buyers', [BuyerController::class, 'index'])->name('buyer.index');
     Route::post('/buyers', [BuyerController::class, 'store'])->name('buyer.store');
@@ -105,7 +105,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/fabrics/{fabric}', [FabricController::class, 'update'])->name('fabric.update');
     Route::delete('/fabrics/{fabric}', [FabricController::class, 'delete'])->name('fabric.destroy');
 
-    //ration 
+    //ration
     Route::get('/ratios', [RatioController::class, 'index'])->name('ratio.index');
     Route::get('/ratios/create', [RatioController::class, 'create'])->name('ratio.create');
     Route::post('/ratios', [RatioController::class, 'store'])->name('ratio.store');

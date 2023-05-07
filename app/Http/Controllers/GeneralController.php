@@ -14,6 +14,7 @@ class GeneralController extends Controller
         $result = ProductionItemResult::count();
         $result_today = ProductionItemResult::whereDate('input_at', now())->count();
         $user = User::count();
+
         return inertia('Dashboard', [
             'artikel' => $artikel,
             'result' => $result,

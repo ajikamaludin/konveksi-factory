@@ -56,7 +56,6 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Lihat Pembeli', 'name' => 'view-buyer'],
             ['id' => Str::uuid(), 'label' => 'Hapus Pembeli', 'name' => 'delete-buyer'],
 
-
             ['id' => Str::uuid(), 'label' => 'Buat Artikel', 'name' => 'create-production'],
             ['id' => Str::uuid(), 'label' => 'Edit Artikel', 'name' => 'update-production'],
             ['id' => Str::uuid(), 'label' => 'Lihat Artikel', 'name' => 'view-production'],
@@ -76,7 +75,7 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Hapus Cutting', 'name' => 'delete-cutting'],
             // setting User Cutting
             ['id' => Str::uuid(), 'label' => 'Buat User Cutting', 'name' => 'create-user-cutting'],
-           
+
             // setting suplier
             ['id' => Str::uuid(), 'label' => 'Buat Supplier', 'name' => 'create-supplier'],
             ['id' => Str::uuid(), 'label' => 'Edit Supplier', 'name' => 'update-supplier'],
@@ -87,15 +86,13 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Edit Rasio', 'name' => 'update-ratio'],
             ['id' => Str::uuid(), 'label' => 'Lihat Rasio', 'name' => 'view-ratio'],
             ['id' => Str::uuid(), 'label' => 'Hapus Rasio', 'name' => 'delete-ratio'],
-            // setting 
+            // setting
             ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
             // tv
             ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
-           
+
             // Finishing
             ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
-
-
 
         ];
 

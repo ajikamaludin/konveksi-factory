@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\RatioController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SizeController;
 use App\Http\Controllers\Api\SupplierController;
-use App\Models\Color;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

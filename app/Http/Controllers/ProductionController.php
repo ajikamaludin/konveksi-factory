@@ -7,8 +7,6 @@ use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
 use App\Models\SettingPayroll;
-use Carbon\Carbon;
-use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -146,11 +144,11 @@ class ProductionController extends Controller
 
         $production->items()->delete();
         $production->delete();
-        $cutting=Cutting::where('production_id',$production->id)->first();
-        if ($cutting!=null){
+        $cutting = Cutting::where('production_id', $production->id)->first();
+        if ($cutting != null) {
             $cutting->delete();
         }
-       
+
         DB::commit();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
@@ -158,8 +156,8 @@ class ProductionController extends Controller
 
     public function export(Production $production)
     {
-        $salary=SettingPayroll::first();
-      
+        $salary = SettingPayroll::first();
+
         $exports = [
             ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
             [
@@ -172,7 +170,7 @@ class ProductionController extends Controller
             ],
             [],
             [],
-            ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa','HPP'],
+            ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa', 'HPP'],
         ];
 
         $target = 0;
@@ -190,18 +188,18 @@ class ProductionController extends Controller
                 $item->target_quantity,
                 $item->finish_quantity,
                 $item->reject_quantity,
-                $left
+                $left,
             ];
             $target += $item->target_quantity;
             $finish += $item->finish_quantity;
             $reject += $item->reject_quantity;
-            $hpp=0;
-            $count=0;
+            $hpp = 0;
+            $count = 0;
             foreach ($item->results as $result) {
-                
-                $workhours=SettingPayroll::getdays($result->input_date);
-                $operator=Operator::where(['input_date'=>$result->input_at])->first();
-                $linehpp=($salary->payroll*$operator->qty)/($result->finish_quantity+$result->reject_quantity)*$workhours;
+
+                $workhours = SettingPayroll::getdays($result->input_date);
+                $operator = Operator::where(['input_date' => $result->input_at])->first();
+                $linehpp = ($salary->payroll * $operator->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
                 $exports[] = [
                     $result->creator->name,
                     '',
@@ -210,12 +208,12 @@ class ProductionController extends Controller
                     $result->finish_quantity,
                     $result->reject_quantity,
                     '',
-                    $linehpp
+                    $linehpp,
                 ];
-                $hpp+=$linehpp;
+                $hpp += $linehpp;
                 $count++;
             }
-            
+
         }
 
         $exports[] = [
@@ -225,10 +223,10 @@ class ProductionController extends Controller
             $target,
             $finish,
             $reject,
-            $leftTotal
+            $leftTotal,
         ];
-        if ($count==0){
-            $count=1;
+        if ($count == 0) {
+            $count = 1;
         }
         $exports[] = [
             'HPP',
@@ -238,7 +236,7 @@ class ProductionController extends Controller
             '',
             '',
             '',
-            $hpp/$count
+            $hpp / $count,
         ];
         $now = now()->format('d-m-Y');
 

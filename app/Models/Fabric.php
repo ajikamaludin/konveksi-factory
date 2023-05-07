@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-
 class Fabric extends Model
 {
     public $cascadeDeletes = ['fabricItems'];
+
     protected $fillable = [
         'name',
         'order_date',
@@ -15,11 +15,13 @@ class Fabric extends Model
         'supplier_id',
     ];
 
-    public function fabricItems(){
+    public function fabricItems()
+    {
         return $this->hasMany(FabricItem::class);
     }
-   
-    public function supplier(){
+
+    public function supplier()
+    {
         return $this->belongsTo(Supplier::class);
     }
 }

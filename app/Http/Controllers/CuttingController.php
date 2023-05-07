@@ -18,14 +18,17 @@ class CuttingController extends Controller
     public function index(Request $request)
     {
         $query = Cutting::query()->with('cuttingItems.size', 'creator');
+
         return inertia('Cutting/Index', [
             'query' => $query->paginate(10),
         ]);
     }
+
     public function create()
     {
         return inertia('Cutting/Form', []);
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -58,8 +61,6 @@ class CuttingController extends Controller
             'deadline' => $request->deadline,
         ]);
 
-
-
         foreach ($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
@@ -69,7 +70,7 @@ class CuttingController extends Controller
             $production->items()->create([
                 'size_id' => $item['size_id'],
                 'target_quantity' => $item['qty'],
-                'lock'=>'1',
+                'lock' => '1',
             ]);
         }
         DB::commit();
@@ -80,7 +81,7 @@ class CuttingController extends Controller
 
     public function edit(Cutting $cutting)
     {
-      
+
         return inertia('Cutting/Form', [
             'cutting' => $cutting->load(['cuttingItems.size']),
         ]);
@@ -111,14 +112,15 @@ class CuttingController extends Controller
             ]);
         }
         DB::commit();
+
         return redirect()->route('cutting.index')
             ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
     }
 
     public function destroy(Cutting $cutting)
     {
-       
-        $production=Production::where('id',$cutting->production_id)->first();
+
+        $production = Production::where('id', $cutting->production_id)->first();
         DB::beginTransaction();
         $itemIds = $production->items()->pluck('id')->toArray();
         ProductionItemResult::whereIn('production_item_id', $itemIds)->delete();
@@ -127,7 +129,7 @@ class CuttingController extends Controller
         $production->delete();
         $cutting->delete();
         DB::commit();
-        
+
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }
 
@@ -160,21 +162,20 @@ class CuttingController extends Controller
             $space,
         ];
 
-
         $exports[] = $sizes;
         $total_kain = 0;
-        $arrcutting = array();
+        $arrcutting = [];
         $total_konsumsi = 0;
         $total_qty = 0;
         $total_cutting = 0;
-        $count=0;
-      
+        $count = 0;
+
         foreach ($userCutting->userCuttingItem as $item) {
             $count++;
             $items = [
                 $item?->creator?->name,
                 $fabricItem->code, $item->qty_fabric,
-                ''
+                '',
             ];
 
             foreach ($ratios->detailsRatio as $ratio) {
@@ -184,16 +185,16 @@ class CuttingController extends Controller
                 );
                 $detail = [
                     $item->qty,
-                    round($item->qty_fabric / $item->qty, 2)
+                    round($item->qty_fabric / $item->qty, 2),
                 ];
-                
+
             }
             $total_cutting += $item->qty_sheet;
             $s = array_merge($items, $detail);
             $exports[] = $s;
             $total_kain += $item->qty_fabric;
             $total_qty += $item->qty;
-            $total_konsumsi+= round($item->qty_fabric / $item->qty, 2);
+            $total_konsumsi += round($item->qty_fabric / $item->qty, 2);
         }
         foreach ($ratios->detailsRatio as $ratio) {
             array_push($arrcutting, $total_cutting * $ratio->qty);
@@ -204,16 +205,17 @@ class CuttingController extends Controller
             $total_kain,
             '',
         ];
-        $a = array_merge($t, $arrcutting, [$total_qty, $total_konsumsi/$count]);
+        $a = array_merge($t, $arrcutting, [$total_qty, $total_konsumsi / $count]);
         $exports[] = $a;
-        $arrsisa=array();
-        foreach($cutting->cuttingItems as $index=>$val){
-            array_push($arrsisa,$val->qty-$arrcutting[$index]);
+        $arrsisa = [];
+        foreach ($cutting->cuttingItems as $index => $val) {
+            array_push($arrsisa, $val->qty - $arrcutting[$index]);
         }
-        $sisa=array_merge(['Sisa PO','','',''],$arrsisa,[$cutting->fritter_quantity]);
-        $exports[]=$sisa;
+        $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting->fritter_quantity]);
+        $exports[] = $sisa;
 
         $now = now()->format('d-m-Y');
+
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");

@@ -15,6 +15,7 @@ class FabricItemController extends Controller
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
+
         return $query->orderBy('created_at', 'desc')->get();
     }
 }

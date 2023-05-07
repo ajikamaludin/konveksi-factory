@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailFabric;
-use Illuminate\Http\Request;
 use App\Models\Fabric;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FabricController extends Controller
@@ -14,12 +14,11 @@ class FabricController extends Controller
     {
         $query = Fabric::query()->with('supplier', 'fabricItems.detailFabrics')
             ->join('fabric_items', 'fabric_id', '=', 'fabrics.id')
-            ->join('detail_fabrics',function($join){
+            ->join('detail_fabrics', function ($join) {
                 $join->on('fabric_item_id', '=', 'fabric_items.id');
                 $join->whereNull('detail_fabrics.deleted_at');
             })
-            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'))
-        ;
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'));
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
@@ -45,9 +44,9 @@ class FabricController extends Controller
             'composisi' => 'required|string',
             'setting_size' => 'required|string',
             'order_date' => 'required|date',
-            'items'=>'required|array',
+            'items' => 'required|array',
             'items.*.code' => 'required|string',
-            'items.*.detail_fabrics'=>'required|array',
+            'items.*.detail_fabrics' => 'required|array',
             'items.*.detail_fabrics.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
@@ -81,13 +80,13 @@ class FabricController extends Controller
 
     public function edit(Fabric $fabric)
     {
-       
+
         return inertia('Fabric/Form', [
             'fabric' => $fabric->load(['supplier', 'fabricItems.detailFabrics']),
         ]);
     }
 
-    public function update(Request $request,Fabric $fabric)
+    public function update(Request $request, Fabric $fabric)
     {
         $request->validate([
             'name' => 'required|string',
@@ -96,9 +95,9 @@ class FabricController extends Controller
             'composisi' => 'required|string',
             'setting_size' => 'required|string',
             'order_date' => 'required|date',
-            'items'=>'required|array',
+            'items' => 'required|array',
             'items.*.code' => 'required|string',
-            'items.*.detail_fabrics'=>'required|array',
+            'items.*.detail_fabrics' => 'required|array',
             'items.*.detail_fabrics.*.qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
@@ -111,7 +110,7 @@ class FabricController extends Controller
             'order_date' => $request->order_date,
         ]);
         foreach ($request->items as $item) {
-            $fabricitems=$fabric->fabricItems()->updateOrCreate([
+            $fabricitems = $fabric->fabricItems()->updateOrCreate([
                 'code' => $item['code'],
                 'name' => $request->name,
             ]);
@@ -124,11 +123,12 @@ class FabricController extends Controller
             }
         }
         DB::commit();
-        return redirect()->route('fabric.index')
-        ->with('message', ['type' => 'success', 'message' => 'Fabric has beed updated']);
 
+        return redirect()->route('fabric.index')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed updated']);
 
     }
+
     public function delete(Fabric $fabric)
     {
         DB::beginTransaction();
@@ -139,5 +139,4 @@ class FabricController extends Controller
         DB::commit();
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }
-
 }

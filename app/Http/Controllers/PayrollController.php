@@ -16,7 +16,9 @@ class PayrollController extends Controller
             'settingPayroll' => $query->first(),
         ]);
     }
-    public function store(Request $request, SettingPayroll $settingPayroll){
+
+    public function store(Request $request, SettingPayroll $settingPayroll)
+    {
         $request->validate([
             'payroll' => 'required|numeric',
             'workhours_sunday' => 'required|numeric',
@@ -28,16 +30,15 @@ class PayrollController extends Controller
             'workhours_saturday' => 'required|numeric',
         ]);
 
-     
         $settingPayroll->update([
-            'payroll'=>$request->payroll,
-            'workhours_sunday'=>$request->workhours_sunday,
-            'workhours_monday'=>$request->workhours_monday,
-            'workhours_tuesday'=>$request->workhours_tuesday,
-            'workhours_wednesday'=>$request->workhours_wednesday,
-            'workhours_thusday'=>$request->workhours_thusday,
-            'workhours_friday'=>$request->workhours_friday,
-            'workhours_saturday'=>$request->workhours_saturday,
+            'payroll' => $request->payroll,
+            'workhours_sunday' => $request->workhours_sunday,
+            'workhours_monday' => $request->workhours_monday,
+            'workhours_tuesday' => $request->workhours_tuesday,
+            'workhours_wednesday' => $request->workhours_wednesday,
+            'workhours_thusday' => $request->workhours_thusday,
+            'workhours_friday' => $request->workhours_friday,
+            'workhours_saturday' => $request->workhours_saturday,
         ]);
         session()->flash('message', ['type' => 'success', 'message' => 'Setting has beed updated']);
     }

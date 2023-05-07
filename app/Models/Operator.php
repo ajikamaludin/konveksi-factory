@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class Operator extends Model
 {
     protected $fillable = [

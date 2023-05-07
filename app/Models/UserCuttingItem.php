@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class UserCuttingItem extends Model
 {
     protected $fillable = [
