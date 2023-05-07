@@ -8,8 +8,8 @@ This is a project about web application to monitor and record every production o
 
 ## Requirements
 
-- PHP 8.1 or latest
-- Node 16+ or latest
+-   PHP 8.1 or latest
+-   Node 16+ or latest
 
 ## How to run
 
@@ -38,3 +38,9 @@ npm run build
 
 ![image1](1.png?raw=true)
 ![image2](2.png?raw=true)
+
+## Rsync
+
+```bash
+rsync -arP -e 'ssh -p 222' --exclude=node_modules --exclude=.git --exclude=.env --exclude=storage --exclude=public/hot . pi@ajikamaludin.id:/home/pi/projects/konveksi
+```

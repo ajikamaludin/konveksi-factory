@@ -44,7 +44,6 @@ class BrandController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $brand->update([
             'name' => $request->name,
             'description' => $request->description,

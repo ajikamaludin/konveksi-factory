@@ -44,7 +44,6 @@ class SizeController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $size->update([
             'name' => $request->name,
             'description' => $request->description,

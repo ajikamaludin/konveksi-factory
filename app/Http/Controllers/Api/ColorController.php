@@ -17,7 +17,7 @@ class ColorController extends Controller
             $query->where('name', 'like', "%{$request->q}%");
         }
 
-        if($request->prod_id != '') {
+        if ($request->prod_id != '') {
             $production = Production::find($request->prod_id);
             $colorIds = $production->items()->groupBy('color_id')->pluck('color_id')->toArray();
 

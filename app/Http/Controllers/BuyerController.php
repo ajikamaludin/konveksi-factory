@@ -50,7 +50,6 @@ class BuyerController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $buyer->update([
             'name' => $request->name,
             'phone' => $request->phone,

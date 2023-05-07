@@ -21,17 +21,17 @@ class Production extends Model
 
     protected $appends = ['sketch_image_url', 'total', 'reject', 'left', 'active_line'];
 
-    public function buyer() 
+    public function buyer()
     {
         return $this->belongsTo(Buyer::class);
     }
 
-    public function brand() 
+    public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
 
-    public function material() 
+    public function material()
     {
         return $this->belongsTo(Material::class);
     }
@@ -91,11 +91,17 @@ class Production extends Model
         return Attribute::make(
             get: function () {
                 $item = $this->items()->orderBy('updated_at', 'desc')->first();
-                if($item != null) {
-                    return $item->editor?->name; 
+                if ($item != null) {
+                    return $item->editor?->name;
                 }
+
                 return '';
             }
-        ); 
+        );
+    }
+
+    public function cuttings()
+    {
+        return $this->hasMany(Cutting::class);
     }
 }

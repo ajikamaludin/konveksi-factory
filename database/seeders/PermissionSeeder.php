@@ -56,23 +56,51 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Lihat Pembeli', 'name' => 'view-buyer'],
             ['id' => Str::uuid(), 'label' => 'Hapus Pembeli', 'name' => 'delete-buyer'],
 
-
             ['id' => Str::uuid(), 'label' => 'Buat Artikel', 'name' => 'create-production'],
             ['id' => Str::uuid(), 'label' => 'Edit Artikel', 'name' => 'update-production'],
             ['id' => Str::uuid(), 'label' => 'Lihat Artikel', 'name' => 'view-production'],
             ['id' => Str::uuid(), 'label' => 'Hapus Artikel', 'name' => 'delete-production'],
 
             ['id' => Str::uuid(), 'label' => 'Buat Line Sewing', 'name' => 'create-production-result'],
+
+            // setting Fabric
+            ['id' => Str::uuid(), 'label' => 'Buat Kain', 'name' => 'create-fabric'],
+            ['id' => Str::uuid(), 'label' => 'Edit Kain', 'name' => 'update-fabric'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Kain', 'name' => 'view-fabric'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Kain', 'name' => 'delete-fabric'],
+            // setting Cutting
+            ['id' => Str::uuid(), 'label' => 'Buat Cutting', 'name' => 'create-cutting'],
+            ['id' => Str::uuid(), 'label' => 'Edit Cutting', 'name' => 'update-cutting'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Cutting', 'name' => 'view-cutting'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Cutting', 'name' => 'delete-cutting'],
+            // setting User Cutting
+            ['id' => Str::uuid(), 'label' => 'Buat User Cutting', 'name' => 'create-user-cutting'],
+            // setting suplier
+            ['id' => Str::uuid(), 'label' => 'Buat Supplier', 'name' => 'create-supplier'],
+            ['id' => Str::uuid(), 'label' => 'Edit Supplier', 'name' => 'update-supplier'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Supplier', 'name' => 'view-supplier'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Supplier', 'name' => 'delete-supplier'],
+            // setting rasio
+            ['id' => Str::uuid(), 'label' => 'Buat Rasio', 'name' => 'create-ratio'],
+            ['id' => Str::uuid(), 'label' => 'Edit Rasio', 'name' => 'update-ratio'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Rasio', 'name' => 'view-ratio'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Rasio', 'name' => 'delete-ratio'],
+            // setting
+            ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
+            // tv
+            ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
+            // Finishing
+            ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
         ];
 
-        foreach($permissions as $permission) {
+        foreach ($permissions as $permission) {
             Permission::insert($permission);
         }
 
         $role = Role::create(['name' => 'admin']);
 
         $permissions = Permission::all();
-        foreach($permissions as $permission) {
+        foreach ($permissions as $permission) {
             $role->rolePermissions()->create(['permission_id' => $permission->id]);
         }
 
@@ -89,8 +117,7 @@ class PermissionSeeder extends Seeder
             'role_id' => $role->id,
         ]);
 
-        $setting = [
-        ];
+        $setting = [];
 
         Setting::insert($setting);
     }

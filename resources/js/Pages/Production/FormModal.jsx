@@ -27,15 +27,15 @@ export default function FormModal(props) {
     }
 
     const handleSubmit = () => {
-        if(data.size === '' || data.color === '' || +data.target_quantity === 0) {
+        if(data.size === '' || +data.target_quantity === 0) {
             toast.error('Periksa kembali data anda')
             return 
         }
         onItemAdd({
             size_id: data.size.id,
             size: data.size,
-            color_id: data.color.id,
-            color: data.color,
+            color_id: data?.color.id,
+            color: data?.color,
             target_quantity:data.target_quantity,
             lock: data.lock,
         })

@@ -33,45 +33,6 @@ services:
     cpus: 0.5
     networks:
       - konveksi
-  # mariadb:
-  #   image: mariadb:latest
-  #   container_name: konveksi-mariadb
-  #   ports:
-  #     - 3306:3306
-  #   volumes:
-  #     - mariadb:/var/lib/mysql
-  #     - ./database:/database
-  #   environment:
-  #     MARIADB_DATABASE: app
-  #     MARIADB_USER: app
-  #     MARIADB_PASSWORD: password
-  #     MARIADB_ROOT_PASSWORD: password
-  #   mem_limit: 512m
-  #   mem_reservation: 128M
-  #   cpus: 0.5
-  #   networks:
-  #     konveksi:
-  #       ipv4_address: 10.8.0.99
-  # postgresql:
-  #   # image: postgres:latest
-  #   image: postgres:14-alpine3.17
-  #   container_name: konveksi-postgres
-  #   restart: always
-  #   ports:
-  #     - 5432:5432
-  #   volumes:
-  #     - postgres:/var/lib/postgresql/data
-  #     - ./database:/database
-  #   environment:
-  #     POSTGRES_DB: app
-  #     POSTGRES_USER: app
-  #     POSTGRES_PASSWORD: password
-  #   mem_limit: 512m
-  #   mem_reservation: 128M
-  #   cpus: 0.5
-  #   networks:
-  #     konveksi:
-  #       ipv4_address: 10.8.0.96
   nodejs:
     image: node:16-alpine
     container_name: konveksi-node
@@ -81,18 +42,9 @@ services:
       - ./:/var/www
     working_dir: /var/www
     entrypoint: ["npm","run", "dev"]
-    mem_limit: 512m
-    mem_reservation: 128M
-    cpus: 0.5
     networks:
       konveksi:
         ipv4_address: 10.11.0.100
-
-volumes:
-  mariadb: 
-    driver: local
-  postgres:
-    driver: local
 
 networks:
   konveksi:

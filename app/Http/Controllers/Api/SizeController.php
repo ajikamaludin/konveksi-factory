@@ -17,7 +17,7 @@ class SizeController extends Controller
             $query->where('name', 'like', "%{$request->q}%");
         }
 
-        if($request->prod_id != '') {
+        if ($request->prod_id != '') {
             $production = Production::find($request->prod_id);
             $sizeIds = $production->items()->groupBy('size_id')->pluck('size_id')->toArray();
 

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cutting;
+use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
+use App\Models\SettingPayroll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -42,7 +45,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            'items.*.color_id' => 'required|exists:colors,id',
+            // 'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
         ]);
 
@@ -57,7 +60,7 @@ class ProductionController extends Controller
             'deadline' => $request->deadline,
         ]);
 
-        foreach($request->items as $item) {
+        foreach ($request->items as $item) {
             $production->items()->create([
                 'size_id' => $item['size_id'],
                 'color_id' => $item['color_id'],
@@ -65,7 +68,7 @@ class ProductionController extends Controller
             ]);
         }
 
-        if($request->hasFile('sketch_image')) {
+        if ($request->hasFile('sketch_image')) {
             $file = $request->file('sketch_image');
             $file->store('uploads', 'public');
             $production->update(['sketch_image' => $file->hashName('uploads')]);
@@ -95,7 +98,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            'items.*.color_id' => 'required|exists:colors,id',
+            // 'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
             'items.*.lock' => 'required|numeric',
         ]);
@@ -112,8 +115,8 @@ class ProductionController extends Controller
             'deadline' => $request->deadline,
         ]);
 
-        foreach($request->items as $item) {
-            if($item['lock'] == 0) {
+        foreach ($request->items as $item) {
+            if ($item['lock'] == 0) {
                 $production->items()->create([
                     'size_id' => $item['size_id'],
                     'color_id' => $item['color_id'],
@@ -122,7 +125,7 @@ class ProductionController extends Controller
             }
         }
 
-        if($request->hasFile('sketch_image')) {
+        if ($request->hasFile('sketch_image')) {
             $file = $request->file('sketch_image');
             $file->store('uploads', 'public');
             $production->update(['sketch_image' => $file->hashName('uploads')]);
@@ -141,6 +144,11 @@ class ProductionController extends Controller
 
         $production->items()->delete();
         $production->delete();
+        $cutting = Cutting::where('production_id', $production->id)->first();
+        if ($cutting != null) {
+            $cutting->delete();
+        }
+
         DB::commit();
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
@@ -148,6 +156,8 @@ class ProductionController extends Controller
 
     public function export(Production $production)
     {
+        $salary = SettingPayroll::first();
+
         $exports = [
             ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
             [
@@ -158,31 +168,38 @@ class ProductionController extends Controller
                 $production->material?->name,
                 $production->brand?->name,
             ],
-            [], [],
-            ['User',  'Warna' , 'Size' , 'Total PO' , 'Jumlah' , 'Reject', 'Sisa'],
+            [],
+            [],
+            ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa', 'HPP'],
         ];
 
         $target = 0;
         $finish = 0;
         $reject = 0;
         $leftTotal = 0;
-        foreach($production->items as $item) {
+        // $line=1;
+        foreach ($production->items as $item) {
             $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
             $leftTotal += $left;
             $exports[] = [
                 $item->creator->name,
-                $item->color->name,
+                $item?->color?->name,
                 $item->size->name,
                 $item->target_quantity,
                 $item->finish_quantity,
                 $item->reject_quantity,
-                $left
+                $left,
             ];
             $target += $item->target_quantity;
             $finish += $item->finish_quantity;
             $reject += $item->reject_quantity;
+            $hpp = 0;
+            $count = 0;
+            foreach ($item->results as $result) {
 
-            foreach($item->results as $result) {
+                $workhours = SettingPayroll::getdays($result->input_date);
+                $operator = Operator::where(['input_date' => $result->input_at])->first();
+                $linehpp = ($salary->payroll * $operator->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
                 $exports[] = [
                     $result->creator->name,
                     '',
@@ -190,10 +207,15 @@ class ProductionController extends Controller
                     '',
                     $result->finish_quantity,
                     $result->reject_quantity,
-                    ''
+                    '',
+                    $linehpp,
                 ];
+                $hpp += $linehpp;
+                $count++;
             }
+
         }
+
         $exports[] = [
             'Total',
             '',
@@ -201,9 +223,21 @@ class ProductionController extends Controller
             $target,
             $finish,
             $reject,
-            $leftTotal
+            $leftTotal,
         ];
-
+        if ($count == 0) {
+            $count = 1;
+        }
+        $exports[] = [
+            'HPP',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            $hpp / $count,
+        ];
         $now = now()->format('d-m-Y');
 
         return (new FastExcel($exports))

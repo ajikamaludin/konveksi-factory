@@ -3,11 +3,13 @@
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BuyerController;
 use App\Http\Controllers\Api\ColorController;
+use App\Http\Controllers\Api\FabricItemController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\ProductionController;
+use App\Http\Controllers\Api\RatioController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SizeController;
-use App\Models\Color;
+use App\Http\Controllers\Api\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,3 +35,6 @@ Route::get('/materials', [MaterialController::class, 'index'])->name('api.materi
 Route::get('/colors', [ColorController::class, 'index'])->name('api.color.index');
 Route::get('/sizes', [SizeController::class, 'index'])->name('api.size.index');
 Route::get('/productions', [ProductionController::class, 'index'])->name('api.production.index');
+Route::get('/suppliers', [SupplierController::class, 'index'])->name('api.suppliers.index');
+Route::get('/fabric-item', [FabricItemController::class, 'index'])->name('api.fabric-item.index');
+Route::get('/ratios', [RatioController::class, 'index'])->name('api.ratios.index');

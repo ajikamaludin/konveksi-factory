@@ -44,7 +44,6 @@ class MaterialController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $material->update([
             'name' => $request->name,
             'description' => $request->description,

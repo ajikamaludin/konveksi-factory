@@ -44,7 +44,6 @@ class ColorController extends Controller
             'description' => 'nullable|string',
         ]);
 
-
         $color->update([
             'name' => $request->name,
             'description' => $request->description,
