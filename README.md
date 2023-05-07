@@ -8,8 +8,8 @@ This is a project about web application to monitor and record every production o
 
 ## Requirements
 
-- PHP 8.1 or latest
-- Node 16+ or latest
+-   PHP 8.1 or latest
+-   Node 16+ or latest
 
 ## How to run
 

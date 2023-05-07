@@ -27,6 +27,7 @@ class DummySeeder extends Seeder
         $this->buyer();
         $this->material();
         $this->setting();
+        $this->supplier();
     }
 
     public function size()

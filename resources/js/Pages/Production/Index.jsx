@@ -131,7 +131,7 @@ export default function Index(props) {
                                                     {production.active_line}
                                                 </td>
                                                 <td className="py-4 px-6">
-                                                    {formatDate(production.deadline)}
+                                                    {production.deadline !== null && formatDate(production.deadline)}
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown

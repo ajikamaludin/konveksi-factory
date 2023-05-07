@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('letter_number')->nullable();
             $table->string('composisi')->nullable();
             $table->string('setting_size')->nullable();
-            $table->uuid('supplier_id');
+            $table->uuid('supplier_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

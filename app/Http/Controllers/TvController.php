@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TvController extends Controller
 {
-    //
     public function index(Request $request)
     {
 
@@ -24,15 +23,17 @@ class TvController extends Controller
         $prod = Production::query()->with('items.results')->orderBy('created_at', 'desc')
             ->where('created_by', Auth::user()->id)->first();
 
-        foreach ($prod->items as $item) {
-            foreach ($item->results as $result) {
-                $workhours = SettingPayroll::getdays($result->input_date);
-                $operator = Operator::where(['input_date' => $result->input_at])->orderBy('input_date', 'desc')->first()->qty;
-                $hourline = Carbon::parse($result->input_at)->format('H:i:s');
-                $target = $item->results[0]->finish_quantity * $workhours;
-                $linehpp = ($salary->payroll * $operator) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
-                $hpp = $linehpp;
-                $hasil = $result->finish_quantity + $result->reject_quantity;
+        if ($prod != null) {
+            foreach ($prod->items as $item) {
+                foreach ($item->results as $result) {
+                    $workhours = SettingPayroll::getdays($result->input_date);
+                    $operator = Operator::where(['input_date' => $result->input_at])->orderBy('input_date', 'desc')->first()->qty;
+                    $hourline = Carbon::parse($result->input_at)->format('H:i:s');
+                    $target = $item->results[0]->finish_quantity * $workhours;
+                    $linehpp = ($salary->payroll * $operator) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
+                    $hpp = $linehpp;
+                    $hasil = $result->finish_quantity + $result->reject_quantity;
+                }
             }
         }
 

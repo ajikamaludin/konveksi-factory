@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class FabricController extends Controller
 {
-    //
     public function index(Request $request)
     {
         $query = Fabric::query()->with('supplier', 'fabricItems.detailFabrics')
@@ -39,17 +38,19 @@ class FabricController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'letter_number' => 'required|string',
-            'composisi' => 'required|string',
-            'setting_size' => 'required|string',
-            'order_date' => 'required|date',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'letter_number' => 'nullable|string',
+            'composisi' => 'nullable|string',
+            'setting_size' => 'nullable|string',
+            'order_date' => 'nullable|date',
             'items' => 'required|array',
             'items.*.code' => 'required|string',
             'items.*.detail_fabrics' => 'required|array',
             'items.*.detail_fabrics.*.qty' => 'required|numeric',
         ]);
+
         DB::beginTransaction();
+
         $fabric = Fabric::create([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
@@ -58,8 +59,8 @@ class FabricController extends Controller
             'setting_size' => $request->setting_size,
             'order_date' => $request->order_date,
         ]);
-        foreach ($request->items as $item) {
 
+        foreach ($request->items as $item) {
             $fabricitems = $fabric->fabricItems()->create([
                 'code' => $item['code'],
                 'name' => $request->name,
@@ -80,7 +81,6 @@ class FabricController extends Controller
 
     public function edit(Fabric $fabric)
     {
-
         return inertia('Fabric/Form', [
             'fabric' => $fabric->load(['supplier', 'fabricItems.detailFabrics']),
         ]);
@@ -90,17 +90,19 @@ class FabricController extends Controller
     {
         $request->validate([
             'name' => 'required|string',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'letter_number' => 'required|string',
-            'composisi' => 'required|string',
-            'setting_size' => 'required|string',
-            'order_date' => 'required|date',
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'letter_number' => 'nullable|string',
+            'composisi' => 'nullable|string',
+            'setting_size' => 'nullable|string',
+            'order_date' => 'nullable|date',
             'items' => 'required|array',
             'items.*.code' => 'required|string',
             'items.*.detail_fabrics' => 'required|array',
             'items.*.detail_fabrics.*.qty' => 'required|numeric',
         ]);
+
         DB::beginTransaction();
+
         $fabric->update([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
@@ -109,16 +111,21 @@ class FabricController extends Controller
             'setting_size' => $request->setting_size,
             'order_date' => $request->order_date,
         ]);
+
+        $items = collect($request->items)->pluck('code')->toArray();
+        $fabric->fabricItems()->whereNotIn('code', $items)->delete();
+
         foreach ($request->items as $item) {
             $fabricitems = $fabric->fabricItems()->updateOrCreate([
                 'code' => $item['code'],
+            ], [
                 'name' => $request->name,
             ]);
-            $fabricitems->detailFabrics()->forceDelete();
+
+            $fabricitems->detailFabrics()->delete();
             foreach ($item['detail_fabrics'] as $detail) {
-                $fabricitems->detailFabrics()->updateOrCreate([
+                $fabricitems->detailFabrics()->create([
                     'qty' => $detail['qty'],
-                    'fabric_item_id' => $item['id'],
                 ]);
             }
         }
@@ -126,7 +133,6 @@ class FabricController extends Controller
 
         return redirect()->route('fabric.index')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed updated']);
-
     }
 
     public function delete(Fabric $fabric)

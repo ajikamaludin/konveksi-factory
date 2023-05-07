@@ -32,16 +32,17 @@ class CuttingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'buyer_id' => 'required|exists:buyers,id',
-            'brand_id' => 'required|exists:brands,id',
-            'material_id' => 'required|exists:materials,id',
             'style' => 'required|string',
             'name' => 'required|string',
-            'deadline' => 'required|date',
+            'buyer_id' => 'nullable|exists:buyers,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'material_id' => 'nullable|exists:materials,id',
+            'deadline' => 'nullable|date',
             'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
             'items.*.qty' => 'required|numeric',
         ]);
+
         DB::beginTransaction();
         $production = Production::create([
             'buyer_id' => $request->buyer_id,
@@ -90,27 +91,31 @@ class CuttingController extends Controller
     public function update(Request $request, Cutting $cutting)
     {
         $request->validate([
-            'buyer_id' => 'required|exists:buyers,id',
-            'brand_id' => 'required|exists:brands,id',
-            'material_id' => 'required|exists:materials,id',
             'style' => 'required|string',
             'name' => 'required|string',
-            'deadline' => 'required|date',
+            'buyer_id' => 'nullable|exists:buyers,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'material_id' => 'nullable|exists:materials,id',
+            'deadline' => 'nullable|date',
             'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
             'items.*.qty' => 'required|numeric',
         ]);
+
         DB::beginTransaction();
+
         $cutting->cuttingItems()->delete();
         $cutting->update([
             'name' => $request->name,
         ]);
+
         foreach ($request->items as $item) {
-            $cutting->detailsRatio()->create([
+            $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
                 'qty' => $item['qty'],
             ]);
         }
+
         DB::commit();
 
         return redirect()->route('cutting.index')
@@ -187,7 +192,6 @@ class CuttingController extends Controller
                     $item->qty,
                     round($item->qty_fabric / $item->qty, 2),
                 ];
-
             }
             $total_cutting += $item->qty_sheet;
             $s = array_merge($items, $detail);
@@ -219,6 +223,5 @@ class CuttingController extends Controller
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");
-
     }
 }

@@ -19,7 +19,6 @@ export default function Index(props) {
     const preValue = usePrevious(search)
 
     const confirmModal = useModalState()
-   
 
     const handleDeleteClick = (fabric) => {
         confirmModal.setData(fabric)
@@ -100,14 +99,14 @@ export default function Index(props) {
                                     <tbody>
                                         {data.map((fabric,index) => (
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={fabric.id}>
-                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {index+1}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {fabric.name}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {fabric.supplier.name}
+                                                    {fabric.supplier?.name}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {fabric.qty}

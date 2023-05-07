@@ -1,84 +1,79 @@
-import React, { useEffect } from 'react';
-import { Head, useForm } from '@inertiajs/react';
-import { HiXCircle } from 'react-icons/hi';
-import { isEmpty } from 'lodash';
-import { useModalState } from '@/hooks';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import Button from '@/Components/Button';
-import FormInput from '@/Components/FormInput';
-import FormInputDate from '@/Components/FormInputDate';
-import SupplierSelectionInput from '../Supplier/SelectedInput';
-import FormModal from './FormModal';
+import React, { useEffect } from "react";
+import { Head, useForm } from "@inertiajs/react";
+import { HiXCircle } from "react-icons/hi";
+import { isEmpty } from "lodash";
+import { useModalState } from "@/hooks";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Button from "@/Components/Button";
+import FormInput from "@/Components/FormInput";
+import FormInputDate from "@/Components/FormInputDate";
+import SupplierSelectionInput from "../Supplier/SelectedInput";
+import FormModal from "./FormModal";
 
 export default function Form(props) {
-    const { fabric } = props
+    const { fabric } = props;
 
     const { data, setData, post, put, processing, errors } = useForm({
-        name: '',
-        order_date: '',
-        letter_number: '',
-        composisi: '',
-        setting_size: '',
-        supplier_id: '',
-        code_lot: '',
+        name: "",
+        order_date: "",
+        letter_number: "",
+        composisi: "",
+        setting_size: "",
+        supplier_id: "",
+        code_lot: "",
         items: [],
-    })
+    });
 
     const handleOnChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? (event.target.checked ? 1 : 0) : event.target.value);
-    }
+        setData(
+            event.target.name,
+            event.target.type === "checkbox"
+                ? event.target.checked
+                    ? 1
+                    : 0
+                : event.target.value
+        );
+    };
 
-    const formItemModal = useModalState()
+    const formItemModal = useModalState();
 
     const onItemAdd = (newitem) => {
-        const isExists = data.items.findIndex(i => i.code === newitem.code)
-        if(isExists!=-1) {
-              let items= data.items.map((detail,index)=>{
-                if (isExists===index){
-                    return{
-                        ...detail,
-                        detail_fabrics:detail.detail_fabrics.concat(newitem.detail_fabrics)
-                  }
-                }
-                return detail
-              })
-              setData({...data,items})
-           
-        }else{
-            setData("items", data.items.concat(newitem))
-        }
-    }
-
-    const onItemRemove = (item,detailindex) => {
-        setData("items",data.items.map((detail,index)=>{
-            if(detail.code==item.code){
-                let b=detail.detail_fabrics.filter((_,i)=>i!=detailindex)
-                if(b.length>0){
+        const isExists = data.items.findIndex((i) => i.code === newitem.code);
+        if (isExists != -1) {
+            let items = data.items.map((detail, index) => {
+                if (isExists === index) {
                     return {
                         ...detail,
-                        detail_fabrics:b
-                    }
-                }else{
-                    return []
+                        detail_fabrics: detail.detail_fabrics.concat(
+                            newitem.detail_fabrics
+                        ),
+                    };
                 }
-                
-            }else{
-                return detail
-            }
-        }))
-    }
+                return detail;
+            });
+            setData({ ...data, items });
+        } else {
+            setData("items", data.items.concat(newitem));
+        }
+    };
+
+    const onItemRemove = (index) => {
+        setData(
+            "items",
+            data.items.filter((_, i) => i !== index)
+        );
+    };
 
     const handleSubmit = () => {
         if (isEmpty(fabric) === false) {
-            put(route('fabric.update', fabric))
-            return
+            put(route("fabric.update", fabric));
+            return;
         }
-        post(route('fabric.store'))
-    }
+        post(route("fabric.store"));
+    };
 
     useEffect(() => {
         if (isEmpty(fabric) === false) {
-
             setData({
                 name: fabric.name,
                 order_date: fabric.order_date,
@@ -87,9 +82,9 @@ export default function Form(props) {
                 setting_size: fabric.setting_size,
                 supplier_id: fabric.supplier_id,
                 items: fabric.fabric_items,
-            })
+            });
         }
-    }, [fabric])
+    }, [fabric]);
 
     return (
         <AuthenticatedLayout
@@ -104,8 +99,7 @@ export default function Form(props) {
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8">
                     <div className="overflow-hidden p-4 shadow-sm sm:rounded-lg bg-white dark:bg-gray-800 flex flex-col ">
-                        <div className='text-xl font-bold mb-4'>Kain</div>
-
+                        <div className="text-xl font-bold mb-4">Kain</div>
                         <FormInput
                             name="name"
                             value={data.name}
@@ -116,15 +110,17 @@ export default function Form(props) {
                         <FormInputDate
                             name="order_date"
                             selected={data.order_date}
-                            onChange={date => setData("order_date", date)}
+                            onChange={(date) => setData("order_date", date)}
                             label="Tanggal"
                             error={errors.order_date}
                         />
-                        <div className='mb-2'>
+                        <div className="mb-2">
                             <SupplierSelectionInput
                                 label="Supplier"
                                 itemSelected={data.supplier_id}
-                                onItemSelected={(id) => setData('supplier_id', id)}
+                                onItemSelected={(id) =>
+                                    setData("supplier_id", id)
+                                }
                                 error={errors.supplier_id}
                             />
                         </div>
@@ -132,7 +128,7 @@ export default function Form(props) {
                             name="letter_number"
                             value={data.letter_number}
                             onChange={handleOnChange}
-                            label="Nomor Surat"
+                            label="Nomor Surat Jalan"
                             error={errors.letter_number}
                         />
                         <FormInput
@@ -151,9 +147,8 @@ export default function Form(props) {
                         />
 
                         <label>Item</label>
-                        <div className='w-full flex flex-col border-2 rounded-lg p-2'>
-                            <div className='mb-2'>
-
+                        <div className="w-full flex flex-col border-2 rounded-lg p-2">
+                            <div className="mb-2">
                                 <button
                                     type="button"
                                     className="px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
@@ -175,30 +170,39 @@ export default function Form(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {data.items.map((item, index) =>
-                                    (
-                                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
-                                            <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {item?.code}
+                                    {data.items.map((item, index) => (
+                                        <tr
+                                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                            key={index}
+                                        >
+                                            <td
+                                                scope="row"
+                                                className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                            >
+                                                {item.code}
                                             </td>
-                                            <td className="py-4 px-6" >
-
-                                                {item?.detail_fabrics?.map((detail, i) => (
-                                                    <div className="grid grid-cols-2 gap-2"  key={i}>
-                                                        <ol>{detail?.qty +" kg"}</ol>
-                                                        <HiXCircle className="w-5 h-5 text-red-600" onClick={() => onItemRemove(item,i)}/>
-                                                    </div>
-                                                ))}
-
+                                            <td className="py-4 px-6">
+                                                {item.detail_fabrics.map(
+                                                    (detail, i) => (
+                                                        <div key={i}>
+                                                                {`${detail.qty} kg`}
+                                                        </div>
+                                                    )
+                                                )}
+                                            </td>
+                                            <td>
+                                                <HiXCircle
+                                                    className="w-5 h-5 text-red-600"
+                                                    onClick={ () => onItemRemove(index) }
+                                                />
                                             </td>
                                         </tr>
-                                    )
-                                    )}
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
 
-                        <div className='mt-10'>
+                        <div className="mt-10">
                             <Button
                                 onClick={handleSubmit}
                                 processing={processing}
@@ -209,11 +213,7 @@ export default function Form(props) {
                     </div>
                 </div>
             </div>
-            <FormModal
-                modalState={formItemModal}
-                onItemAdd={onItemAdd}
-
-            />
+            <FormModal modalState={formItemModal} onItemAdd={onItemAdd} />
         </AuthenticatedLayout>
     );
 }

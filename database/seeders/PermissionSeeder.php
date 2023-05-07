@@ -75,7 +75,6 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Hapus Cutting', 'name' => 'delete-cutting'],
             // setting User Cutting
             ['id' => Str::uuid(), 'label' => 'Buat User Cutting', 'name' => 'create-user-cutting'],
-
             // setting suplier
             ['id' => Str::uuid(), 'label' => 'Buat Supplier', 'name' => 'create-supplier'],
             ['id' => Str::uuid(), 'label' => 'Edit Supplier', 'name' => 'update-supplier'],
@@ -90,10 +89,8 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
             // tv
             ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
-
             // Finishing
             ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
-
         ];
 
         foreach ($permissions as $permission) {
@@ -120,8 +117,7 @@ class PermissionSeeder extends Seeder
             'role_id' => $role->id,
         ]);
 
-        $setting = [
-        ];
+        $setting = [];
 
         Setting::insert($setting);
     }
