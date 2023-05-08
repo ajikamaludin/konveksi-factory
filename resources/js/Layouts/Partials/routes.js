@@ -129,6 +129,14 @@ export default [
                 permission: "view-ratio",
             },
             {
+                name: "Komposisi",
+                show: true,
+                icon: HiClipboardList,
+                route: route("composition.index"),
+                active: "composition.*",
+                permission: "view-composition",
+            },
+            {
                 name: "Setting",
                 show: true,
                 icon: HiCurrencyDollar,

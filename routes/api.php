@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BuyerController;
 use App\Http\Controllers\Api\ColorController;
+use App\Http\Controllers\Api\CompositionController;
 use App\Http\Controllers\Api\FabricItemController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\ProductionController;
@@ -38,3 +39,4 @@ Route::get('/productions', [ProductionController::class, 'index'])->name('api.pr
 Route::get('/suppliers', [SupplierController::class, 'index'])->name('api.suppliers.index');
 Route::get('/fabric-item', [FabricItemController::class, 'index'])->name('api.fabric-item.index');
 Route::get('/ratios', [RatioController::class, 'index'])->name('api.ratios.index');
+Route::get('/compositions', [CompositionController::class, 'index'])->name('api.composition.index');

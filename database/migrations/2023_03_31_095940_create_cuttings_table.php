@@ -23,7 +23,6 @@ return new class extends Migration
             $table->uuid('buyer_id')->nullable();
             $table->uuid('brand_id')->nullable();
             $table->uuid('production_id')->nullable();
-            $table->smallInteger('lock')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

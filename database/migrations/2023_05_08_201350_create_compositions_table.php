@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cutting_items', function (Blueprint $table) {
+        Schema::create('compositions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('size_id');
-            $table->decimal('qty', 14, 2)->default(0);
-            $table->uuid('cutting_id');
-            $table->smallInteger('lock')->default(0);
+            $table->string('name');
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cutting_items');
+        Schema::dropIfExists('compositions');
     }
 };

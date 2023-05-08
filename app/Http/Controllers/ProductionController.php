@@ -45,7 +45,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            // 'items.*.color_id' => 'required|exists:colors,id',
+            'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
         ]);
 
@@ -98,7 +98,7 @@ class ProductionController extends Controller
             'deadline' => 'nullable|date',
             'sketch_image' => 'nullable|image',
             'items.*.size_id' => 'required|exists:sizes,id',
-            // 'items.*.color_id' => 'required|exists:colors,id',
+            'items.*.color_id' => 'required|exists:colors,id',
             'items.*.target_quantity' => 'required|numeric',
             'items.*.lock' => 'required|numeric',
         ]);

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('order_date')->nullable();
             $table->string('letter_number')->nullable();
-            $table->string('composisi')->nullable();
+            $table->uuid('composisi_id')->nullable();
             $table->string('setting_size')->nullable();
             $table->uuid('supplier_id')->nullable();
             $table->timestamps();

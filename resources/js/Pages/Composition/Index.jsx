@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
 import { Button, Dropdown } from 'flowbite-react';
-import { HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -22,19 +22,19 @@ export default function Index(props) {
     const confirmModal = useModalState()
     const formModal = useModalState()
 
-    const toggleFormModal = (cutting = null) => {
-        formModal.setData(cutting)
+    const toggleFormModal = (composition = null) => {
+        formModal.setData(composition)
         formModal.toggle()
     }
 
-    const handleDeleteClick = (cutting) => {
-        confirmModal.setData(cutting)
+    const handleDeleteClick = (composition) => {
+        confirmModal.setData(composition)
         confirmModal.toggle()
     }
 
     const onDelete = () => {
         if(confirmModal.data !== null) {
-            router.delete(route('cutting.destroy', confirmModal.data.id))
+            router.delete(route('composition.destroy', confirmModal.data.id))
         }
     }
 
@@ -52,25 +52,26 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-cutting')
-    const canUpdate = hasPermission(auth, 'update-cutting')
-    const canDelete = hasPermission(auth, 'delete-cutting')
-   
+    const canCreate = hasPermission(auth, 'create-composition')
+    const canUpdate = hasPermission(auth, 'update-composition')
+    const canDelete = hasPermission(auth, 'delete-composition')
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
             flash={props.flash}
             page={'Dashboard'}
-            action={'Cutting'}
+            action={'Komposisi'}
         >
-            <Head title="Cutting"/>
+            <Head title="Komposisi"/>
+
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-gray-200 dark:bg-gray-800 space-y-4">
                         <div className='flex justify-between'>
-                        {canCreate && (
-                                <Link href={route("cutting.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
+                            {canCreate && (
+                                <Button size="sm" onClick={() => toggleFormModal()}>Tambah</Button>
                             )}
                             <div className="flex items-center">
                                 <SearchInput
@@ -85,44 +86,19 @@ export default function Index(props) {
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
                                             <th scope="col" className="py-3 px-6">
-                                                Nama
+                                                Komposisi
                                             </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Total PO
-                                            </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Hasil Cutting
-                                            </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Sisa
-                                            </th>
-                                            <th scope="col" className="py-3 px-6">
-                                                Konsumsi
-                                            </th>
+                                            
                                             <th scope="col" className="py-3 px-6"/>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map(cutting => (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={cutting.id}>
+                                        {data.map(composition => (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={composition.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {cutting.name}
+                                                    {composition.name}
                                                 </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {
-                                                    cutting.cutting_items.reduce((sum,val)=>
-                                                       sum+=val.qty,0
-                                                        )}
-                                                </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {cutting.result_quantity}
-                                                </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {cutting.fritter_quantity}
-                                                </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {parseFloat(cutting.consumsion).toFixed(2)}
-                                                </td>
+                                               
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown
                                                         label={"Opsi"}
@@ -131,25 +107,16 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
-                                                       
-                                                            <Dropdown.Item>
-                                                            <a href={route("cutting.export", cutting)} target="_blank" className="flex space-x-1 items-center">
-                                                                <HiFolderDownload/> 
-                                                                <div>Excel</div>
-                                                            </a>
-                                                        </Dropdown.Item>
-                                                        
-                                                        
                                                         {canUpdate && (
-                                                            <Dropdown.Item>
-                                                            <Link href={route("cutting.edit", cutting)} className="flex space-x-1 items-center">
-                                                                <HiPencil/> 
-                                                                <div>Ubah</div>
-                                                            </Link>
-                                                        </Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => toggleFormModal(composition)}>
+                                                                <div className='flex space-x-1 items-center'>
+                                                                    <HiPencil/> 
+                                                                    <div>Ubah</div>
+                                                                </div>
+                                                            </Dropdown.Item>
                                                         )}
-                                                        {canDelete&&cutting.consumsion==0 && (
-                                                            <Dropdown.Item onClick={() => handleDeleteClick(cutting)}>
+                                                        {canDelete && (
+                                                            <Dropdown.Item onClick={() => handleDeleteClick(composition)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 
                                                                     <div>Hapus</div>
@@ -167,7 +134,6 @@ export default function Index(props) {
                                 <Pagination links={links} params={params}/>
                             </div>
                         </div>
-                       
                     </div>
                 </div>
             </div>
@@ -177,7 +143,6 @@ export default function Index(props) {
             />
             <FormModal
                 modalState={formModal}
-              
             />
         </AuthenticatedLayout>
     );

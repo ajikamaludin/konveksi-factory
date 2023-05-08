@@ -51,6 +51,7 @@ export default function Form(props) {
 
     useEffect(() => {
         if(isEmpty(cutting) === false) {
+           
             setData({
                 style: cutting.style,
                 name: cutting.name,
@@ -139,6 +140,9 @@ export default function Form(props) {
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
+                                    <th scope="col" className="py-3 px-6">
+                                            Color
+                                        </th>
                                         <th scope="col" className="py-3 px-6">
                                             Size
                                         </th>
@@ -152,6 +156,9 @@ export default function Form(props) {
                                 <tbody>
                                     {data.items.map((item, index) => (
                                         <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={index}>
+                                           <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {item.color.name}
+                                            </td>
                                             <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {item.size.name}
                                             </td>

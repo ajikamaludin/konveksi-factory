@@ -17,7 +17,7 @@ class CuttingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cutting::query()->with('cuttingItems.size', 'creator');
+        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator');
 
         return inertia('Cutting/Index', [
             'query' => $query->paginate(10),
@@ -31,6 +31,7 @@ class CuttingController extends Controller
 
     public function store(Request $request)
     {
+
         $request->validate([
             'style' => 'required|string',
             'name' => 'required|string',
@@ -40,6 +41,7 @@ class CuttingController extends Controller
             'deadline' => 'nullable|date',
             'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
+            'items.*.color_id' => 'required|exists:colors,id',
             'items.*.qty' => 'required|numeric',
         ]);
 
@@ -65,13 +67,14 @@ class CuttingController extends Controller
         foreach ($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
+                'color_id' => $item['color_id'],
                 'qty' => $item['qty'],
 
             ]);
             $production->items()->create([
                 'size_id' => $item['size_id'],
+                'color_id' => $item['color_id'],
                 'target_quantity' => $item['qty'],
-                'lock' => '1',
             ]);
         }
         DB::commit();
@@ -84,7 +87,7 @@ class CuttingController extends Controller
     {
 
         return inertia('Cutting/Form', [
-            'cutting' => $cutting->load(['cuttingItems.size']),
+            'cutting' => $cutting->load(['cuttingItems.size', 'cuttingItems.color']),
         ]);
     }
 
@@ -141,14 +144,17 @@ class CuttingController extends Controller
     public function export(Cutting $cutting)
     {
         $userCutting = UserCutting::with('userCuttingItem.creator')->where('artikel_id', $cutting?->production_id)->first();
+
         $fabricItem = FabricItem::where('id', $userCutting?->fabric_item_id)->first();
         $supplier = Fabric::with('supplier')->where('id', $fabricItem?->fabric_id)->first();
         $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting?->ratio_id)->first();
         $sizes = ['', '', '', ''];
         $space = ['User', 'Lot', 'Kain', 'Hasil Cutting'];
-        foreach ($ratios->detailsRatio as $ratio) {
-            array_push($sizes, $ratio->size->name);
-            array_push($space, '');
+        if ($ratios != null) {
+            foreach ($ratios->detailsRatio as $ratio) {
+                array_push($sizes, $ratio->size->name);
+                array_push($space, '');
+            }
         }
         array_push($space, 'Total', 'Konsumsi');
         $exports = [
@@ -174,34 +180,37 @@ class CuttingController extends Controller
         $total_qty = 0;
         $total_cutting = 0;
         $count = 0;
-
-        foreach ($userCutting->userCuttingItem as $item) {
-            $count++;
-            $items = [
-                $item?->creator?->name,
-                $fabricItem->code, $item->qty_fabric,
-                '',
-            ];
-
-            foreach ($ratios->detailsRatio as $ratio) {
-                array_push(
-                    $items,
-                    $item->qty_sheet * $ratio->qty
-                );
-                $detail = [
-                    $item->qty,
-                    round($item->qty_fabric / $item->qty, 2),
+        if ($userCutting != null) {
+            foreach ($userCutting->userCuttingItem as $item) {
+                $count++;
+                $items = [
+                    $item?->creator?->name,
+                    $fabricItem->code, $item->qty_fabric,
+                    '',
                 ];
+
+                foreach ($ratios->detailsRatio as $ratio) {
+                    array_push(
+                        $items,
+                        $item->qty_sheet * $ratio->qty
+                    );
+                    $detail = [
+                        $item->qty,
+                        round($item->qty_fabric / $item->qty, 2),
+                    ];
+                }
+                $total_cutting += $item->qty_sheet;
+                $s = array_merge($items, $detail);
+                $exports[] = $s;
+                $total_kain += $item->qty_fabric;
+                $total_qty += $item->qty;
+                $total_konsumsi += round($item->qty_fabric / $item->qty, 2);
             }
-            $total_cutting += $item->qty_sheet;
-            $s = array_merge($items, $detail);
-            $exports[] = $s;
-            $total_kain += $item->qty_fabric;
-            $total_qty += $item->qty;
-            $total_konsumsi += round($item->qty_fabric / $item->qty, 2);
         }
-        foreach ($ratios->detailsRatio as $ratio) {
-            array_push($arrcutting, $total_cutting * $ratio->qty);
+        if ($ratios != null) {
+            foreach ($ratios->detailsRatio as $ratio) {
+                array_push($arrcutting, $total_cutting * $ratio->qty);
+            }
         }
         $t = [
             'Total',
@@ -209,17 +218,26 @@ class CuttingController extends Controller
             $total_kain,
             '',
         ];
+        if ($count == 0) {
+            $count = 1;
+        }
         $a = array_merge($t, $arrcutting, [$total_qty, $total_konsumsi / $count]);
         $exports[] = $a;
         $arrsisa = [];
+       
         foreach ($cutting->cuttingItems as $index => $val) {
-            array_push($arrsisa, $val->qty - $arrcutting[$index]);
+            $substract=0;
+            if(count($arrcutting)){
+                $substract=$arrcutting[$index];
+            }
+            array_push($arrsisa, $val->qty - $substract);
+            
         }
         $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting->fritter_quantity]);
         $exports[] = $sisa;
 
         $now = now()->format('d-m-Y');
-
+       
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");

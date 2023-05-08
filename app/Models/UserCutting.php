@@ -14,4 +14,7 @@ class UserCutting extends Model
     {
         return $this->hasMany(UserCuttingItem::class);
     }
+    public function ratio(){
+        return $this->belongsTo(Ratio::class);
+    }
 }

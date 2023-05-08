@@ -27,7 +27,7 @@ export default function FormModal(props) {
     }
 
     const handleSubmit = () => {
-        if(data.size === '' || +data.target_quantity === 0) {
+        if(data.size === '' ||data.color===''|| +data.target_quantity === 0) {
             toast.error('Periksa kembali data anda')
             return 
         }

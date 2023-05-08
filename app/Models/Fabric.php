@@ -10,7 +10,7 @@ class Fabric extends Model
         'name',
         'order_date',
         'letter_number',
-        'composisi',
+        'composisi_id',
         'setting_size',
         'supplier_id',
     ];
@@ -23,5 +23,8 @@ class Fabric extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
+    }
+    public function composition(){
+        return $this->belongsTo(Compositions::class);
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BuyerController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\CompositionController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\FabricController;
 use App\Http\Controllers\GeneralController;
@@ -131,6 +132,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/{settingPayroll}', [PayrollController::class, 'store'])->name('setting.create');
     // Tv
     Route::get('/tv', [TvController::class, 'index'])->name('tv.index');
+    //Compositions
+    Route::get('/compositions', [CompositionController::class, 'index'])->name('composition.index');
+    Route::post('/compositions', [CompositionController::class, 'store'])->name('composition.store');
+    Route::put('/compositions/{composition}', [CompositionController::class, 'update'])->name('composition.update');
+    Route::delete('/compositions/{composition}', [CompositionController::class, 'destroy'])->name('composition.destroy');
 
 });
 

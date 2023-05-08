@@ -8,6 +8,7 @@ import Button from "@/Components/Button";
 import FormInput from "@/Components/FormInput";
 import FormInputDate from "@/Components/FormInputDate";
 import SupplierSelectionInput from "../Supplier/SelectedInput";
+import CompositionSelectionInput from "../Composition/SelectedInput";
 import FormModal from "./FormModal";
 
 export default function Form(props) {
@@ -17,7 +18,7 @@ export default function Form(props) {
         name: "",
         order_date: "",
         letter_number: "",
-        composisi: "",
+        composisi_id: "",
         setting_size: "",
         supplier_id: "",
         code_lot: "",
@@ -74,11 +75,12 @@ export default function Form(props) {
 
     useEffect(() => {
         if (isEmpty(fabric) === false) {
+            console.log(fabric);
             setData({
                 name: fabric.name,
                 order_date: fabric.order_date,
                 letter_number: fabric.letter_number,
-                composisi: fabric.composisi,
+                composisi_id: fabric.composisi_id,
                 setting_size: fabric.setting_size,
                 supplier_id: fabric.supplier_id,
                 items: fabric.fabric_items,
@@ -131,13 +133,18 @@ export default function Form(props) {
                             label="Nomor Surat Jalan"
                             error={errors.letter_number}
                         />
-                        <FormInput
-                            name="composisi"
-                            value={data.composisi}
-                            onChange={handleOnChange}
-                            label="Komposisi"
-                            error={errors.composisi}
-                        />
+                       
+                        <div className="mb-2">
+                            <CompositionSelectionInput
+                                label="Komposisi"
+                                itemSelected={data.composisi_id}
+                                onItemSelected={(id) =>
+                                    setData("composisi_id", id)
+                                }
+                                error={errors.composisi_id}
+                            />
+                        </div>
+                        
                         <FormInput
                             name="setting_size"
                             value={data.setting_size}

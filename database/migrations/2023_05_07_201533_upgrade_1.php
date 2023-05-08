@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Compositions;
 use App\Models\Permission;
 use App\Models\SettingPayroll;
 use Illuminate\Database\Migrations\Migration;
@@ -43,6 +44,11 @@ return new class extends Migration
             ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
             // Finishing
             ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
+            //Compositions
+            ['id' => Str::uuid(), 'label' => 'Buat Komposisi', 'name' => 'create-composition'],
+            ['id' => Str::uuid(), 'label' => 'Edit Komposisi', 'name' => 'update-composition'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Komposisi', 'name' => 'view-composition'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Komposisi', 'name' => 'delete-composition'],
         ];
 
         $permit = Permission::where('name', 'create-setting')->first();
@@ -66,6 +72,7 @@ return new class extends Migration
                 'workhours_saturday' => '8',
             ]);
         }
+        
     }
 
     /**
