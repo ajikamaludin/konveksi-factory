@@ -51,7 +51,7 @@ export default function Form(props) {
 
     useEffect(() => {
         if(isEmpty(cutting) === false) {
-           
+            
             setData({
                 style: cutting.style,
                 name: cutting.name,
@@ -166,7 +166,12 @@ export default function Form(props) {
                                                 {item.qty}
                                             </td>
                                             <td>
+                                            {+item.lock === 0 ? (
                                                     <HiXCircle className="w-5 h-5 text-red-600" onClick={() => onItemRemove(index)}/>
+                                                ) : (
+                                                    <HiLockClosed className="w-5 h-5 text-red-600"/>
+                                                )}
+                                                  
                                             </td>
                                         </tr>
                                     ))}
