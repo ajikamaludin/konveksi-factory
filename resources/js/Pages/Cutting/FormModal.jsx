@@ -44,6 +44,7 @@ export default function FormModal(props) {
             qty:data.qty,
             color:data.color,
             color_id:data.color.id,
+            lock:data.lock,
         })
         reset()
         modalState.toggle()

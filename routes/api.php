@@ -38,5 +38,6 @@ Route::get('/sizes', [SizeController::class, 'index'])->name('api.size.index');
 Route::get('/productions', [ProductionController::class, 'index'])->name('api.production.index');
 Route::get('/suppliers', [SupplierController::class, 'index'])->name('api.suppliers.index');
 Route::get('/fabric-item', [FabricItemController::class, 'index'])->name('api.fabric-item.index');
+Route::get('/fabric', [FabricItemController::class, 'fabric'])->name('api.fabric.index');
 Route::get('/ratios', [RatioController::class, 'index'])->name('api.ratios.index');
 Route::get('/compositions', [CompositionController::class, 'index'])->name('api.composition.index');

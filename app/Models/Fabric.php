@@ -19,6 +19,9 @@ class Fabric extends Model
     {
         return $this->hasMany(FabricItem::class);
     }
+    public function first_item(){
+        return $this->hasOne(FabricItem::class)->where('fritter','=','0');
+    }
 
     public function supplier()
     {

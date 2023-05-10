@@ -106,8 +106,8 @@ class CuttingController extends Controller
         ]);
 
         DB::beginTransaction();
-
-        $cutting->cuttingItems()->delete();
+        
+        $cutting->cuttingItems()->where('lock','0')->delete();
         $cutting->update([
             'name' => $request->name,
         ]);
@@ -115,6 +115,7 @@ class CuttingController extends Controller
         foreach ($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
+                'color_id' => $item['color_id'],
                 'qty' => $item['qty'],
             ]);
         }

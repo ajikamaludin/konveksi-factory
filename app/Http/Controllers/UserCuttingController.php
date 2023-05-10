@@ -23,7 +23,7 @@ class UserCuttingController extends Controller
                 ->get();
         }
 
-        return inertia('UserCutting/Index', [
+        return inertia('UserCutting/Form', [
             'userCutting' => $userCutting,
 
         ]);
