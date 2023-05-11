@@ -22,7 +22,7 @@ class FabricItemController extends Controller
     public function fabric(Request $request)
     {
         $query = Fabric::query()->with('first_item.detailFabrics');
-
+        
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }

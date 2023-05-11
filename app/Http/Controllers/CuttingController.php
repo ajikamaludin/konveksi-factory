@@ -197,7 +197,7 @@ class CuttingController extends Controller
                     );
                     $detail = [
                         $item->qty,
-                        round($item->qty_fabric / $item->qty, 2),
+                        $item->qty_fabric / $item->qty,
                     ];
                 }
                 $total_cutting += $item->qty_sheet;
@@ -205,7 +205,7 @@ class CuttingController extends Controller
                 $exports[] = $s;
                 $total_kain += $item->qty_fabric;
                 $total_qty += $item->qty;
-                $total_konsumsi += round($item->qty_fabric / $item->qty, 2);
+                $total_konsumsi +=$item->qty_fabric / $item->qty;
             }
         }
         if ($ratios != null) {

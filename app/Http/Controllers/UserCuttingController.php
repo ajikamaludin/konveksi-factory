@@ -22,6 +22,7 @@ class UserCuttingController extends Controller
                 ['ratio_id', '=', $request->ratio_id],
                 ['fabric_item_id', '=', $request->fabric_item_id],
             ])->get();
+            
         }
 
         return inertia('UserCutting/Form', [

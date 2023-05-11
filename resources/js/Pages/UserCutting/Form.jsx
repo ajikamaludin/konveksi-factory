@@ -42,7 +42,7 @@ export default function Form(props) {
     }
     const onSeletedFabric = (fabric) => {
         if (isEmpty(fabric) === false) {
-          
+        //   console.log(fabric)
             let items = fabric.first_item.detail_fabrics.map((detail) => {
                 return {
                     ...detail,
@@ -83,7 +83,7 @@ export default function Form(props) {
                 if (item.qty >= value) {
                     item[name] = value,
                         item['total_qty'] = value * ratio_qty,
-                        item['fritter_item'] = parseFloat(item.fritter) - value
+                        item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - value
 
                 }
             }
@@ -99,7 +99,7 @@ export default function Form(props) {
                 if (item.qty > value) {
                     item[name] = parseFloat(value) + 1,
                         item['total_qty'] = (parseFloat(value) + 1) * ratio_qty,
-                        item['fritter_item'] = parseFloat(item.fritter) - (parseFloat(value) + 1)
+                        item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
                 }
             }
             return item
@@ -108,7 +108,7 @@ export default function Form(props) {
     }
     const SubstractPO = () => {
         const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0)
-        setData('fritter_po', parseFloat(data.total_po - qty))
+        setData('fritter_po', parseFloat(data.total_po - qty).toFixed(2))
     }
      const handleReset = () => {
         reset()
@@ -251,7 +251,7 @@ export default function Form(props) {
                                                         </td>
                                                         <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
                                                             <FormInput
-                                                                value={item?.fritter_item}
+                                                                value={item?.fritter_item.toFixed(2)}
                                                                 readOnly={true}
                                                             />
                                                         </td>

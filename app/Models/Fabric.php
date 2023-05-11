@@ -25,6 +25,7 @@ class Fabric extends Model
         ->join('detail_fabrics','fabric_item_id','fabric_items.id')
         ->select('fabric_items.*',DB::raw('sum(fritter) as fritter'))
         ->where('fritter','>','0')
+        ->groupBy('fabric_items.fabric_id')
         ;
     }
 

@@ -84,7 +84,7 @@ export default function SelectedInputFabricItem(props) {
             }
         })
         .then((response) => {
-            // console.log(response.data);
+            
             setShowItem(response.data)
         })
         .catch((err) => {
