@@ -17,6 +17,7 @@ class Cutting extends Model
         'result_quantity',
         'fritter_quantity',
         'production_id',
+        'lock'
 
     ];
 

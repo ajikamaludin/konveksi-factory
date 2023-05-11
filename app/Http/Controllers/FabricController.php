@@ -17,7 +17,7 @@ class FabricController extends Controller
                 $join->on('fabric_item_id', '=', 'fabric_items.id');
                 $join->whereNull('detail_fabrics.deleted_at');
             })
-            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'));
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(qty) -sum(detail_fabrics.result_qty) as fritter_qty'));
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
@@ -70,6 +70,7 @@ class FabricController extends Controller
                 $fabricitems->detailFabrics()->create([
                     'qty' => $detail['qty'],
                     'fabric_item_id' => $fabricitems['id'],
+                    'fritter'=>$detail['qty'],
                 ]);
             }
         }
@@ -126,6 +127,7 @@ class FabricController extends Controller
             foreach ($item['detail_fabrics'] as $detail) {
                 $fabricitems->detailFabrics()->create([
                     'qty' => $detail['qty'],
+                    'fritter'=>$detail['qty'],
                 ]);
             }
         }

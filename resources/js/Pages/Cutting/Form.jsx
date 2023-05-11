@@ -24,6 +24,7 @@ export default function Form(props) {
         consumsion: '',
         deadline: '',
         name: '',
+        lock:0,
         items: [],
     })
 
@@ -61,6 +62,7 @@ export default function Form(props) {
                 description: cutting.description,
                 deadline: cutting.deadline,
                 consumsion:cutting.consumsion,
+                lock:cutting.lock,
                 items: cutting.cutting_items,
             })
         }
@@ -166,7 +168,7 @@ export default function Form(props) {
                                                 {item.qty}
                                             </td>
                                             <td>
-                                            {+item.lock === 0 ? (
+                                            {+data.lock === 0 ? (
                                                     <HiXCircle className="w-5 h-5 text-red-600" onClick={() => onItemRemove(index)}/>
                                                 ) : (
                                                     <HiLockClosed className="w-5 h-5 text-red-600"/>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('result_quantity', 14, 2)->default(0);
             $table->decimal('fritter_quantity', 14, 2)->default(0);
             $table->decimal('consumsion', 14, 2)->default(0);
+            $table->smallInteger('lock')->default(0);
             $table->uuid('material_id')->nullable();
             $table->uuid('buyer_id')->nullable();
             $table->uuid('brand_id')->nullable();

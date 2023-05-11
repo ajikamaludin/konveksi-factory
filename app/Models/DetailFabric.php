@@ -7,5 +7,7 @@ class DetailFabric extends Model
     protected $fillable = [
         'qty',
         'fabric_item_id',
+        'result_qty',
+        'fritter',
     ];
 }

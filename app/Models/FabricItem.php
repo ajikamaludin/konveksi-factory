@@ -10,8 +10,7 @@ class FabricItem extends Model
         'code',
         'name',
         'fabric_id',
-        'result_qty',
-        'fritter',
+        
     ];
 
     public function detailFabrics()
