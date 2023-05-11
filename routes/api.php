@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\BuyerController;
 use App\Http\Controllers\Api\ColorController;
 use App\Http\Controllers\Api\CompositionController;
+use App\Http\Controllers\Api\CuttingController;
 use App\Http\Controllers\Api\FabricItemController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\ProductionController;
@@ -40,4 +41,5 @@ Route::get('/suppliers', [SupplierController::class, 'index'])->name('api.suppli
 Route::get('/fabric-item', [FabricItemController::class, 'index'])->name('api.fabric-item.index');
 Route::get('/fabric', [FabricItemController::class, 'fabric'])->name('api.fabric.index');
 Route::get('/ratios', [RatioController::class, 'index'])->name('api.ratios.index');
+Route::get('/cuttings', [CuttingController::class, 'index'])->name('api.cutting.index');
 Route::get('/compositions', [CompositionController::class, 'index'])->name('api.composition.index');

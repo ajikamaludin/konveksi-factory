@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { router,useForm } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import ProductionSelectionInput from '../Production/SelectionInput';
+import ProductionSelectionInput from '../Cutting/SelectionInput';
 import RatioSelected from '../Ratio/SelectedInput'
 import FabricSelectionInput from '../Fabric/SeletedInputFabric'
 import FormInput from '@/Components/FormInput';
@@ -22,6 +22,7 @@ export default function Form(props) {
         kode_lot: '',
         total_po: 0,
         fritter_po: 0,
+        fritter_quantity:0,
         items: [],
     });
     const [search, setSearch] = useState('')
@@ -32,8 +33,9 @@ export default function Form(props) {
     }
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.id, ratio_id: data.ratio_id, total_po: production.total, fritter_po: production.left, kode_lot: data.kode_lot })
-            setSearch({ ...search, production_id: production.id })
+            var total_po=production.result_quantity+production.fritter_quantity
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity,fritter_quantity:production?.fritter_quantity, kode_lot: data.kode_lot })
+            setSearch({ ...search, production_id: production.production_id })
             return
         } else {
             setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po })
@@ -42,7 +44,7 @@ export default function Form(props) {
     }
     const onSeletedFabric = (fabric) => {
         if (isEmpty(fabric) === false) {
-        //   console.log(fabric)
+        
             let items = fabric.first_item.detail_fabrics.map((detail) => {
                 return {
                     ...detail,
@@ -108,7 +110,7 @@ export default function Form(props) {
     }
     const SubstractPO = () => {
         const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0)
-        setData('fritter_po', parseFloat(data.total_po - qty).toFixed(2))
+        setData('fritter_quantity', parseFloat(data.fritter_po - qty).toFixed(2))
     }
      const handleReset = () => {
         reset()
@@ -262,7 +264,7 @@ export default function Form(props) {
                                                         <b>Sisa PO</b>
                                                     </td>
                                                     <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                                        {data.fritter_po}
+                                                        {data.fritter_quantity}
                                                     </td>
                                                 </tr>
                                             </tbody>
