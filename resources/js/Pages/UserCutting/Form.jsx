@@ -33,12 +33,13 @@ export default function Form(props) {
     }
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
+            // console.log(production)
             var total_po=production.result_quantity+production.fritter_quantity
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity,fritter_quantity:production?.fritter_quantity, kode_lot: data.kode_lot })
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity,fritter_quantity:production.fritter_quantity, kode_lot: data.kode_lot })
             setSearch({ ...search, production_id: production.production_id })
             return
         } else {
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po })
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po,fritter_quantity:data.fritter_quantity })
             setSearch({ ...search, production_id: '' })
         }
     }
@@ -55,12 +56,12 @@ export default function Form(props) {
 
             });
          
-            setData({ fabric_item_id: fabric.first_item.id, items: items, production_id: data.production_id, ratio_id: data.ratio_id, kode_lot: fabric.first_item.code, total_po: data.total_po, fritter_po: data.fritter_po })
+            setData({ fabric_item_id: fabric.first_item.id, items: items, production_id: data.production_id, ratio_id: data.ratio_id, kode_lot: fabric.first_item.code, total_po: data.total_po, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
             setSearch({ ...search, fabric_item_id: fabric.first_item.id })
 
             return
         } else {
-            setData({ fabric_item_id: '', items: [], production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po })
+            setData({ fabric_item_id: '', items: [], production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
             setSearch({ ...search, fabric_item_id: '' })
         }
     }
@@ -71,22 +72,22 @@ export default function Form(props) {
                 sum += val.qty, 0
             )
             setRatioQty(qtyratio)
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po })
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
             setSearch({ ...search, ratio_id: ratio?.id })
+          
             return
         } else {
             setSearch({ ...search, ratio_id: '' })
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po })
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po,fritter_quantity:data.fritter_quantity })
         }
     }
     const handleChangeItemValue = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
-                if (item.qty >= value) {
+                if (item.qty >= value&&item.fritter>=value) {
                     item[name] = value,
                         item['total_qty'] = value * ratio_qty,
                         item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - value
-
                 }
             }
             return item
@@ -98,7 +99,7 @@ export default function Form(props) {
     const addQuantity = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
-                if (item.qty > value) {
+                if (item.qty > value || item.fritter>= value) {
                     item[name] = parseFloat(value) + 1,
                         item['total_qty'] = (parseFloat(value) + 1) * ratio_qty,
                         item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
@@ -109,8 +110,10 @@ export default function Form(props) {
         SubstractPO();
     }
     const SubstractPO = () => {
-        const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0)
-        setData('fritter_quantity', parseFloat(data.fritter_po - qty).toFixed(2))
+        const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0);
+        let fritter_quantity=parseFloat(data.fritter_po)-parseFloat(qty);
+       
+        setData('fritter_quantity', fritter_quantity.toFixed(2))
     }
      const handleReset = () => {
         reset()

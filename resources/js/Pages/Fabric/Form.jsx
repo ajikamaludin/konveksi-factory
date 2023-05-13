@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Head, useForm } from "@inertiajs/react";
-import { HiXCircle } from "react-icons/hi";
+import { HiLockClosed, HiXCircle } from "react-icons/hi";
 import { isEmpty } from "lodash";
 import { useModalState } from "@/hooks";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -75,7 +75,7 @@ export default function Form(props) {
 
     useEffect(() => {
         if (isEmpty(fabric) === false) {
-            console.log(fabric);
+            // console.log(fabric);
             setData({
                 name: fabric.name,
                 order_date: fabric.order_date,
@@ -133,7 +133,7 @@ export default function Form(props) {
                             label="Nomor Surat Jalan"
                             error={errors.letter_number}
                         />
-                       
+
                         <div className="mb-2">
                             <CompositionSelectionInput
                                 label="Komposisi"
@@ -144,7 +144,7 @@ export default function Form(props) {
                                 error={errors.composisi_id}
                             />
                         </div>
-                        
+
                         <FormInput
                             name="setting_size"
                             value={data.setting_size}
@@ -192,16 +192,21 @@ export default function Form(props) {
                                                 {item.detail_fabrics.map(
                                                     (detail, i) => (
                                                         <div key={i}>
-                                                                {`${detail.qty} kg`}
+                                                            {`${detail.qty} kg`}
                                                         </div>
                                                     )
                                                 )}
                                             </td>
                                             <td>
-                                                <HiXCircle
-                                                    className="w-5 h-5 text-red-600"
-                                                    onClick={ () => onItemRemove(index) }
-                                                />
+                                                {
+                                                    item.detail_fabrics.reduce((sum, detail) => sum += detail.result_qty, 0) == 0?(
+                                                        <HiXCircle
+                                                            className="w-5 h-5 text-red-600"
+                                                            onClick={() => onItemRemove(index)}
+                                                        />
+                                                    ):(<HiLockClosed className="w-5 h-5 text-red-600"/>)
+                                                }
+
                                             </td>
                                         </tr>
                                     ))}

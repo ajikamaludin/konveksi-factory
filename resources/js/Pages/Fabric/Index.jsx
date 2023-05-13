@@ -48,7 +48,7 @@ export default function Index(props) {
     const canCreate = hasPermission(auth, 'create-fabric')
     const canUpdate = hasPermission(auth, 'update-fabric')
     const canDelete = hasPermission(auth, 'delete-fabric')
-console.log(data)
+    
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -131,7 +131,7 @@ console.log(data)
                                                                 </Link>
                                                             </Dropdown.Item>
                                                         )}
-                                                        {canDelete && (
+                                                        {canDelete && fabric.result_qty==0 && (
                                                             <Dropdown.Item onClick={() => handleDeleteClick(fabric)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiTrash/> 

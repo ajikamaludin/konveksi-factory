@@ -17,7 +17,7 @@ class FabricController extends Controller
                 $join->on('fabric_item_id', '=', 'fabric_items.id');
                 $join->whereNull('detail_fabrics.deleted_at');
             })
-            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(qty) -sum(detail_fabrics.result_qty) as fritter_qty'));
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(qty) -sum(detail_fabrics.result_qty) as fritter_qty'),DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
@@ -40,7 +40,7 @@ class FabricController extends Controller
             'name' => 'required|string',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'letter_number' => 'nullable|string',
-            'composisi_id' => 'nullable|exists:compositions,id',
+            'composisi_id' => 'nullable|string',
             'setting_size' => 'nullable|string',
             'order_date' => 'nullable|date',
             'items' => 'required|array',
@@ -50,7 +50,7 @@ class FabricController extends Controller
         ]);
 
         DB::beginTransaction();
-
+       
         $fabric = Fabric::create([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,

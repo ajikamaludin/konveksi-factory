@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('size_id');
             $table->decimal('qty', 14, 2)->default(0);
             $table->uuid('cutting_id');
-            $table->smallInteger('lock')->default(0);
             $table->timestamps();
             $table->softDeletes();
             $table->uuid('created_by')->nullable();

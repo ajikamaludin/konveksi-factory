@@ -6,6 +6,7 @@ use App\Models\Cutting;
 use App\Models\Fabric;
 use App\Models\FabricItem;
 use App\Models\Production;
+use App\Models\ProductionItem;
 use App\Models\ProductionItemResult;
 use App\Models\Ratio;
 use App\Models\UserCutting;
@@ -54,6 +55,10 @@ class CuttingController extends Controller
             'name' => $request->name,
             'deadline' => $request->deadline,
         ]);
+        $fritter_quantity=0;
+        foreach ($request->items as $item) {
+            $fritter_quantity=$fritter_quantity+$item['qty'];
+        }
 
         $cutting = $production->cuttings()->create([
             'buyer_id' => $request->buyer_id,
@@ -62,6 +67,7 @@ class CuttingController extends Controller
             'style' => $request->style,
             'name' => $request->name,
             'deadline' => $request->deadline,
+            'fritter_quantity'=>$fritter_quantity
         ]);
 
         foreach ($request->items as $item) {
@@ -102,22 +108,54 @@ class CuttingController extends Controller
             'deadline' => 'nullable|date',
             'items' => 'required|array',
             'items.*.size_id' => 'required|exists:sizes,id',
+            'items.*.color_id' => 'required|exists:colors,id',
             'items.*.qty' => 'required|numeric',
         ]);
-
+       
+        $production=Production::find($cutting->production_id)->load('items');
         DB::beginTransaction();
-        
-        $cutting->cuttingItems()->where('lock','0')->delete();
-        $cutting->update([
+        $production->update([
+            'buyer_id' => $request->buyer_id,
+            'brand_id' => $request->brand_id,
+            'material_id' => $request->material_id,
+            'code' => $request->style,
             'name' => $request->name,
+            'deadline' => $request->deadline,
         ]);
-
+        $production->items()->where('lock', 0)->delete();
+        $cutting->cuttingItems()->where('lock','0')->delete();
+        $fritter_quantity=0;
+        foreach ($request->items as $item) {
+           
+            $fritter_quantity=$fritter_quantity+$item['qty'];
+        }
+        if ($cutting->result_quantity>0){
+            $fritter_quantity=$fritter_quantity-$cutting->result_quantity;
+        }
+      
+        $cutting->update([
+            'buyer_id' => $request->buyer_id,
+            'brand_id' => $request->brand_id,
+            'material_id' => $request->material_id,
+            'style' => $request->style,
+            'name' => $request->name,
+            'deadline' => $request->deadline,
+            'fritter_quantity'=>$fritter_quantity
+        ]);
+       
         foreach ($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
                 'color_id' => $item['color_id'],
                 'qty' => $item['qty'],
             ]);
+    
+            $production->items()->create([
+                'size_id' => $item['size_id'],
+                'color_id' => $item['color_id'],
+                'target_quantity' => $item['qty'],
+            ]);
+            
         }
 
         DB::commit();

@@ -14,15 +14,15 @@ class UserCuttingController extends Controller
     public function index(Request $request)
     {
         $userCutting = null;
-        
+
         if ($request->production_id != '' && $request->ratio_id != '' && $request->fabric_item_id != '') {
-            
+
             $userCutting = UserCutting::with('userCuttingItem.creator')->where([
-                ['artikel_id', '=',$request->production_id],
+                ['artikel_id', '=', $request->production_id],
                 ['ratio_id', '=', $request->ratio_id],
                 ['fabric_item_id', '=', $request->fabric_item_id],
             ])->get();
-            
+
         }
 
         return inertia('UserCutting/Form', [
@@ -48,7 +48,7 @@ class UserCuttingController extends Controller
             ['ratio_id', '=', $request->ratio_id],
             ['fabric_item_id', '=', $request->fabric_item_id],
         ])->get();
-            // dd($request->items);
+        // dd($request->items);
         DB::beginTransaction();
         $userCatting = UserCutting::create([
             'ratio_id' => $request->ratio_id,
@@ -70,23 +70,27 @@ class UserCuttingController extends Controller
         } else {
             $total_po = $request->total_po;
         }
-      
+
         foreach ($request->items as $item) {
             $result_quantity = $item['total_qty'] + $result_quantity;
             $qty_fabric = $item['qty'];
             $total_po = $total_po - $item['total_qty'];
-            $userCatting->userCuttingItem()->create([
-                'qty_fabric' => $qty_fabric,
-                'qty_sheet' => $item['quantity'],
-                'qty' => $item['total_qty'],
-                'fritter' => $total_po,
-            ]);
-            $total_qty = $total_qty + $qty_fabric;
-         
-            DetailFabric::where('id',$item['id'])->update([
-                'fritter'=>$item['fritter_item'],
-                'result_qty'=>$item['quantity']+$item['result_qty']
-            ]);
+            if ($item['qty'] > 0) {
+                $userCatting->userCuttingItem()->create([
+                    'qty_fabric' => $qty_fabric,
+                    'qty_sheet' => $item['quantity'],
+                    'qty' => $item['total_qty'],
+                    'fritter' => $total_po,
+                    'lock' => 1,
+                ]);
+
+                $total_qty = $total_qty + $qty_fabric;
+
+                DetailFabric::where('id', $item['id'])->update([
+                    'fritter' => $item['fritter_item'],
+                    'result_qty' => $item['quantity'] + $item['result_qty']
+                ]);
+            }
         }
         $consumsion = $total_qty / $result_quantity;
         Cutting::where('production_id', $request->production_id)->update([
@@ -99,7 +103,7 @@ class UserCuttingController extends Controller
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
 
-        return redirect()->route('user-cutting.index')
-            ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
+        // return redirect()->route('user-cutting.index')
+        //     ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
     }
 }

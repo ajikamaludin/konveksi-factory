@@ -43,7 +43,7 @@ export default function SelectionInput(props) {
 
     const handleSelectItem = (item) => {
         setIsSelected(true)
-        onItemSelected(item.id)
+        onItemSelected(item.name)
         setSelected(item.name)
         setIsOpen(false)
     }

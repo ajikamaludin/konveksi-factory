@@ -42,44 +42,44 @@ export default function Index(props) {
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-white space-y-6 min-h-screen">
                         <div className='grid grid-cols-4 text-center'>
                             <div className='border-r-2'>
-                                <div className='mb-2'>{_production?.name}</div>
+                                <div className='mb-2 text-4xl'>{_production?.name}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div className='mb-2'>{_production?.active_line}</div>
+                                <div className='mb-2 text-4xl'>{_production?.active_line}</div>
                             </div>
                             <div className='border-r-2 mt-1'>
-                                <div div className='mb-2'>PO {formatIDR(_production?.total)}</div>
+                                <div div className='mb-2 text-4xl'>PO {formatIDR(_production?.total)}</div>
                             </div>
                             <div className='border-r-2 mt-1'>
-                                <div div className='mb-2'>Jam {hourline}</div>
+                                <div div className='mb-2 text-4xl'>Jam {hourline}</div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>Target</div>
-                                <div div className='mb-2'>{target}</div>
+                                <div div className='mb-2 text-4xl'>Target</div>
+                                <div div className='mb-2 text-4xl'>{target}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>Hasil</div>
-                                <div div className='mb-2'>{hasil}</div>
+                                <div div className='mb-2 text-4xl'>Hasil</div>
+                                <div div className='mb-2 text-4xl'>{hasil}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>Sisa PO</div>
-                                <div div className='mb-2'>{formatIDR(_production?.left)}</div>
+                                <div div className='mb-2 text-4xl'>Sisa PO</div>
+                                <div div className='mb-2 text-4xl'>{formatIDR(_production?.left)}</div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>Operator</div>
-                                <div div className='mb-2'>{operator}</div>
+                                <div div className='mb-2 text-4xl'>Operator</div>
+                                <div div className='mb-2 text-4xl'>{operator}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>Perkiraan</div>
-                                <div div className='mb-2'>{target}</div>
+                                <div div className='mb-2 text-4xl'>Perkiraan</div>
+                                <div div className='mb-2 text-4xl text-4xl'>{target}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div div className='mb-2'>HPP</div>
-                                <div div className='mb-2'>{formatIDR(hpp)}</div>
+                                <div div className='mb-2 text-4xl'>HPP</div>
+                                <div div className='mb-2 text-4xl text-4xl'>{formatIDR(hpp)}</div>
                             </div>
                         </div>
                         <div className="flex items-center">
