@@ -103,7 +103,5 @@ class UserCuttingController extends Controller
 
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
 
-        // return redirect()->route('user-cutting.index')
-        //     ->with('message', ['type' => 'success', 'message' => 'Item has beed saved']);
     }
 }

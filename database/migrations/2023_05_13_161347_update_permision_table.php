@@ -21,35 +21,42 @@ return new class extends Migration {
             ['id' => Str::uuid(), 'label' => 'Lihat Komposisi', 'name' => 'view-composition'],
             ['id' => Str::uuid(), 'label' => 'Hapus Komposisi', 'name' => 'delete-composition'],
         ];
-       
+
         foreach ($permissions as $permission) {
-            Permission::insert($permission);
+            Permission::firstOrCreate(['name' => $permission['name']], ['id' => $permission['id'], 'label' => $permission['label']]);
         }
 
         $role = Role::where(['name' => 'admin'])->first();
-
         $permissions = Permission::all();
-        foreach ($permissions as $permission) {
-            $role->rolePermissions()->create(['permission_id' => $permission->id]);
+        if ($role != null) {
+            foreach ($permissions as $permission) {
+                $role->rolePermissions()->create(['permission_id' => $permission->id]);
+            }
+        }
+        $supplier = Supplier::first();
+        if ($supplier==null){
+            Supplier::create([
+                'name' => 'PT Maju Lancar',
+                'address' => 'Jl pandega sakti',
+                'phonenumber' => '081231237821',
+                'emails' => 'maju@mail.com',
+            ]);
+        }
+       
+        $settingPayroll = SettingPayroll::first();
+        if ($settingPayroll == null) {
+            SettingPayroll::create([
+                'payroll' => '100000',
+                'workhours_sunday' => '8',
+                'workhours_monday' => '9',
+                'workhours_tuesday' => '9',
+                'workhours_wednesday' => '9',
+                'workhours_thusday' => '9',
+                'workhours_friday' => '9',
+                'workhours_saturday' => '8',
+            ]);
         }
 
-        Supplier::create([
-            'name' => 'PT Maju Lancar',
-            'address' => 'Jl pandega sakti',
-            'phonenumber' => '081231237821',
-            'emails' => 'maju@mail.com',
-        ]);
-        
-        SettingPayroll::create([
-            'payroll' => '100000',
-            'workhours_sunday' => '8',
-            'workhours_monday' => '9',
-            'workhours_tuesday' => '9',
-            'workhours_wednesday' => '9',
-            'workhours_thusday' => '9',
-            'workhours_friday' => '9',
-            'workhours_saturday' => '8',
-        ]);
     }
 
     /**

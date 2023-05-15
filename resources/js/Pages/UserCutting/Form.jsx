@@ -117,19 +117,16 @@ export default function Form(props) {
     }
      const handleReset = () => {
         reset()
-        onSeletedProduct()
-        onSeletedFabric()
-        onSeletedRatio()
+       
     }
     const handleSubmit = () => {
         post(route('user-cutting.store'), {
-            onSuccess: () => handleReset()
+            // onSuccess: () => handleReset()
         })
     }
   
 
     useEffect(() => {
-    
         if (preValue) {
             router.get(
                 route(route().current()),
@@ -139,7 +136,7 @@ export default function Form(props) {
                     preserveState: true,
                 }
             )
-          
+            
         }
     }, [search])
    

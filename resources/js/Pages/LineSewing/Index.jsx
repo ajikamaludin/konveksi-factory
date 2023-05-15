@@ -12,7 +12,7 @@ import FormInput from '@/Components/FormInput';
 import Input from '@/Components/Input';
 
 export default function Index(props) {
-    const { item, _production, _color, _size } = props
+    const { item, _production, _color, _size,operator } = props
 
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         finish_quantity: 0,
@@ -62,6 +62,7 @@ export default function Index(props) {
         }
         setSearch({ ...search, size_id: '' })
         setSize('')
+        setData('qty',operator)
     }
 
     const handleReset = () => {
@@ -95,7 +96,7 @@ export default function Index(props) {
             setData({
                 finish_quantity: 0,
                 reject_quantity: 0,
-                
+                qty:operator,
             })
         }
     }, [search])

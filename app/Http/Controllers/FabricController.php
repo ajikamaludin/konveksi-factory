@@ -55,7 +55,7 @@ class FabricController extends Controller
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
             'letter_number' => $request->letter_number,
-            'composisi_id' => $request->composisi_id,
+            'composisi' => $request->composisi_id,
             'setting_size' => $request->setting_size,
             'order_date' => $request->order_date,
         ]);
@@ -93,7 +93,7 @@ class FabricController extends Controller
             'name' => 'required|string',
             'supplier_id' => 'nullable|exists:suppliers,id',
             'letter_number' => 'nullable|string',
-            'composisi_id' => 'nullable|exists:compositions,id',
+            'composisi_id' => 'nullable|string',
             'setting_size' => 'nullable|string',
             'order_date' => 'nullable|date',
             'items' => 'required|array',
@@ -108,7 +108,7 @@ class FabricController extends Controller
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
             'letter_number' => $request->letter_number,
-            'composisi_id' => $request->composisi_id,
+            'composisi' => $request->composisi_id,
             'setting_size' => $request->setting_size,
             'order_date' => $request->order_date,
         ]);

@@ -87,7 +87,7 @@ export default function Form(props) {
             });
         }
     }, [fabric]);
-
+   
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -199,7 +199,7 @@ export default function Form(props) {
                                             </td>
                                             <td>
                                                 {
-                                                    item.detail_fabrics.reduce((sum, detail) => sum += detail.result_qty, 0) == 0?(
+                                                    item.detail_fabrics.reduce((sum, detail) => sum += detail.result_qty, 0) == 0 || item.detail_fabrics.result_qty==undefined ?(
                                                         <HiXCircle
                                                             className="w-5 h-5 text-red-600"
                                                             onClick={() => onItemRemove(index)}

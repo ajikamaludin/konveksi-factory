@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\Setting;
+use App\Models\SettingPayroll;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -89,8 +90,11 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
             // tv
             ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
-            // Finishing
-            ['id' => Str::uuid(), 'label' => 'Buat Finishing', 'name' => 'create-finishing'],
+           //Compositions
+           ['id' => Str::uuid(), 'label' => 'Buat Komposisi', 'name' => 'create-composition'],
+           ['id' => Str::uuid(), 'label' => 'Edit Komposisi', 'name' => 'update-composition'],
+           ['id' => Str::uuid(), 'label' => 'Lihat Komposisi', 'name' => 'view-composition'],
+           ['id' => Str::uuid(), 'label' => 'Hapus Komposisi', 'name' => 'delete-composition'],
         ];
 
         foreach ($permissions as $permission) {
@@ -120,5 +124,19 @@ class PermissionSeeder extends Seeder
         $setting = [];
 
         Setting::insert($setting);
+
+        $setting = SettingPayroll::first();
+        if ($setting == null) {
+            SettingPayroll::create([
+                'payroll' => '100000',
+                'workhours_sunday' => '8',
+                'workhours_monday' => '9',
+                'workhours_tuesday' => '9',
+                'workhours_wednesday' => '9',
+                'workhours_thusday' => '9',
+                'workhours_friday' => '9',
+                'workhours_saturday' => '8',
+            ]);
+        }
     }
 }

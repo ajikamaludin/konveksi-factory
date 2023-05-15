@@ -27,7 +27,7 @@ class TvController extends Controller
             foreach ($prod->items as $item) {
                 foreach ($item->results as $result) {
                     $workhours = SettingPayroll::getdays($result->input_date);
-                    $operator = Operator::where(['input_date' => $result->input_at])->orderBy('input_date', 'desc')->first()->qty;
+                    $operator = Operator::where(['input_date' => $result->input_at])->orderBy('input_date', 'desc')->first()?->qty;
                     $hourline = Carbon::parse($result->input_at)->format('H:i:s');
                     $target = $item->results[0]->finish_quantity * $workhours;
                     $linehpp = ($salary->payroll * $operator) / ($result->finish_quantity + $result->reject_quantity) * $workhours;

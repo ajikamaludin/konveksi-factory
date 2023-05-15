@@ -19,6 +19,9 @@ class LineSewingController extends Controller
         $color = null;
         $size = null;
         $item = null;
+        $operator=0;
+        
+
         if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
             $color = Color::find($request->color_id);
@@ -29,6 +32,11 @@ class LineSewingController extends Controller
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],
             ])->first();
+       
+            if (count($item->results)>0){
+                $operator = Operator::where(['input_date' => $item->results[0]['input_at']])->orderBy('input_date', 'desc')->first()?->qty;
+            }
+            
         } elseif ($request->production_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
             $size = Size::find($request->size_id);
@@ -44,6 +52,7 @@ class LineSewingController extends Controller
             '_production' => $production,
             '_color' => $color,
             '_size' => $size,
+            'operator'=>$operator,
         ]);
     }
 
