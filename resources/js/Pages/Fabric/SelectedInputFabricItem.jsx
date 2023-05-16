@@ -16,6 +16,7 @@ export default function SelectedInputFabricItem(props) {
         placeholder = '',
         error = '',
         all = 0,
+        fabric_id,
     } = props
 
     const [showItems, setShowItem] = useState([])
@@ -78,7 +79,7 @@ export default function SelectedInputFabricItem(props) {
 
     const fetch = (q = '') => {
         setLoading(true)
-        axios.get(route('api.fabric-item.index', { 'q': q, 'all': all }), {
+        axios.get(route('api.fabric-item.index', { 'q': q, 'all': all,'fabric_id':fabric_id }), {
             headers: {
                 'Content-Type': 'application/json',
             }

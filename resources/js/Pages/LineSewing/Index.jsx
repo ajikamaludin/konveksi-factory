@@ -37,6 +37,7 @@ export default function Index(props) {
             setBuyer(production?.buyer?.name)
             setProduction(production)
             setSearch({ ...search, production_id: production.id })
+            setData('qty',operator)
             return
         }
         setSearch({ ...search, production_id: '' })
@@ -48,6 +49,7 @@ export default function Index(props) {
         if (isEmpty(color) === false) {
             setColor(color)
             setSearch({ ...search, color_id: color.id })
+            setData('qty',operator)
             return
         }
         setColor('')
@@ -58,11 +60,12 @@ export default function Index(props) {
         if (isEmpty(size) === false) {
             setSize(size)
             setSearch({ ...search, size_id: size.id })
+            setData('qty',operator)
             return
         }
         setSearch({ ...search, size_id: '' })
         setSize('')
-        setData('qty',operator)
+        
     }
 
     const handleReset = () => {

@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { router,useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import ProductionSelectionInput from '../Cutting/SelectionInput';
 import RatioSelected from '../Ratio/SelectedInput'
 import FabricSelectionInput from '../Fabric/SeletedInputFabric'
+import FabricItemSelected from '../Fabric/SelectedInputFabricItem'
 import FormInput from '@/Components/FormInput';
 import { isEmpty } from 'lodash';
 import { HiOutlinePlusCircle, HiXCircle } from 'react-icons/hi';
 import Button from '@/Components/Button';
 import { usePrevious } from 'react-use';
 import { formatDate } from '@/utils';
+import Input from '@/Components/Input';
 
 
 export default function Form(props) {
@@ -22,11 +24,12 @@ export default function Form(props) {
         kode_lot: '',
         total_po: 0,
         fritter_po: 0,
-        fritter_quantity:0,
+        fritter_quantity: 0,
         items: [],
     });
     const [search, setSearch] = useState('')
     const preValue = usePrevious(search)
+    const [fabric_id, setFabricId] = useState(null);
     const [ratio_qty, setRatioQty] = useState(1)
     const handleOnChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? (event.target.checked ? 1 : 0) : event.target.value);
@@ -34,34 +37,56 @@ export default function Form(props) {
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
             // console.log(production)
-            var total_po=production.result_quantity+production.fritter_quantity
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity,fritter_quantity:production.fritter_quantity, kode_lot: data.kode_lot })
+            var total_po = production.result_quantity + production.fritter_quantity
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity, fritter_quantity: production.fritter_quantity, kode_lot: data.kode_lot })
             setSearch({ ...search, production_id: production.production_id })
             return
         } else {
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po,fritter_quantity:data.fritter_quantity })
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
             setSearch({ ...search, production_id: '' })
         }
     }
     const onSeletedFabric = (fabric) => {
         if (isEmpty(fabric) === false) {
-        
-            let items = fabric.first_item.detail_fabrics.map((detail) => {
+            setFabricId(fabric.id);
+            return
+        } else {
+            setFabricId(null);
+        }
+    }
+    const onSeletedFabricItem = (fabricItem) => {
+        if (isEmpty(fabricItem) === false) {
+            let items = fabricItem?.detail_fabrics.map((detail) => {
                 return {
                     ...detail,
                     quantity: 0,
                     total_qty: 0,
-                    fritter_item: detail.fritter,
+                    // fritter_item: detail.fritter,
+                    fritter_item: 0,
+
                 };
-
             });
-         
-            setData({ fabric_item_id: fabric.first_item.id, items: items, production_id: data.production_id, ratio_id: data.ratio_id, kode_lot: fabric.first_item.code, total_po: data.total_po, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
-            setSearch({ ...search, fabric_item_id: fabric.first_item.id })
-
+            setData({
+                fabric_item_id: fabricItem.id,
+                items: items, production_id: data.production_id,
+                ratio_id: data.ratio_id,
+                kode_lot: fabricItem.code,
+                total_po: data.total_po,
+                fritter_po: data.fritter_po,
+                fritter_quantity: data.fritter_quantity
+            })
+            setSearch({ ...search, fabric_item_id: fabricItem.id })
             return
         } else {
-            setData({ fabric_item_id: '', items: [], production_id: data.production_id, ratio_id: data.ratio_id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
+            setData({
+                fabric_item_id: '',
+                items: items, production_id: data.production_id,
+                ratio_id: data.ratio_id,
+                kode_lot: fabricItem.code,
+                total_po: data.total_po,
+                fritter_po: data.fritter_po,
+                fritter_quantity: data.fritter_quantity
+            })
             setSearch({ ...search, fabric_item_id: '' })
         }
     }
@@ -72,59 +97,90 @@ export default function Form(props) {
                 sum += val.qty, 0
             )
             setRatioQty(qtyratio)
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po ,fritter_quantity:data.fritter_quantity})
+            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
             setSearch({ ...search, ratio_id: ratio?.id })
-          
+
             return
         } else {
             setSearch({ ...search, ratio_id: '' })
-            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po,fritter_quantity:data.fritter_quantity })
+            setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
         }
     }
     const handleChangeItemValue = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
-                if (item.qty >= value&&item.fritter>=value) {
-                    item[name] = value,
-                        item['total_qty'] = value * ratio_qty,
-                        item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - value
+                if (name != 'fritter_item') {
+                    // if (data.fritter_quantity >= (parseFloat(value)) * ratio_qty) {
+                        item[name] = value,
+                            item['total_qty'] = value * ratio_qty
+                        // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - value
+                    // }
+                } else {
+                    // if (data.fritter_quantity >= (parseFloat(value))) {
+                        item[name] = value
+                    // }
                 }
             }
             return item
         }))
-        SubstractPO();
+        SubstractPO(name,index,value);
     }
-    
+
 
     const addQuantity = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
-                if (item.qty > value || item.fritter>= value) {
-                    item[name] = parseFloat(value) + 1,
-                        item['total_qty'] = (parseFloat(value) + 1) * ratio_qty,
-                        item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
+                if (name != 'fritter_item') {
+                    // if (data.fritter_quantity >= (parseFloat(value) + 1) * ratio_qty) {
+                        item[name] = parseFloat(value) + 1,
+                            item['total_qty'] = (parseFloat(value) + 1) * ratio_qty
+                        // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
+                    // }
+                } else {
+                    item[name] = parseFloat(value) + 1
                 }
+
             }
             return item
         }))
-        SubstractPO();
+            SubstractPO(name,index,value);
+        
     }
-    const SubstractPO = () => {
+    const SubstractPO = (name,index,value) => {
         const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0);
-        let fritter_quantity=parseFloat(data.fritter_po)-parseFloat(qty);
-       
-        setData('fritter_quantity', fritter_quantity.toFixed(2))
+        const friter_qty = data.items.reduce((qty, item) => qty += item.fritter_item, 0);
+        let fritter_quantity = parseFloat(data.fritter_po) - parseFloat(qty)-parseFloat(friter_qty);
+        if (fritter_quantity>=0){
+            setData('fritter_quantity', fritter_quantity.toFixed(2))
+        }else{
+            setData("items", data.items.map((item, i) => {
+                if (i === index) {
+                    if (name != 'fritter_item') {
+                        // if (data.fritter_quantity >= (parseFloat(value) + 1) * ratio_qty) {
+                            item[name] = parseFloat(value) - 1,
+                                item['total_qty'] = (parseFloat(value) - 1) * ratio_qty
+                            // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
+                        // }
+                    } else {
+                        item[name] = parseFloat(value) - 1
+                    }
+    
+                }
+                return item
+            }))
+        }
+        
     }
-     const handleReset = () => {
+    const handleReset = () => {
         reset()
-       
+
     }
     const handleSubmit = () => {
         post(route('user-cutting.store'), {
             // onSuccess: () => handleReset()
         })
     }
-  
+
 
     useEffect(() => {
         if (preValue) {
@@ -136,10 +192,10 @@ export default function Form(props) {
                     preserveState: true,
                 }
             )
-            
+
         }
     }, [search])
-   
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -169,14 +225,23 @@ export default function Form(props) {
                                     error={errors.fabric_item_id}
                                 />
                             </div>
-                            <FormInput
+                            {/* <FormInput
                                 name="kode_lot"
                                 value={data.kode_lot}
                                 onChange={handleOnChange}
                                 label="Kode Lot"
                                 readOnly={true}
                                 error={errors.kode_lot}
-                            />
+                            /> */}
+                            <div className='border-r-2 px-2'>
+                                <FabricItemSelected
+                                    label="Kode Lot"
+                                    fabric_id={fabric_id}
+                                    itemSelected={data.fabric_item_id}
+                                    onItemSelected={(fabric) => onSeletedFabricItem(fabric)}
+                                    error={errors.fabric_item_id}
+                                />
+                            </div>
                             <div className='border-r-2 px-2'>
                                 <RatioSelected
                                     label="Ratio"
@@ -252,9 +317,11 @@ export default function Form(props) {
                                                             />
                                                         </td>
                                                         <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                                            <FormInput
-                                                                value={item?.fritter_item.toFixed(2)}
-                                                                readOnly={true}
+                                                            <Input
+                                                                name="fritter_item"
+                                                                type="number"
+                                                                value={item?.fritter_item}
+                                                                onChange={e => handleChangeItemValue("fritter_item", e.target.value, index)}
                                                             />
                                                         </td>
                                                     </tr>
@@ -281,7 +348,7 @@ export default function Form(props) {
                                 Simpan
                             </Button>
                         </div>
-                        {userCutting?.length>0 && (<>
+                        {userCutting?.length > 0 && (<>
                             <div className='border-2 rounded-lg p-2 w-full overflow-y-auto'>
                                 <label className='text-lg ml-2'>Hasil</label>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
@@ -321,7 +388,7 @@ export default function Form(props) {
                                                     </td>
                                                     <td className="py-4 px-6">
                                                         {
-                                                            val?.user_cutting_item[val?.user_cutting_item.length-1]?.fritter
+                                                            val?.user_cutting_item[val?.user_cutting_item.length - 1]?.fritter
                                                         }
                                                     </td>
                                                 </tr>

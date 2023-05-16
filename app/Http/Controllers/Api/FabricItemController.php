@@ -16,12 +16,16 @@ class FabricItemController extends Controller
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
+        if ($request->fabric_id){
+            // dd($request->fabric_id)
+            $query->where('fabric_id',$request->fabric_id);
+        }
 
         return $query->orderBy('created_at', 'desc')->get();
     }
     public function fabric(Request $request)
     {
-        $query = Fabric::query()->with('first_item.detailFabrics');
+        $query = Fabric::query()->with('fabricItems.detailFabrics');
         
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");

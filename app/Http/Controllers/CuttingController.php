@@ -190,8 +190,8 @@ class CuttingController extends Controller
         $sizes = ['', '', '', ''];
         $space = ['User', 'Lot', 'Kain', 'Hasil Cutting'];
         if ($ratios != null) {
-            foreach ($ratios->detailsRatio as $ratio) {
-                array_push($sizes, $ratio->size->name);
+            foreach ($ratios?->detailsRatio as $ratio) {
+                array_push($sizes, $ratio?->size?->name);
                 array_push($space, '');
             }
         }
@@ -224,31 +224,31 @@ class CuttingController extends Controller
                 $count++;
                 $items = [
                     $item?->creator?->name,
-                    $fabricItem->code, $item->qty_fabric,
+                    $fabricItem?->code, $item?->qty_fabric,
                     '',
                 ];
 
                 foreach ($ratios->detailsRatio as $ratio) {
                     array_push(
                         $items,
-                        $item->qty_sheet * $ratio->qty
+                        $item?->qty_sheet * $ratio?->qty
                     );
                     $detail = [
-                        $item->qty,
-                        $item->qty_fabric / $item->qty,
+                        $item?->qty,
+                        $item?->qty_fabric / $item?->qty,
                     ];
                 }
                 $total_cutting += $item->qty_sheet;
                 $s = array_merge($items, $detail);
                 $exports[] = $s;
-                $total_kain += $item->qty_fabric;
-                $total_qty += $item->qty;
-                $total_konsumsi +=$item->qty_fabric / $item->qty;
+                $total_kain += $item?->qty_fabric;
+                $total_qty += $item?->qty;
+                $total_konsumsi +=$item?->qty_fabric / $item?->qty;
             }
         }
         if ($ratios != null) {
             foreach ($ratios->detailsRatio as $ratio) {
-                array_push($arrcutting, $total_cutting * $ratio->qty);
+                array_push($arrcutting, $total_cutting * $ratio?->qty);
             }
         }
         $t = [
@@ -272,7 +272,7 @@ class CuttingController extends Controller
             array_push($arrsisa, $val->qty - $substract);
             
         }
-        $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting->fritter_quantity]);
+        $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting?->fritter_quantity]);
         $exports[] = $sisa;
 
         $now = now()->format('d-m-Y');
