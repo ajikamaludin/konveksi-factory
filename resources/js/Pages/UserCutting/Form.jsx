@@ -13,6 +13,7 @@ import Button from '@/Components/Button';
 import { usePrevious } from 'react-use';
 import { formatDate } from '@/utils';
 import Input from '@/Components/Input';
+import { toast } from "react-toastify";
 
 
 export default function Form(props) {
@@ -153,13 +154,14 @@ export default function Form(props) {
         if (fritter_quantity>=0){
             setData('fritter_quantity', fritter_quantity.toFixed(2))
         }else{
+            toast.error('Periksa kembali data anda..,Jumlah Sisa PO sudah Habis')
             setData("items", data.items.map((item, i) => {
                 if (i === index) {
                     if (name != 'fritter_item') {
                         // if (data.fritter_quantity >= (parseFloat(value) + 1) * ratio_qty) {
-                            item[name] = parseFloat(value) - 1,
-                                item['total_qty'] = (parseFloat(value) - 1) * ratio_qty
-                            // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
+                            item[name] = value,
+                                item['total_qty'] = value*ratio_qty
+                           
                         // }
                     } else {
                         item[name] = parseFloat(value) - 1
@@ -225,14 +227,7 @@ export default function Form(props) {
                                     error={errors.fabric_item_id}
                                 />
                             </div>
-                            {/* <FormInput
-                                name="kode_lot"
-                                value={data.kode_lot}
-                                onChange={handleOnChange}
-                                label="Kode Lot"
-                                readOnly={true}
-                                error={errors.kode_lot}
-                            /> */}
+                          
                             <div className='border-r-2 px-2'>
                                 <FabricItemSelected
                                     label="Kode Lot"
