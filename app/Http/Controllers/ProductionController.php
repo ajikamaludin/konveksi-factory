@@ -198,7 +198,7 @@ class ProductionController extends Controller
             foreach ($item->results as $result) {
 
                 $workhours = SettingPayroll::getdays($result->input_date);
-                $operator = Operator::where(['input_date' => $result->input_at])->first();
+                $operator = Operator::whereDate('input_date' ,'=' ,$result->input_at)->first();
                 $linehpp = ($salary->payroll * $operator->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
                 $exports[] = [
                     $result->creator->name,

@@ -32,10 +32,7 @@ class LineSewingController extends Controller
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],
             ])->first();
-       
-            if (count($item->results)>0){
-                $operator = Operator::where(['input_date' => $item->results[0]['input_at']])->orderBy('input_date', 'desc')->first()?->qty;
-            }
+           
             
         } elseif ($request->production_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
@@ -46,7 +43,10 @@ class LineSewingController extends Controller
                 ['size_id', '=', $request->size_id],
             ])->first();
         }
-
+        $dataNow=date('Y-m-d');
+       
+            $operator = Operator::whereDate('input_date','=',$dataNow)->orderBy('input_date', 'desc')->first()?->qty;
+        
         return inertia('LineSewing/Index', [
             'item' => $item,
             '_production' => $production,
@@ -67,7 +67,7 @@ class LineSewingController extends Controller
         $qtyinput = $request->finish_quantity + $request->reject_quantity;
         $lastqty = $item->target_quantity - $item->finish_quantity + $item->reject_quantity;
         if ($qtyinput <= $lastqty) {
-            $date = Carbon::now()->toDateString();
+            $date = date('Y-m-d');
             $item->update([
                 'lock' => 1,
                 'finish_quantity' => $item->finish_quantity + $request->finish_quantity,
@@ -79,7 +79,7 @@ class LineSewingController extends Controller
                 'finish_quantity' => $request->finish_quantity,
                 'reject_quantity' => $request->reject_quantity,
             ]);
-            Operator::where('input_date', $date)->updateOrCreate([
+            Operator::whereDate('input_date', $date)->updateOrCreate([
                 'qty' => $request->qty,
                 'input_date' => $resultItem->input_at,
 

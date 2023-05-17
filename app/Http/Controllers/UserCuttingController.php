@@ -92,6 +92,9 @@ class UserCuttingController extends Controller
                 ]);
             }
         }
+        if ($result_quantity==0){
+            $result_quantity=1;
+        }
         $consumsion = $total_qty / $result_quantity;
         Cutting::where('production_id', $request->production_id)->update([
             'result_quantity' => $result_quantity,

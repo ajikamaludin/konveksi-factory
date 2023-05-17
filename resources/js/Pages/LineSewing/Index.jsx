@@ -17,7 +17,7 @@ export default function Index(props) {
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         finish_quantity: 0,
         reject_quantity: 0,
-        qty: 0,
+        qty: operator,
     })
 
     const handleOnChange = (event) => {
@@ -103,7 +103,7 @@ export default function Index(props) {
             })
         }
     }, [search])
-
+console.log(data)
     return (
         <AuthenticatedLayout
             auth={props.auth}
