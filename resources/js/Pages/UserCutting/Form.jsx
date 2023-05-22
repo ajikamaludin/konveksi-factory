@@ -67,6 +67,7 @@ export default function Form(props) {
 
                 };
             });
+            
             setData({
                 fabric_item_id: fabricItem.id,
                 items: items, production_id: data.production_id,
@@ -98,7 +99,15 @@ export default function Form(props) {
                 sum += val.qty, 0
             )
             setRatioQty(qtyratio)
-            setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
+            let detail=data.items.map((item, i) => {
+                return{
+                    ...item,
+                    quantity:0,
+                    total_qty:0
+                }
+                })
+            setData({ fabric_item_id: data.fabric_item_id, items:detail, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
+            // resetQty()
             setSearch({ ...search, ratio_id: ratio?.id })
 
             return
@@ -106,6 +115,11 @@ export default function Form(props) {
             setSearch({ ...search, ratio_id: '' })
             setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
         }
+    }
+    const resetQty=()=>{
+       
+        setData('items',detail)
+     
     }
     const handleChangeItemValue = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
@@ -179,7 +193,7 @@ export default function Form(props) {
     }
     const handleSubmit = () => {
         post(route('user-cutting.store'), {
-            // onSuccess: () => handleReset()
+            onSuccess: () => resetQty()
         })
     }
 
