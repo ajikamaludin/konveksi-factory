@@ -121,7 +121,7 @@ export default function Index(props) {
                                                 {cutting.fritter_quantity}
                                                 </td>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {parseFloat(cutting.consumsion).toFixed(2)}
+                                                    {parseFloat(cutting.consumsion).toFixed(3)}
                                                 </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown

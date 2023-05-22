@@ -17,7 +17,7 @@ class FabricController extends Controller
                 $join->on('fabric_item_id', '=', 'fabric_items.id');
                 $join->whereNull('detail_fabrics.deleted_at');
             })
-            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(qty) -sum(detail_fabrics.result_qty) as fritter_qty'),DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(fritter) as fritter_qty'),DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }

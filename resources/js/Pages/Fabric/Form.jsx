@@ -75,7 +75,7 @@ export default function Form(props) {
 
     useEffect(() => {
         if (isEmpty(fabric) === false) {
-            // console.log(fabric);
+           
             setData({
                 name: fabric.name,
                 order_date: fabric.order_date,

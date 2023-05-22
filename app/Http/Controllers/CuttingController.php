@@ -55,9 +55,9 @@ class CuttingController extends Controller
             'name' => $request->name,
             'deadline' => $request->deadline,
         ]);
-        $fritter_quantity=0;
+        $fritter_quantity = 0;
         foreach ($request->items as $item) {
-            $fritter_quantity=$fritter_quantity+$item['qty'];
+            $fritter_quantity = $fritter_quantity + $item['qty'];
         }
 
         $cutting = $production->cuttings()->create([
@@ -67,7 +67,7 @@ class CuttingController extends Controller
             'style' => $request->style,
             'name' => $request->name,
             'deadline' => $request->deadline,
-            'fritter_quantity'=>$fritter_quantity
+            'fritter_quantity' => $fritter_quantity
         ]);
 
         foreach ($request->items as $item) {
@@ -111,8 +111,8 @@ class CuttingController extends Controller
             'items.*.color_id' => 'required|exists:colors,id',
             'items.*.qty' => 'required|numeric',
         ]);
-       
-        $production=Production::find($cutting->production_id)->load('items');
+
+        $production = Production::find($cutting->production_id)->load('items');
         DB::beginTransaction();
         $production->update([
             'buyer_id' => $request->buyer_id,
@@ -123,16 +123,16 @@ class CuttingController extends Controller
             'deadline' => $request->deadline,
         ]);
         $production->items()->where('lock', 0)->delete();
-        $cutting->cuttingItems()->where('lock','0')->delete();
-        $fritter_quantity=0;
+        $cutting->cuttingItems()->where('lock', '0')->delete();
+        $fritter_quantity = 0;
         foreach ($request->items as $item) {
-           
-            $fritter_quantity=$fritter_quantity+$item['qty'];
+
+            $fritter_quantity = $fritter_quantity + $item['qty'];
         }
-        if ($cutting->result_quantity>0){
-            $fritter_quantity=$fritter_quantity-$cutting->result_quantity;
+        if ($cutting->result_quantity > 0) {
+            $fritter_quantity = $fritter_quantity - $cutting->result_quantity;
         }
-      
+
         $cutting->update([
             'buyer_id' => $request->buyer_id,
             'brand_id' => $request->brand_id,
@@ -140,22 +140,21 @@ class CuttingController extends Controller
             'style' => $request->style,
             'name' => $request->name,
             'deadline' => $request->deadline,
-            'fritter_quantity'=>$fritter_quantity
+            'fritter_quantity' => $fritter_quantity
         ]);
-       
+
         foreach ($request->items as $item) {
             $cutting->cuttingItems()->create([
                 'size_id' => $item['size_id'],
                 'color_id' => $item['color_id'],
                 'qty' => $item['qty'],
             ]);
-    
+
             $production->items()->create([
                 'size_id' => $item['size_id'],
                 'color_id' => $item['color_id'],
                 'target_quantity' => $item['qty'],
             ]);
-            
         }
 
         DB::commit();
@@ -182,11 +181,9 @@ class CuttingController extends Controller
 
     public function export(Cutting $cutting)
     {
-        $userCutting = UserCutting::with('userCuttingItem.creator')->where('artikel_id', $cutting?->production_id)->first();
-
-        $fabricItem = FabricItem::where('id', $userCutting?->fabric_item_id)->first();
-        $supplier = Fabric::with('supplier')->where('id', $fabricItem?->fabric_id)->first();
-        $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting?->ratio_id)->first();
+        $userCutting = UserCutting::with('userCuttingItem.creator', 'userCuttingItem.fabricItem')->where('artikel_id', $cutting?->production_id)->get();
+        $supplier = Fabric::with('supplier')->where('id', $userCutting[0]?->fabric_item_id)->first();
+        $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting[0]?->ratio_id)->first();
         $sizes = ['', '', '', ''];
         $space = ['User', 'Lot', 'Kain', 'Hasil Cutting'];
         if ($ratios != null) {
@@ -195,9 +192,10 @@ class CuttingController extends Controller
                 array_push($space, '');
             }
         }
+     
         array_push($space, 'Total', 'Konsumsi');
         $exports = [
-            ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand', 'Supplier Kain'],
+            ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand', 'Supplier Kain', 'Total PO'],
             [
                 $cutting?->style,
                 $cutting?->name,
@@ -206,6 +204,7 @@ class CuttingController extends Controller
                 $cutting?->material?->name,
                 $cutting?->brand?->name,
                 $supplier?->supplier?->name,
+                $cutting?->fritter_quantity + $cutting->result_quantity,
             ],
             [],
             [],
@@ -220,31 +219,34 @@ class CuttingController extends Controller
         $total_cutting = 0;
         $count = 0;
         if ($userCutting != null) {
-            foreach ($userCutting->userCuttingItem as $item) {
-                $count++;
-                $items = [
-                    $item?->creator?->name,
-                    $fabricItem?->code, $item?->qty_fabric,
-                    '',
-                ];
-
-                foreach ($ratios->detailsRatio as $ratio) {
-                    array_push(
-                        $items,
-                        $item?->qty_sheet * $ratio?->qty
-                    );
-                    $detail = [
-                        $item?->qty,
-                        $item?->qty_fabric / $item?->qty,
+            foreach ($userCutting as $detail) {
+                foreach ($detail->userCuttingItem as $item) {
+                    $count++;
+                   
+                    $items = [
+                        $item?->creator?->name,
+                        $item?->fabricItem->code, $item?->qty_fabric,
+                        '',
                     ];
+                    foreach ($ratios->detailsRatio as $ratio) {
+                        array_push(
+                            $items,
+                            $item?->qty_sheet * $ratio?->qty
+                        );
+                        $detail = [
+                            $item?->qty,
+                            $item?->qty_fabric / $item?->qty,
+                        ];
+                    }
+                    $total_cutting += $item->qty_sheet;
+                    $s = array_merge($items, $detail);
+                    $exports[] = $s;
+                    $total_kain += $item?->qty_fabric;
+                    $total_qty += $item?->qty;
+                    $total_konsumsi += $item?->qty_fabric / $item?->qty;
                 }
-                $total_cutting += $item->qty_sheet;
-                $s = array_merge($items, $detail);
-                $exports[] = $s;
-                $total_kain += $item?->qty_fabric;
-                $total_qty += $item?->qty;
-                $total_konsumsi +=$item?->qty_fabric / $item?->qty;
             }
+          
         }
         if ($ratios != null) {
             foreach ($ratios->detailsRatio as $ratio) {
@@ -260,17 +262,17 @@ class CuttingController extends Controller
         if ($count == 0) {
             $count = 1;
         }
+       
         $a = array_merge($t, $arrcutting, [$total_qty, $total_konsumsi / $count]);
         $exports[] = $a;
         $arrsisa = [];
-       
+
         foreach ($cutting->cuttingItems as $index => $val) {
-            $substract=0;
-            if(count($arrcutting)){
-                $substract=$arrcutting[$index];
+            $substract = 0;
+            if (count($arrcutting)) {
+                $substract = $arrcutting[$index];
             }
             array_push($arrsisa, $val->qty - $substract);
-            
         }
         $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting?->fritter_quantity]);
         $exports[] = $sisa;

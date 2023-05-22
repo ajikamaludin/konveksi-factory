@@ -103,7 +103,7 @@ export default function Index(props) {
             })
         }
     }, [search])
-console.log(data)
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
