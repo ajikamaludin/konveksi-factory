@@ -125,7 +125,7 @@ Route::middleware(['auth'])->group(function () {
 
     // User Cutting
     Route::get('/user-cuttings', [UserCuttingController::class, 'index'])->name('user-cutting.index');
-    Route::post('/user-cuttings', [UserCuttingController::class, 'store'])->name('user-cutting.store');
+    Route::post('/user-cuttings/{cutting}', [UserCuttingController::class, 'store'])->name('user-cutting.store');
 
     //Setting Payroll
     Route::get('/settings', [PayrollController::class, 'index'])->name('setting.index');

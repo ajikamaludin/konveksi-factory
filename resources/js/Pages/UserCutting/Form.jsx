@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 
 
 export default function Form(props) {
-    const { userCutting } = props
+    const { userCutting,cutting } = props
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         ratio_id: '',
         production_id: '',
@@ -30,22 +30,25 @@ export default function Form(props) {
     });
     const [search, setSearch] = useState('')
     const preValue = usePrevious(search)
+   
     const [fabric_id, setFabricId] = useState(null);
     const [ratio_qty, setRatioQty] = useState(1)
     const handleOnChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? (event.target.checked ? 1 : 0) : event.target.value);
     }
+    
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
-           
+          
             var total_po = production.result_quantity + production.fritter_quantity
+           
+           
             setData({ fabric_item_id: data.fabric_item_id, items: data.items, production_id: production?.production_id, ratio_id: data.ratio_id, total_po: total_po, fritter_po: production?.fritter_quantity, fritter_quantity: production.fritter_quantity, kode_lot: data.kode_lot })
-            setSearch({ ...search, production_id: production.production_id })
-            
+            setSearch({ ...search, production_id: production.production_id,cutting_id:production.id })
             return
         } else {
             setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: '', ratio_id: data.ratio_id, total_po: 0, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
-            setSearch({ ...search, production_id: '' })
+            setSearch({ ...search, production_id: '',cutting_id:'' })
         }
     }
     const onSeletedFabric = (fabric) => {
@@ -108,7 +111,7 @@ export default function Form(props) {
                 }
                 })
             setData({ fabric_item_id: data.fabric_item_id, items:detail, production_id: data.production_id, ratio_id: ratio.id, total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
-            // resetQty()
+          
             setSearch({ ...search, ratio_id: ratio?.id })
 
             return
@@ -116,6 +119,7 @@ export default function Form(props) {
             setSearch({ ...search, ratio_id: '' })
             setData({ fabric_item_id: data.fabric_item_id, items: [], production_id: data.production_id, ratio_id: '', total_po: data.total_po, kode_lot: data.kode_lot, fritter_po: data.fritter_po, fritter_quantity: data.fritter_quantity })
         }
+      
     }
     const resetQty=()=>{
         let detail=data.items.map((item, i) => {
@@ -126,9 +130,8 @@ export default function Form(props) {
             }
             })
         setData('items',detail)
-       
-     
     }
+    
     const handleChangeItemValue = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
@@ -172,7 +175,13 @@ export default function Form(props) {
     const SubstractPO = (name,index,value) => {
         const qty = data.items.reduce((qty, item) => qty += item.total_qty, 0);
         const friter_qty = data.items.reduce((qty, item) => qty += item.fritter_item, 0);
-        let fritter_quantity = parseFloat(data.fritter_po) - parseFloat(qty);
+        let fritter_po=0;
+        if(isEmpty(cutting)===false){
+            fritter_po=cutting.fritter_quantity;
+        }else{
+            fritter_po=data.fritter_po
+        }
+        let fritter_quantity = parseFloat(fritter_po) - parseFloat(qty);
         if (fritter_quantity>=0){
             setData('fritter_quantity', fritter_quantity.toFixed(2))
         }else{
@@ -200,11 +209,19 @@ export default function Form(props) {
     }
     
     const handleSubmit = () => {
-        post(route('user-cutting.store'), {
+       
+        post(route('user-cutting.store',cutting), {
             onSuccess: () => resetQty()
         })
     }
-
+const onLoadFritter_po=()=>{
+   
+    if (cutting!=null){
+        setData('fritter_quantity', cutting.fritter_quantity.toFixed(2))
+    }
+    
+   
+}
 
     useEffect(() => {
         if (preValue) {
@@ -216,7 +233,7 @@ export default function Form(props) {
                     preserveState: true,
                 }
             )
-            SubstractPO('','','');
+            onLoadFritter_po();
            
         }
     }, [search])

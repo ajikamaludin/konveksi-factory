@@ -8,6 +8,7 @@ class UserCutting extends Model
         'fabric_item_id',
         'artikel_id',
         'ratio_id',
+        'cutting_id'
     ];
 
     public function userCuttingItem()
