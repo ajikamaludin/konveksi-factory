@@ -8,6 +8,7 @@ use App\Models\Production;
 use App\Models\ProductionItemResult;
 use App\Models\SettingPayroll;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -198,7 +199,7 @@ class ProductionController extends Controller
             foreach ($item->results as $result) {
 
                 $workhours = SettingPayroll::getdays($result->input_date);
-                $operator = Operator::whereDate('input_date' ,'=' ,$result->input_at)->first();
+                $operator = Operator::whereDate('input_date', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
                 $linehpp = ($salary->payroll * $operator->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
                 $exports[] = [
                     $result->creator->name,
@@ -213,7 +214,6 @@ class ProductionController extends Controller
                 $hpp += $linehpp;
                 $count++;
             }
-
         }
 
         $exports[] = [
