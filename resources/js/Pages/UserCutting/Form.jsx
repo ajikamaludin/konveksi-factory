@@ -67,11 +67,11 @@ export default function Form(props) {
                     quantity: 0,
                     total_qty: 0,
                     // fritter_item: detail.fritter,
-                    fritter_item: 0,
+                    fritter_item: detail.fritter,
 
                 };
             });
-           
+        //    console.log(items);
             setData({
                 fabric_item_id: fabricItem.fabric_id,
                 items: items, production_id: data.production_id,
@@ -129,7 +129,8 @@ export default function Form(props) {
                 total_qty:0
             }
             })
-        setData('items',detail)
+        setData('items',detail);
+        // onLoadFritter_po();
     }
     
     const handleChangeItemValue = (name, value, index) => {
@@ -138,7 +139,7 @@ export default function Form(props) {
                 if (name != 'fritter_item') {
                     // if (data.fritter_quantity >= (parseFloat(value)) * ratio_qty) {
                         item[name] = value,
-                            item['total_qty'] = value * ratio_qty
+                        item['total_qty'] = value * ratio_qty
                         // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - value
                     // }
                 } else {
@@ -159,7 +160,7 @@ export default function Form(props) {
                 if (name != 'fritter_item') {
                     // if (data.fritter_quantity >= (parseFloat(value) + 1) * ratio_qty) {
                         item[name] = parseFloat(value) + 1,
-                            item['total_qty'] = (parseFloat(value) + 1) * ratio_qty
+                        item['total_qty'] = (parseFloat(value) + 1) * ratio_qty
                         // item['fritter_item'] = parseFloat(item.fritter).toFixed(2) - (parseFloat(value) + 1).toFixed(2)
                     // }
                 } else {
@@ -352,10 +353,13 @@ const onLoadFritter_po=()=>{
                                                             />
                                                         </td>
                                                         <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                                            <Input
+                                                            <input
+                                                             className={'`mb-2 bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700  dark:placeholder-gray-400 dark:text-white'}
                                                                 name="fritter_item"
                                                                 type="number"
                                                                 value={item?.fritter_item}
+                                                                max={item?.fritter}
+                                                                min="0"
                                                                 onChange={e => handleChangeItemValue("fritter_item", e.target.value, index)}
                                                             />
                                                         </td>

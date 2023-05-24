@@ -46,9 +46,9 @@ class UserCuttingController extends Controller
             // 'items.*.detail_fabric' => 'required|array',
             // 'items.*.detail_fabric.id' => 'required|exists:detail_fabrics,id',
         ]);
-
+        $cutting_id=$cutting->id;
         $userCutting = UserCutting::with('userCuttingItem.creator')->where([
-            ['cutting_id', '=', $cutting->id],
+            ['cutting_id', '=', $cutting_id],
         ])->get();
         DB::beginTransaction();
         try {
@@ -71,10 +71,11 @@ class UserCuttingController extends Controller
                     }
                 }
             } else {
-                $total_po = $request->result_quantity;
+                $total_po = $request->fritter_quantity;
             }
-
+           
             foreach ($request->items as $item) {
+                // dd( $item['total_qty'],$request,$total_po);
                 $result_quantity = $item['total_qty'] + $result_quantity;
                 $qty_fabric = $item['qty'];
                 $total_po = $total_po - $item['total_qty'];
@@ -83,7 +84,7 @@ class UserCuttingController extends Controller
                         'qty_fabric' => $qty_fabric,
                         'qty_sheet' => $item['quantity'],
                         'qty' => $item['total_qty'],
-                        'fritter' => $total_po,
+                        'fritter' => $request->fritter_quantity,
                         'lock' => 1,
                         'fabric_item_id' => $item['fabric_item_id']
                     ]);
@@ -102,16 +103,11 @@ class UserCuttingController extends Controller
             }
 
             $consumsion = $total_qty / $result_quantity;
-            //  $cutting->update([
-            //     'result_quantity' => $result_quantity,
-            //     'fritter_quantity' => $total_po,
-            //     'consumsion' => $consumsion,
-            //     'lock' => '1',
-            // ]);
            
-            Cutting::where('id', $cutting->cutting_id)->update([
+           
+            Cutting::where('id', $cutting_id)->update([
                 'result_quantity' => $result_quantity,
-                'fritter_quantity' => $total_po,
+                'fritter_quantity' => $request->fritter_quantity,
                 'consumsion' => $consumsion,
                 'lock' => '1',
             ]);
