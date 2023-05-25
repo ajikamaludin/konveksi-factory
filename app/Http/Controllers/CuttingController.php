@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cutting;
+use App\Models\DetailRatio;
 use App\Models\Fabric;
 use App\Models\FabricItem;
 use App\Models\Production;
@@ -13,6 +14,8 @@ use App\Models\UserCutting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
+
+use function PHPUnit\Framework\isEmpty;
 
 class CuttingController extends Controller
 {
@@ -182,17 +185,18 @@ class CuttingController extends Controller
     public function export(Cutting $cutting)
     {
         $userCutting = UserCutting::with('userCuttingItem.creator', 'userCuttingItem.fabricItem')->where('artikel_id', $cutting?->production_id)->get();
-        $supplier = Fabric::with('supplier')->where('id', $userCutting[0]?->fabric_item_id)->first();
+        $supplier = Fabric::with('supplier', 'fabricItems.detailFabrics')->where('id', $userCutting[0]?->fabric_item_id)->first();
         $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting[0]?->ratio_id)->first();
-        $sizes = ['', '', '', ''];
+        $sizes = ['', '', '',''];
         $space = ['User', 'Lot', 'Kain', 'Hasil Cutting'];
-        if ($ratios != null) {
-            foreach ($ratios?->detailsRatio as $ratio) {
-                array_push($sizes, $ratio?->size?->name);
-                array_push($space, '');
-            }
+
+        $qty = 0;
+
+        foreach ($cutting->cuttingItems as $item) {
+            array_push($sizes, $item->size['name']);
+            array_push($space, '');
         }
-     
+
         array_push($space, 'Total', 'Konsumsi');
         $exports = [
             ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand', 'Supplier Kain', 'Total PO'],
@@ -218,26 +222,47 @@ class CuttingController extends Controller
         $total_qty = 0;
         $total_cutting = 0;
         $count = 0;
+
         if ($userCutting != null) {
             foreach ($userCutting as $detail) {
+                $ratio_id=$detail['ratio_id'];
                 foreach ($detail->userCuttingItem as $item) {
                     $count++;
-                   
                     $items = [
                         $item?->creator?->name,
-                        $item?->fabricItem->code, $item?->qty_fabric,
-                        '',
+                        $item?->fabricItem->code, $item?->qty_fabric,''
+                        
                     ];
-                    foreach ($ratios->detailsRatio as $ratio) {
+                   
+                    // foreach ($ratios->detailsRatio as $ratio) {
+                    //     array_push(
+                    //         $items,
+                    //         $item?->qty_sheet * $ratio?->qty
+                    //     );
+                    //     $detail = [
+                    //         $item?->qty,
+                    //         $item?->qty_fabric / $item?->qty,
+                    //     ];
+                    // }
+                    foreach ($cutting->cuttingItems as $cuttingitem) {
+                      
+                        $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
+                        if ($detailRatio == null) {
+                            $qty=0;
+                        }else{
+                            $qty=$detailRatio->qty;
+                        }
                         array_push(
                             $items,
-                            $item?->qty_sheet * $ratio?->qty
+                            $item?->qty_sheet * $qty
                         );
                         $detail = [
                             $item?->qty,
                             $item?->qty_fabric / $item?->qty,
                         ];
                     }
+
+
                     $total_cutting += $item->qty_sheet;
                     $s = array_merge($items, $detail);
                     $exports[] = $s;
@@ -246,11 +271,11 @@ class CuttingController extends Controller
                     $total_konsumsi += $item?->qty_fabric / $item?->qty;
                 }
             }
-          
         }
+       
         if ($ratios != null) {
             foreach ($ratios->detailsRatio as $ratio) {
-                array_push($arrcutting, $total_cutting * $ratio?->qty);
+                // array_push($arrcutting, $total_cutting * $ratio?->qty);
             }
         }
         $t = [
@@ -262,7 +287,7 @@ class CuttingController extends Controller
         if ($count == 0) {
             $count = 1;
         }
-       
+
         $a = array_merge($t, $arrcutting, [$total_qty, $total_konsumsi / $count]);
         $exports[] = $a;
         $arrsisa = [];
@@ -276,9 +301,9 @@ class CuttingController extends Controller
         }
         $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting?->fritter_quantity]);
         $exports[] = $sisa;
-
-        $now = now()->format('d-m-Y');
        
+        $now = now()->format('d-m-Y');
+
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");
