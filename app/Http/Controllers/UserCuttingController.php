@@ -46,6 +46,7 @@ class UserCuttingController extends Controller
             // 'items.*.detail_fabric' => 'required|array',
             // 'items.*.detail_fabric.id' => 'required|exists:detail_fabrics,id',
         ]);
+      
         $cutting_id=$cutting->id;
         $userCutting = UserCutting::with('userCuttingItem.creator')->where([
             ['cutting_id', '=', $cutting_id],
@@ -89,14 +90,11 @@ class UserCuttingController extends Controller
                         'fabric_item_id' => $item['fabric_item_id']
                     ]);
                     $total_qty = $total_qty + $qty_fabric;
-
-                    if ($item['result_qty'] > 0) {
-                        DetailFabric::where('id', $item['id'])->update([
-                            'fritter' => $item['fritter'] - $item['fritter_item'],
-                            'result_qty' => $item['quantity'] + $item['result_qty']
-                        ]);
-                    }
                 }
+                DetailFabric::where('id', $item['id'])->update([
+                    'fritter' => $item['fritter_item'],
+                    'result_qty' => $item['quantity'] + $item['result_qty']
+                ]);
             }
             if ($result_quantity == 0) {
                 $result_quantity = 1;

@@ -11,7 +11,7 @@ class CuttingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cutting::query()->with(['buyer']);
+        $query = Cutting::query()->with(['buyer','cuttingItems.size']);
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%")

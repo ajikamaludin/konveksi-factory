@@ -17,8 +17,11 @@ class FabricItemController extends Controller
             $query->where('name', 'like', "%{$request->q}%");
         }
         if ($request->fabric_id){
-            // dd($request->fabric_id)
             $query->where('fabric_id',$request->fabric_id);
+        }
+
+        if($request->fabric_item_id){
+            $query->where('id',$request->fabric_item_id);
         }
 
         return $query->orderBy('created_at', 'desc')->get();
