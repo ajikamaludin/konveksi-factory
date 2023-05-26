@@ -230,20 +230,11 @@ class CuttingController extends Controller
                     $count++;
                     $items = [
                         $item?->creator?->name,
-                        $item?->fabricItem->code, $item?->qty_fabric,''
+                        $item?->fabricItem?->code, $item?->qty_fabric,'',
                         
                     ];
                    
-                    // foreach ($ratios->detailsRatio as $ratio) {
-                    //     array_push(
-                    //         $items,
-                    //         $item?->qty_sheet * $ratio?->qty
-                    //     );
-                    //     $detail = [
-                    //         $item?->qty,
-                    //         $item?->qty_fabric / $item?->qty,
-                    //     ];
-                    // }
+                   
                     foreach ($cutting->cuttingItems as $cuttingitem) {
                       
                         $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
@@ -273,10 +264,19 @@ class CuttingController extends Controller
             }
         }
        
-        if ($ratios != null) {
-            foreach ($ratios->detailsRatio as $ratio) {
-                // array_push($arrcutting, $total_cutting * $ratio?->qty);
+        // if ($ratios != null) {
+        //     foreach ($ratios->detailsRatio as $ratio) {
+        //         // array_push($arrcutting, $total_cutting * $ratio?->qty);
+        //     }
+        // }
+        foreach ($cutting->cuttingItems as $cuttingitem) {
+            $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
+            if ($detailRatio == null) {
+                $qty=0;
+            }else{
+                $qty=$detailRatio->qty;
             }
+            array_push($arrcutting, $total_cutting * $qty);
         }
         $t = [
             'Total',
