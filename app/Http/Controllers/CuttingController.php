@@ -247,9 +247,14 @@ class CuttingController extends Controller
                             $items,
                             $item?->qty_sheet * $qty
                         );
+                        if($item?->qty==0){
+                            $itemqty=1;
+                        }else{
+                            $itemqty=$item?->qty;
+                        }
                         $detail = [
                             $item?->qty,
-                            $item?->qty_fabric / $item?->qty,
+                            $item?->qty_fabric / $itemqty,
                         ];
                     }
 
@@ -259,7 +264,7 @@ class CuttingController extends Controller
                     $exports[] = $s;
                     $total_kain += $item?->qty_fabric;
                     $total_qty += $item?->qty;
-                    $total_konsumsi += $item?->qty_fabric / $item?->qty;
+                    $total_konsumsi += $item?->qty_fabric / $itemqty;
                 }
             }
         }
