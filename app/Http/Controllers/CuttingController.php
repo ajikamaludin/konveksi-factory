@@ -184,7 +184,7 @@ class CuttingController extends Controller
 
     public function export(Cutting $cutting)
     {
-        $userCutting = UserCutting::with('userCuttingItem.creator', 'userCuttingItem.fabricItem')->where('artikel_id', $cutting?->production_id)->get();
+        $userCutting = UserCutting::with('userCuttingItem.creator', 'userCuttingItem.fabricItem.detailFabrics')->where('artikel_id', $cutting?->production_id)->get();
         $supplier = Fabric::with('supplier', 'fabricItems.detailFabrics')->where('id', $userCutting[0]?->fabric_item_id)->first();
         $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting[0]?->ratio_id)->first();
         $sizes = ['', '', '',''];
@@ -222,7 +222,7 @@ class CuttingController extends Controller
         $total_qty = 0;
         $total_cutting = 0;
         $count = 0;
-
+        $fritter=0;
         if ($userCutting != null) {
             foreach ($userCutting as $detail) {
                 $ratio_id=$detail['ratio_id'];
@@ -234,10 +234,17 @@ class CuttingController extends Controller
                         $item?->fabricItem?->code, $item?->qty_fabric,'',
                         
                     ];
-                   
+                   $qty_fabric=$item?->qty_fabric;
+                  
+                    foreach($item?->fabricItem->detailFabrics as $detailFabric){
+                        if($detailFabric['qty']===$qty_fabric&&$detailFabric['result_qty']===$item?->qty_sheet){
+                           $fritter=$detailFabric['fritter'];
+                        }
+                    }
+                  
                    
                     foreach ($cutting->cuttingItems as $cuttingitem) {
-                      
+                     
                         $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
                         if ($detailRatio == null) {
                             $qty=0;
@@ -255,7 +262,8 @@ class CuttingController extends Controller
                         }
                         $detail = [
                             $item?->qty,
-                            $item?->qty_fabric / $itemqty,
+                            ($item?->qty_fabric-$fritter) / $itemqty,
+                          
                         ];
                     }
 
@@ -269,6 +277,7 @@ class CuttingController extends Controller
                 }
             }
         }
+        
        
         // if ($ratios != null) {
         //     foreach ($ratios->detailsRatio as $ratio) {
@@ -309,7 +318,6 @@ class CuttingController extends Controller
         $exports[] = $sisa;
        
         $now = now()->format('d-m-Y');
-
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");
