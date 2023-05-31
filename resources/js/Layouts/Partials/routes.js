@@ -60,6 +60,14 @@ export default [
         permission: "create-production-result",
     },
     {
+        name: "Finising",
+        show: true,
+        icon: HiOutlineCog,
+        route: route("finishing.index"),
+        active: "finishing.index",
+        permission: "create-finishing",
+    },
+    {
         name: "TV",
         show: true,
         icon: HiOutlineCog,

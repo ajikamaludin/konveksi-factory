@@ -15,10 +15,12 @@ class ProductionItem extends Model
         'target_quantity',
         'finish_quantity',
         'reject_quantity',
+        'result_quantity_finishing',
+        'reject_quantity_finishing',
         'lock',
     ];
 
-    protected $appends = ['left_quantity'];
+    protected $appends = ['left_quantity','leftfinishing_quantity'];
 
     public function size()
     {
@@ -35,10 +37,21 @@ class ProductionItem extends Model
         return $this->hasMany(ProductionItemResult::class);
     }
 
+    public function finishingresults()
+    {
+        return $this->hasMany(FinishingItemResults::class);
+    }
+
     public function leftQuantity(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->target_quantity - $this->finish_quantity - $this->reject_quantity,
+        );
+    }
+    public function leftfinishingQuantity(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->target_quantity - $this->result_quantity_finishing - $this->reject_quantity_finishing,
         );
     }
 }

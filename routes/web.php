@@ -6,6 +6,7 @@ use App\Http\Controllers\ColorController;
 use App\Http\Controllers\CompositionController;
 use App\Http\Controllers\CuttingController;
 use App\Http\Controllers\FabricController;
+use App\Http\Controllers\FinishingController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\LineSewingController;
 use App\Http\Controllers\MaterialController;
@@ -137,7 +138,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/compositions', [CompositionController::class, 'store'])->name('composition.store');
     Route::put('/compositions/{composition}', [CompositionController::class, 'update'])->name('composition.update');
     Route::delete('/compositions/{composition}', [CompositionController::class, 'destroy'])->name('composition.destroy');
-
+    //Finishing
+    Route::get('/finishing/sewing', [FinishingController::class, 'index'])->name('finishing.index');
+    Route::post('/finishing/sewing/{item}', [FinishingController::class, 'store'])->name('finishing.create');
 });
 
 Route::middleware('auth')->group(function () {

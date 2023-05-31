@@ -227,6 +227,7 @@ class CuttingController extends Controller
             foreach ($userCutting as $detail) {
                 $ratio_id=$detail['ratio_id'];
                 foreach ($detail->userCuttingItem as $item) {
+                  
                     $count++;
                     $items = [
                         $item?->creator?->name,
