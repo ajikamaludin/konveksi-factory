@@ -54,4 +54,7 @@ class ProductionItem extends Model
             get: fn () => $this->target_quantity - $this->result_quantity_finishing - $this->reject_quantity_finishing,
         );
     }
+    public function product(){
+        return $this->belongsTo(Production::class);
+    }
 }

@@ -10,4 +10,8 @@ class FinishingItemResults extends Model
         'reject_quantity',
         'input_at',
     ];
+
+    public function productionItem(){
+      return $this->belongsTo(ProductionItem::class);
+    }
 }

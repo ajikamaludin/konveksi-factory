@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Color;
-use App\Models\Operator;
+use App\Models\FinishingItemResults;
+use Rap2hpoutre\FastExcel\FastExcel;
 use App\Models\Production;
 use App\Models\ProductionItem;
 use App\Models\Size;
@@ -20,8 +21,8 @@ class FinishingController extends Controller
         $color = null;
         $size = null;
         $item = null;
-        $operator=0;
-        
+        $operator = 0;
+        $results = null;
 
         if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
@@ -33,27 +34,24 @@ class FinishingController extends Controller
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],
             ])->first();
-         
-            
-        } elseif ($request->production_id != '' && $request->size_id != '') {
-            $production = Production::find($request->production_id);
-            $size = Size::find($request->size_id);
-            $item = ProductionItem::with(['results.creator'])->where([
-                ['production_id', '=', $request->production_id],
-
-                ['size_id', '=', $request->size_id],
-            ])->first();
         }
-        $dataNow=date('Y-m-d');
-       
-            $operator = Operator::whereDate('input_date','=',$dataNow)->orderBy('input_date', 'desc')->first()?->qty;
-        
+        $dataNow = date('Y-m-d');
+
+        $results = FinishingItemResults::Select(
+            'productions.id',
+            'productions.name as name',
+            DB::raw('DATE(input_at) as input_at')
+        )
+            ->join('production_items', 'production_items.id', '=', 'finishing_item_results.production_item_id')
+            ->join('productions', 'productions.id', '=', 'production_items.production_id')
+            ->groupBy(DB::raw('DATE(input_at)'))->get();
         return inertia('Finishing/Index', [
             'item' => $item,
             '_production' => $production,
             '_color' => $color,
             '_size' => $size,
-            'operator'=>$operator,
+            // 'operator' => $operator,
+            'results' => $results,
         ]);
     }
 
@@ -61,7 +59,7 @@ class FinishingController extends Controller
     {
         $request->validate([
             'finish_quantity' => 'required|numeric',
-            'qty' => 'required|numeric',
+            // 'qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
 
@@ -79,17 +77,46 @@ class FinishingController extends Controller
                 'finish_quantity' => $request->finish_quantity,
                 'reject_quantity' => $request->reject_quantity,
             ]);
-            Operator::whereDate('input_date', $date)->updateOrCreate([
-                'qty' => $request->qty,
-                'input_date' => $resultItem->input_at,
 
-            ]);
 
             DB::commit();
             session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
         } else {
             session()->flash('message', ['type' => 'Faield', 'message' => 'Your Quantity is more than PO']);
         }
+    }
 
+    public function export(String $finishing)
+    {
+        $exports = [
+            ['Tanggal', 'Artikel', 'Result', 'Reject']
+        ];
+        $results = FinishingItemResults::Select(
+            'productions.id',
+            'productions.name as name',
+            DB::raw('DATE(input_at) as input_at'),'production_items.id as production_item_id'
+        )->with('productionItem.product')
+            ->join('production_items', 'production_items.id', '=', 'finishing_item_results.production_item_id')
+            ->join('productions', 'productions.id', '=', 'production_items.production_id')
+            ->groupBy('productions.id', DB::raw('DATE(input_at)'))->whereDate('input_at', $finishing)->get();
+            
+        foreach ($results as $result) {
+          $products=[
+            $finishing,
+            $result['name'],
+          ];
+          $production_items=FinishingItemResults::with('productionItem.size')->whereDate('input_at', $finishing)->get();
+          foreach($production_items as $item){
+          if($result['id']==$item['productionItem']['production_id']){
+            array_push($products,$item['productionItem']['size']['name'],$item['finish_quantity'],$item['reject_quantity']);
+          }
+           
+          }
+          $exports[]=$products;
+        }
+     
+        return (new FastExcel($exports))
+            ->withoutHeaders()
+            ->download("Finishing-$finishing.xlsx");
     }
 }

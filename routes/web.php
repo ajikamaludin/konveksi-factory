@@ -141,6 +141,7 @@ Route::middleware(['auth'])->group(function () {
     //Finishing
     Route::get('/finishing/sewing', [FinishingController::class, 'index'])->name('finishing.index');
     Route::post('/finishing/sewing/{item}', [FinishingController::class, 'store'])->name('finishing.create');
+    Route::get('/finishing/{finish}/export', [FinishingController::class, 'export'])->name('finishing.export');
 });
 
 Route::middleware('auth')->group(function () {
