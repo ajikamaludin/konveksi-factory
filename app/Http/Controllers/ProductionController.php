@@ -10,7 +10,10 @@ use App\Models\SettingPayroll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Mockery\Undefined;
 use Rap2hpoutre\FastExcel\FastExcel;
+
+use function PHPUnit\Framework\isEmpty;
 
 class ProductionController extends Controller
 {
@@ -178,11 +181,21 @@ class ProductionController extends Controller
         $finish = 0;
         $reject = 0;
         $leftTotal = 0;
+        $hpp = 0;
         // $line=1;
         foreach ($production->items as $item) {
             $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
             $leftTotal += $left;
-            $exports[] = [
+            // $exports[] = [
+            //     $item->creator->name,
+            //     $item?->color?->name,
+            //     $item->size->name,
+            //     $item->target_quantity,
+            //     $item->finish_quantity,
+            //     $item->reject_quantity,
+            //     $left,
+            // ];
+            $items=[
                 $item->creator->name,
                 $item?->color?->name,
                 $item->size->name,
@@ -194,26 +207,39 @@ class ProductionController extends Controller
             $target += $item->target_quantity;
             $finish += $item->finish_quantity;
             $reject += $item->reject_quantity;
-            $hpp = 0;
+          
             $count = 0;
+            $detail=[];
+            if(isEmpty($item->results)){
+                $linehpp=0;
+                $detail=[
+                    $linehpp
+                ];
+            }
             foreach ($item->results as $result) {
-
                 $workhours = SettingPayroll::getdays($result->input_date);
                 $operator = Operator::whereDate('input_date', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
-                $linehpp = ($salary->payroll * $operator->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
-                $exports[] = [
-                    $result->creator->name,
-                    '',
-                    $result->input_at,
-                    '',
-                    $result->finish_quantity,
-                    $result->reject_quantity,
-                    '',
-                    $linehpp,
-                ];
+                $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
+                
+                $detail=[
+                $linehpp
+            ];
+                //    dd (($salary->payroll * $operator->qty), ($result->finish_quantity + $result->reject_quantity),$workhours);
+                // $exports[] = [
+                //     $result->creator->name,
+                //     '',
+                //     $result->input_at,
+                //     '',
+                //     $result->finish_quantity,
+                //     $result->reject_quantity,
+                //     '',
+                //     $linehpp,
+                // ];
                 $hpp += $linehpp;
                 $count++;
             }
+            $s=array_merge($items,$detail);
+            $exports[]=$s;
         }
 
         $exports[] = [
@@ -238,6 +264,7 @@ class ProductionController extends Controller
             '',
             $hpp / $count,
         ];
+        dd($exports);
         $now = now()->format('d-m-Y');
 
         return (new FastExcel($exports))
