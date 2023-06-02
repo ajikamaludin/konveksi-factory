@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/fabrics/{fabric}/edit', [FabricController::class, 'edit'])->name('fabric.edit');
     Route::put('/fabrics/{fabric}', [FabricController::class, 'update'])->name('fabric.update');
     Route::delete('/fabrics/{fabric}', [FabricController::class, 'delete'])->name('fabric.destroy');
+    Route::get('/fabrics/{fabric}/exports', [FabricController::class, 'exports'])->name('fabric.export');
 
     //ration
     Route::get('/ratios', [RatioController::class, 'index'])->name('ratio.index');

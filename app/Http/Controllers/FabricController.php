@@ -6,6 +6,7 @@ use App\Models\DetailFabric;
 use App\Models\Fabric;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class FabricController extends Controller
 {
@@ -19,7 +20,7 @@ class FabricController extends Controller
             })
             ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(fritter) as fritter_qty'),DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
         if ($request->q) {
-            $query->where('name', 'like', "%{$request->q}%");
+            $query->where('fabrics.name', 'like', "%{$request->q}%");
         }
 
         $query->groupBy('fabrics.id')->orderBy('fabrics.created_at', 'desc');
@@ -146,5 +147,31 @@ class FabricController extends Controller
         $fabric->fabricItems()->delete();
         DB::commit();
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
+    }
+
+    public function exports(Fabric $fabric){
+        $exports=[
+            ['Lot','Kg','User','Artikel','Sisa']
+        ];
+
+
+        foreach($fabric->fabricItems as $item){
+            
+            foreach($item->detailFabrics as $detail){
+                $exports[]=[
+                    $item['code'],
+                    $detail['qty'],
+                    $item->creator['name'],
+                    $fabric['name'],
+                    $detail['fritter'],
+                ];
+            }
+        }
+        // dd($exports);
+        $now = now()->format('d-m-Y');
+
+        return (new FastExcel($exports))
+            ->withoutHeaders()
+            ->download("artikel-$fabric->name-$now.xlsx");
     }
 }

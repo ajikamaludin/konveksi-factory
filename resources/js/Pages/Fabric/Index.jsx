@@ -10,7 +10,7 @@ import Pagination from '@/Components/Pagination';
 import ModalConfirm from '@/Components/ModalConfirm';
 import SearchInput from '@/Components/SearchInput';
 import { hasPermission } from '@/utils';
-import { HiPencil,HiTrash } from 'react-icons/hi';
+import { HiFolderDownload, HiPencil,HiTrash } from 'react-icons/hi';
 
 export default function Index(props) {
     const { query: { links, data }, auth } = props
@@ -123,6 +123,12 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
+                                                        <Dropdown.Item>
+                                                            <a href={route("fabric.export", fabric)} target="_blank" className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
+                                                                <div>Excel</div>
+                                                            </a>
+                                                        </Dropdown.Item>
                                                         {canUpdate && (
                                                             <Dropdown.Item>
                                                                 <Link href={route("fabric.edit", fabric)} className="flex space-x-1 items-center">
