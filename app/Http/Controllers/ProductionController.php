@@ -264,11 +264,15 @@ class ProductionController extends Controller
             '',
             $hpp / $count,
         ];
-        dd($exports);
+        // dd($exports);
         $now = now()->format('d-m-Y');
 
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("artikel-$production->code-$now.xlsx");
     }
+
+    public function exportfinis(Production $production){
+
+    } 
 }
