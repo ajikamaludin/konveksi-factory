@@ -22,7 +22,7 @@ class TvController extends Controller
         $prod = Production::query()->with(['items.results' => function ($query) {
             $query->orderBy('created_at', 'DESC');
         }])->orderBy('updated_at', 'DESC')
-            // ->where('created_by', Auth::user()->id)
+            ->where('created_by', Auth::user()->id)
             ->first();
         $operator = Operator::whereDate('input_date', '=', date('Y-m-d'))->orderBy('input_date', 'desc')->value('qty') ?? 1;
         if ($prod != null) {

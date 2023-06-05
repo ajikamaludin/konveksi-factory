@@ -62,9 +62,9 @@ class FinishingController extends Controller
             // 'qty' => 'required|numeric',
         ]);
         DB::beginTransaction();
-
+// dd($item);
         $qtyinput = $request->finish_quantity + $request->reject_quantity;
-        $lastqty = $item->target_quantity - $item->finish_quantity + $item->reject_quantity;
+        $lastqty = $item->target_quantity - $item->result_quantity_finishing + $item->reject_quantity_finishing;
         if ($qtyinput <= $lastqty) {
             $date = date('Y-m-d');
             $item->update([
