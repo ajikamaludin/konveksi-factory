@@ -186,15 +186,7 @@ class ProductionController extends Controller
         foreach ($production->items as $item) {
             $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
             $leftTotal += $left;
-            // $exports[] = [
-            //     $item->creator->name,
-            //     $item?->color?->name,
-            //     $item->size->name,
-            //     $item->target_quantity,
-            //     $item->finish_quantity,
-            //     $item->reject_quantity,
-            //     $left,
-            // ];
+           
             $items=[
                 $item->creator->name,
                 $item?->color?->name,
@@ -224,17 +216,7 @@ class ProductionController extends Controller
                 $detail=[
                 $linehpp
             ];
-                //    dd (($salary->payroll * $operator->qty), ($result->finish_quantity + $result->reject_quantity),$workhours);
-                // $exports[] = [
-                //     $result->creator->name,
-                //     '',
-                //     $result->input_at,
-                //     '',
-                //     $result->finish_quantity,
-                //     $result->reject_quantity,
-                //     '',
-                //     $linehpp,
-                // ];
+            
                 $hpp += $linehpp;
                 $count++;
             }
@@ -272,7 +254,26 @@ class ProductionController extends Controller
             ->download("artikel-$production->code-$now.xlsx");
     }
 
-    public function exportfinis(Production $production){
-
+    public function exportfinishing(Production $production){
+       
+        foreach ($production->items as $item) {
+            $exports = [
+                ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
+                [
+                    $production->code,
+                    $production->name,
+                    $production->buyer?->name,
+                    $production->deadline,
+                    $production->material?->name,
+                    $production->brand?->name,
+                ],
+                [],
+                [],
+                ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa', 'HPP'],
+            ];
+            foreach ($item->finishingresults as $result) {
+                
+            }
+        }
     } 
 }

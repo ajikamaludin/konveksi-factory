@@ -88,6 +88,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/productions/{production}', [ProductionController::class, 'update'])->name('production.update');
     Route::get('/productions/{production}/export', [ProductionController::class, 'export'])->name('production.export');
     Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
+    Route::get('/productions/{production}/export-finishing', [ProductionController::class, 'exportfinishing'])->name('production.exportfinishing');
 
     // line-sewing
     Route::get('/line/sewing', [LineSewingController::class, 'index'])->name('line.sewing.index');

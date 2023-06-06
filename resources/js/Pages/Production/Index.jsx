@@ -147,6 +147,12 @@ export default function Index(props) {
                                                                 <div>Excel</div>
                                                             </a>
                                                         </Dropdown.Item>
+                                                        <Dropdown.Item>
+                                                            <a href={route("production.exportfinishing", production)} target="_blank" className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
+                                                                <div>Excel Finishing</div>
+                                                            </a>
+                                                        </Dropdown.Item>
                                                         {canUpdate && (
                                                             <Dropdown.Item>
                                                                 <Link href={route("production.edit", production)} className="flex space-x-1 items-center">
