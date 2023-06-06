@@ -55,6 +55,6 @@ class ProductionItem extends Model
         );
     }
     public function product(){
-        return $this->belongsTo(Production::class);
+        return $this->belongsTo(Production::class,'production_id');
     }
 }

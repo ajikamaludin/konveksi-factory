@@ -10,4 +10,8 @@ class ProductionItemResult extends Model
         'reject_quantity',
         'input_at',
     ];
+
+    public function item(){
+        return $this->belongsTo(ProductionItem::class,'production_item_id');
+    }
 }
