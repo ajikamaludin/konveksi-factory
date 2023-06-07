@@ -39,7 +39,7 @@ class TvController extends Controller
         }
         
         return inertia('Tv/Index', [
-            '_production' => $prod->item->product,
+            '_production' => $prod?->item?->product,
             'target' => $target,
             'operator' => $operator,
             'hourline' => $hourline,

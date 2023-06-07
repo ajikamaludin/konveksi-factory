@@ -7,6 +7,7 @@ use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItem;
 use App\Models\Size;
+use App\Models\TargetProductions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,8 @@ class LineSewingController extends Controller
         $size = null;
         $item = null;
         $operator=0;
-        
+        $target=0;
+        $dataNow=date('Y-m-d');
 
         if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
@@ -32,8 +34,8 @@ class LineSewingController extends Controller
                 ['color_id', '=', $request->color_id],
                 ['size_id', '=', $request->size_id],
             ])->first();
-           
             
+           
         } elseif ($request->production_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);
             $size = Size::find($request->size_id);
@@ -43,16 +45,24 @@ class LineSewingController extends Controller
                 ['size_id', '=', $request->size_id],
             ])->first();
         }
-        $dataNow=date('Y-m-d');
-       
-            $operator = Operator::whereDate('input_date','=',$dataNow)->orderBy('input_date', 'desc')->first()?->qty;
+        if($request->production_id!=''){
+            $gettarget=TargetProductions::whereDate('input_at','=',$dataNow)
+            ->where('production_id','=',$request->production_id )
+            ->orderBy('input_at','desc')->first();
+            if (!empty($gettarget)){
+                $target=$gettarget?->qty;
+            } 
+        }
         
+        $operator = Operator::whereDate('input_date','=',$dataNow)->orderBy('input_date', 'desc')->first()?->qty;
+       
         return inertia('LineSewing/Index', [
             'item' => $item,
             '_production' => $production,
             '_color' => $color,
             '_size' => $size,
             'operator'=>$operator,
+            'target'=>$target,
         ]);
     }
 
@@ -61,6 +71,7 @@ class LineSewingController extends Controller
         $request->validate([
             'finish_quantity' => 'required|numeric',
             'qty' => 'required|numeric',
+            'qtytarget'=> 'required|numeric',
         ]);
         DB::beginTransaction();
 
@@ -81,8 +92,13 @@ class LineSewingController extends Controller
             ]);
             Operator::whereDate('input_date', $date)->updateOrCreate([
                 'qty' => $request->qty,
-                'input_date' => $resultItem->input_at,
+                'input_date' => $date,
 
+            ]);
+            TargetProductions::whereDate('input_at', $date)->where('production_id','=',$item->production_id)->updateOrCreate([
+                'qty' => $request->qtytarget,
+                'input_at' => $date,
+                'production_id'=>$item->production_id
             ]);
 
             DB::commit();
