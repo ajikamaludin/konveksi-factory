@@ -6,6 +6,7 @@ use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
 use App\Models\SettingPayroll;
+use App\Models\TargetProductions;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,17 +21,22 @@ class TvController extends Controller
         $salary = SettingPayroll::first();
         $hasil = 0;
         $hpp = 0;
-    
+        $dataNow=date('Y-m-d');
         $prod=ProductionItemResult::with(['item.product'])
         ->where('created_by', Auth::user()->id)
-        ->orderBy('created_at', 'DESC')->first();
-       
-        $operator = Operator::whereDate('input_date', '=', date('Y-m-d'))->orderBy('input_date', 'desc')->value('qty') ?? 1;
+        ->orderBy('created_at', 'DESC');
+      
+        $operator = Operator::whereDate('input_date', '=', $dataNow)->orderBy('input_date', 'desc')->value('qty') ?? 1;
         if ($prod != null) {
-    
+            dd($prod);
                     $workhours = SettingPayroll::getdays($prod->input_at);
                     $hourline = Carbon::parse($prod->input_at)->format('H:i:s');
-                    $target = $prod->finish_quantity * $workhours;
+                    $gettarget = TargetProductions::whereDate('input_at','=',$dataNow)
+                    ->where('production_id','=',$prod->item->product->id)
+                    ->orderBy('input_at','desc')->first();
+                    if (!empty($gettarget)){
+                        $target=$gettarget?->qty;
+                    } 
                     $qty = ($prod->item->finish_quantity + $prod->reject_quantity) * $workhours;
           
                     $linehpp = ($salary->payroll * $operator) / $qty;

@@ -74,7 +74,7 @@ export default function Index(props) {
             finish_quantity: 0,
             reject_quantity: 0,
             qty: operator,
-            qtytarget:target,
+            // qtytarget:target,
         })
     }
 

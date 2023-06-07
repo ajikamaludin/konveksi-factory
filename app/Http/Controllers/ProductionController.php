@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cutting;
 use App\Models\Operator;
+use App\Models\OperatorFinishing;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
 use App\Models\SettingPayroll;
@@ -161,7 +162,6 @@ class ProductionController extends Controller
     public function export(Production $production)
     {
         $salary = SettingPayroll::first();
-
         $exports = [
             ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
             [
@@ -186,8 +186,8 @@ class ProductionController extends Controller
         foreach ($production->items as $item) {
             $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
             $leftTotal += $left;
-           
-            $items=[
+
+            $items = [
                 $item->creator->name,
                 $item?->color?->name,
                 $item->size->name,
@@ -199,12 +199,12 @@ class ProductionController extends Controller
             $target += $item->target_quantity;
             $finish += $item->finish_quantity;
             $reject += $item->reject_quantity;
-          
+
             $count = 0;
-            $detail=[];
-            if(isEmpty($item->results)){
-                $linehpp=0;
-                $detail=[
+            $detail = [];
+            if (isEmpty($item->results)) {
+                $linehpp = 0;
+                $detail = [
                     $linehpp
                 ];
             }
@@ -212,16 +212,16 @@ class ProductionController extends Controller
                 $workhours = SettingPayroll::getdays($result->input_date);
                 $operator = Operator::whereDate('input_date', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
                 $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
-                
-                $detail=[
-                $linehpp
-            ];
-            
+
+                $detail = [
+                    $linehpp
+                ];
+
                 $hpp += $linehpp;
                 $count++;
             }
-            $s=array_merge($items,$detail);
-            $exports[]=$s;
+            $s = array_merge($items, $detail);
+            $exports[] = $s;
         }
 
         $exports[] = [
@@ -254,26 +254,100 @@ class ProductionController extends Controller
             ->download("artikel-$production->code-$now.xlsx");
     }
 
-    public function exportfinishing(Production $production){
-       
+    public function exportfinishing(Production $production)
+    {
+
+        $salary = SettingPayroll::first();
+        $exports = [
+            ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
+            [
+                $production->code,
+                $production->name,
+                $production->buyer?->name,
+                $production->deadline,
+                $production->material?->name,
+                $production->brand?->name,
+            ],
+            [],
+            [],
+            ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa', 'HPP'],
+        ];
+
+        $target = 0;
+        $finish = 0;
+        $reject = 0;
+        $leftTotal = 0;
+        $hpp = 0;
+        // $line=1;
         foreach ($production->items as $item) {
-            $exports = [
-                ['Style', 'Nama', 'Pembeli', 'Deadline', 'Bahan', 'Brand'],
-                [
-                    $production->code,
-                    $production->name,
-                    $production->buyer?->name,
-                    $production->deadline,
-                    $production->material?->name,
-                    $production->brand?->name,
-                ],
-                [],
-                [],
-                ['User', 'Warna', 'Size', 'Total PO', 'Jumlah', 'Reject', 'Sisa', 'HPP'],
+            $left = $item->target_quantity - $item->finish_quantity - $item->reject_quantity;
+            $leftTotal += $left;
+
+            $items = [
+                $item->creator->name,
+                $item?->color?->name,
+                $item->size->name,
+                $item->target_quantity,
+                $item->result_quantity_finishing,
+                $item->reject_quantity,
+                $left,
             ];
-            foreach ($item->finishingresults as $result) {
-                
+            $target += $item->target_quantity;
+            $finish += $item->result_quantity_finishing;
+            $reject += $item->reject_quantity_finishing;
+
+            $count = 0;
+            $detail = [];
+            if ($item->finishingresults->isEmpty()) {
+                $linehpp = 0;
+                $detail = [
+                    $linehpp
+                ];
+            } else {
+                foreach ($item->finishingresults as $result) {
+                    $workhours = SettingPayroll::getdays($result->input_date);
+                    $operator = OperatorFinishing::whereDate('input_at', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
+                    $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
+
+                    $detail = [
+                        $linehpp
+                    ];
+
+                    $hpp += $linehpp;
+                    $count++;
+                }
             }
+            $s = array_merge($items, $detail);
+            $exports[] = $s;
         }
-    } 
+
+        $exports[] = [
+            'Total',
+            '',
+            '',
+            $target,
+            $finish,
+            $reject,
+            $leftTotal,
+        ];
+        if ($count == 0) {
+            $count = 1;
+        }
+        $exports[] = [
+            'HPP',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            $hpp / $count,
+        ];
+       
+        $now = now()->format('d-m-Y');
+
+        return (new FastExcel($exports))
+            ->withoutHeaders()
+            ->download("artikel-finishing-$production->code-$now.xlsx");
+    }
 }

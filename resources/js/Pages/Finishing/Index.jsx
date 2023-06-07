@@ -12,13 +12,14 @@ import FormInput from "@/Components/FormInput";
 import Input from "@/Components/Input";
 
 export default function Index(props) {
-    const { item, _production, _color, _size, results } = props;
+    const { item, _production, _color, _size, results,operator,target } = props;
 
     const { data, setData, post, processing, errors, reset, clearErrors } =
         useForm({
             finish_quantity: 0,
             reject_quantity: 0,
-            // qty: operator,
+            qty: operator,
+            qtytarget:target,
         });
 
     const handleOnChange = (event) => {
@@ -45,7 +46,7 @@ export default function Index(props) {
             setBuyer(production?.buyer?.name);
             setProduction(production);
             setSearch({ ...search, production_id: production.id });
-            // setData("qty", operator);
+            setData({'qty':operator,'qtytarget':target})
             return;
         }
         setSearch({ ...search, production_id: "" });
@@ -57,7 +58,7 @@ export default function Index(props) {
         if (isEmpty(color) === false) {
             setColor(color);
             setSearch({ ...search, color_id: color.id });
-            // setData("qty", operator);
+            setData({'qty':operator,'qtytarget':target})
             return;
         }
         setColor("");
@@ -68,7 +69,7 @@ export default function Index(props) {
         if (isEmpty(size) === false) {
             setSize(size);
             setSearch({ ...search, size_id: size.id });
-            // setData("qty", operator);
+            setData({'qty':operator,'qtytarget':target})
             return;
         }
         setSearch({ ...search, size_id: "" });
@@ -76,7 +77,12 @@ export default function Index(props) {
     };
 
     const handleReset = () => {
-        reset();
+        // reset();
+        setData({
+            finish_quantity: 0,
+            reject_quantity: 0,
+         
+        })
     };
 
     const addQuantity = () => {
@@ -102,7 +108,7 @@ export default function Index(props) {
             setData({
                 finish_quantity: 0,
                 reject_quantity: 0,
-                // qty: operator,
+               
             });
         }
     }, [search]);
@@ -163,7 +169,28 @@ export default function Index(props) {
                         </div>
                         {item && (
                             <>
-                               
+                                <div className='flex'>
+                                <div className='flex-auto px-2'>
+                                    <FormInput
+                                        type="number"
+                                        name="qty"
+                                        value={data.qty}
+                                        onChange={handleOnChange}
+                                        label="Operator"
+                                        error={errors.qty}
+                                    />
+                                </div>
+                                <div className='flex-auto px-2'>
+                                    <FormInput
+                                        type="number"
+                                        name="qtytarget"
+                                        value={data.qtytarget}
+                                        onChange={handleOnChange}
+                                        label="Target"
+                                        error={errors.qtytarget}
+                                    />
+                                </div>
+                            </div>
                                 <div className="flex flex-row gap-2 w-full justify-around h-20">
                                     <div className="w-1/3 flex items-end">
                                         <button

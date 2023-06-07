@@ -113,7 +113,7 @@ class UserCuttingController extends Controller
            
             session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
         } catch (\Exception $e) {
-            dd($e);
+            // dd($e);
             session()->flash('message', ['type' => 'Failed', 'message' => 'Data Is Not Valid unable to Save']);
             DB::rollBack();
         }
