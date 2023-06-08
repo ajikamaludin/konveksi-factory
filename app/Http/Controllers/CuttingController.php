@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cutting;
 use App\Models\DetailRatio;
 use App\Models\Fabric;
-use App\Models\FabricItem;
 use App\Models\Production;
-use App\Models\ProductionItem;
 use App\Models\ProductionItemResult;
 use App\Models\Ratio;
 use App\Models\UserCutting;
@@ -15,13 +13,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-use function PHPUnit\Framework\isEmpty;
 
 class CuttingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator');
+        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive','=','0');
 
         return inertia('Cutting/Index', [
             'query' => $query->paginate(10),
@@ -321,5 +318,26 @@ class CuttingController extends Controller
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");
+    }
+
+    public function getarchive(Request $request)
+    {
+        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive','=','1');
+
+        return inertia('Cutting/Archive', [
+            'query' => $query->paginate(10),
+        ]);
+    }
+    public function archive(Cutting $cutting)
+    {
+        $cutting->update(['is_archive' => 1]);
+        return redirect()->route('cutting.index')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
+    }
+    public function unarchive(Cutting $cutting)
+    {
+        $cutting->update(['is_archive' => 0]);
+        return redirect()->route('cutting.archive')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }
 }

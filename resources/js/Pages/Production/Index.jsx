@@ -3,7 +3,7 @@ import { Link, router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
 import { Button, Dropdown } from 'flowbite-react';
-import { HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiArchive, HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -15,7 +15,7 @@ import { formatDate, formatIDDate, formatIDR, hasPermission } from '@/utils';
 
 export default function Index(props) {
     const { query: { links, data }, auth } = props
-    
+
     const [search, setSearch] = useState('')
     const preValue = usePrevious(search)
 
@@ -33,8 +33,18 @@ export default function Index(props) {
     }
 
     const onDelete = () => {
-        if(confirmModal.data !== null) {
+        if (confirmModal.data !== null) {
             router.delete(route('production.destroy', confirmModal.data.id))
+        }
+    }
+    const AddArchive = (production) => {
+        confirmModal.setData(production)
+        confirmModal.toggle()
+
+    }
+    const onArchive = () => {
+        if (confirmModal.data !== null) {
+            router.put(route('production.addarchive', confirmModal.data.id))
         }
     }
 
@@ -64,7 +74,7 @@ export default function Index(props) {
             page={'Dashboard'}
             action={'Artikel'}
         >
-            <Head title="Artikel"/>
+            <Head title="Artikel" />
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
@@ -74,6 +84,12 @@ export default function Index(props) {
                                 <Link href={route("production.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
                             )}
                             <div className="flex items-center">
+                                <Link href={route("production.archive")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
+                                    <HiArchive />
+                                    <span>
+                                        Archive
+                                    </span>
+                                </Link>
                                 <SearchInput
                                     onChange={e => setSearch(e.target.value)}
                                     value={search}
@@ -106,7 +122,7 @@ export default function Index(props) {
                                             <th scope="col" className="py-3 px-6">
                                                 Deadline
                                             </th>
-                                            <th scope="col" className="py-3 px-6"/>
+                                            <th scope="col" className="py-3 px-6" />
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -141,22 +157,30 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
+                                                        <Dropdown.Item onClick={() => AddArchive(production)}>
+                                                            <div className='flex space-x-1 items-center'>
+                                                                <HiArchive />
+                                                                <div>Add Archive</div>
+                                                            </div>
+                                                        </Dropdown.Item>
                                                         <Dropdown.Item>
                                                             <a href={route("production.export", production)} target="_blank" className="flex space-x-1 items-center">
-                                                                <HiFolderDownload/> 
+                                                                <HiFolderDownload />
                                                                 <div>Excel</div>
                                                             </a>
                                                         </Dropdown.Item>
+                                                        
                                                         <Dropdown.Item>
                                                             <a href={route("production.exportfinishing", production)} target="_blank" className="flex space-x-1 items-center">
-                                                                <HiFolderDownload/> 
+                                                                <HiFolderDownload />
                                                                 <div>Excel Finishing</div>
                                                             </a>
                                                         </Dropdown.Item>
+                                                        
                                                         {canUpdate && (
                                                             <Dropdown.Item>
                                                                 <Link href={route("production.edit", production)} className="flex space-x-1 items-center">
-                                                                    <HiPencil/> 
+                                                                    <HiPencil />
                                                                     <div>Ubah</div>
                                                                 </Link>
                                                             </Dropdown.Item>
@@ -164,7 +188,7 @@ export default function Index(props) {
                                                         {canDelete && (
                                                             <Dropdown.Item onClick={() => handleDeleteClick(production)}>
                                                                 <div className='flex space-x-1 items-center'>
-                                                                    <HiTrash/> 
+                                                                    <HiTrash />
                                                                     <div>Hapus</div>
                                                                 </div>
                                                             </Dropdown.Item>
@@ -177,7 +201,7 @@ export default function Index(props) {
                                 </table>
                             </div>
                             <div className='w-full flex items-center justify-center'>
-                                <Pagination links={links} params={params}/>
+                                <Pagination links={links} params={params} />
                             </div>
                         </div>
                     </div>
@@ -186,6 +210,10 @@ export default function Index(props) {
             <ModalConfirm
                 modalState={confirmModal}
                 onConfirm={onDelete}
+            />
+            <ModalConfirm
+                modalState={confirmModal}
+                onConfirm={onArchive}
             />
             <FormModal
                 modalState={formModal}

@@ -89,7 +89,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/productions/{production}/export', [ProductionController::class, 'export'])->name('production.export');
     Route::delete('/productions/{production}', [ProductionController::class, 'destroy'])->name('production.destroy');
     Route::get('/productions/{production}/export-finishing', [ProductionController::class, 'exportfinishing'])->name('production.exportfinishing');
-
+    Route::get('/productions/archive', [ProductionController::class, 'getarchive'])->name('production.archive');
+    Route::put('/productions/{production}/addarchive', [ProductionController::class, 'archive'])->name('production.addarchive');
+    Route::put('/productions/{production}/unarchive', [ProductionController::class, 'unarchive'])->name('production.unarchive');
     // line-sewing
     Route::get('/line/sewing', [LineSewingController::class, 'index'])->name('line.sewing.index');
     Route::post('/line/sewing/{item}', [LineSewingController::class, 'store'])->name('line.sewing.create');
@@ -108,6 +110,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/fabrics/{fabric}', [FabricController::class, 'update'])->name('fabric.update');
     Route::delete('/fabrics/{fabric}', [FabricController::class, 'delete'])->name('fabric.destroy');
     Route::get('/fabrics/{fabric}/exports', [FabricController::class, 'exports'])->name('fabric.export');
+    Route::get('/fabrics/archive', [FabricController::class, 'getarchive'])->name('fabric.archive');
+    Route::put('/fabrics/{fabric}/addarchive', [FabricController::class, 'archive'])->name('fabric.addarchive');
+    Route::put('/fabrics/{fabric}/unarchive', [FabricController::class, 'unarchive'])->name('fabric.unarchive');
 
     //ration
     Route::get('/ratios', [RatioController::class, 'index'])->name('ratio.index');
@@ -125,7 +130,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cuttings/{cutting}', [CuttingController::class, 'update'])->name('cutting.update');
     Route::delete('/cuttings/{cutting}', [CuttingController::class, 'destroy'])->name('cutting.destroy');
     Route::get('/cuttings/{cutting}/export', [CuttingController::class, 'export'])->name('cutting.export');
-
+    Route::get('/cuttings/archive', [CuttingController::class, 'getarchive'])->name('cutting.archive');
+    Route::put('/cuttings/{cutting}/addarchive', [CuttingController::class, 'archive'])->name('cutting.addarchive');
+    Route::put('/cuttings/{cutting}/unarchive', [CuttingController::class, 'unarchive'])->name('cutting.unarchive');
     // User Cutting
     Route::get('/user-cuttings', [UserCuttingController::class, 'index'])->name('user-cutting.index');
     Route::post('/user-cuttings/{cutting}', [UserCuttingController::class, 'store'])->name('user-cutting.store');

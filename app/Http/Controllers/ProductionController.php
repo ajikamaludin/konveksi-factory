@@ -20,7 +20,7 @@ class ProductionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Production::query();
+        $query = Production::query()->where('is_archive','=','0');
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
@@ -349,5 +349,32 @@ class ProductionController extends Controller
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("artikel-finishing-$production->code-$now.xlsx");
+    }
+
+    public function getarchive(Request $request)
+    {
+        $query = Production::query()->where('is_archive','=','1');
+
+        if ($request->q) {
+            $query->where('name', 'like', "%{$request->q}%");
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        return inertia('Production/Archive', [
+            'query' => $query->paginate(10),
+        ]);
+    }
+    public function archive(Production $production)
+    {
+        $production->update(['is_archive' => 1]);
+        return redirect()->route('production.index')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
+    }
+    public function unarchive(Production $production)
+    {
+        $production->update(['is_archive' => 0]);
+        return redirect()->route('production.archive')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }
 }

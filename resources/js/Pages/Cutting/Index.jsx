@@ -3,7 +3,7 @@ import { Link, router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
 import { Button, Dropdown } from 'flowbite-react';
-import { HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiArchive, HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -37,7 +37,16 @@ export default function Index(props) {
             router.delete(route('cutting.destroy', confirmModal.data.id))
         }
     }
+    const AddArchive = (cutting) => {
+        confirmModal.setData(cutting)
+        confirmModal.toggle()
 
+    }
+    const onArchive = () => {
+        if (confirmModal.data !== null) {
+            router.put(route('cutting.addarchive', confirmModal.data.id))
+        }
+    }
     const params = { q: search }
     useEffect(() => {
         if (preValue) {
@@ -73,6 +82,12 @@ export default function Index(props) {
                                 <Link href={route("cutting.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
                             )}
                             <div className="flex items-center">
+                            <Link href={route("cutting.archive")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
+                                    <HiArchive />
+                                    <span>
+                                        Archive
+                                    </span>
+                                </Link>
                                 <SearchInput
                                     onChange={e => setSearch(e.target.value)}
                                     value={search}
@@ -131,7 +146,12 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
-                                                       
+                                                        <Dropdown.Item onClick={() => AddArchive(cutting)}>
+                                                            <div className='flex space-x-1 items-center'>
+                                                                <HiArchive />
+                                                                <div>Add Archive</div>
+                                                            </div>
+                                                        </Dropdown.Item>
                                                             <Dropdown.Item>
                                                             <a href={route("cutting.export", cutting)} target="_blank" className="flex space-x-1 items-center">
                                                                 <HiFolderDownload/> 
@@ -174,6 +194,10 @@ export default function Index(props) {
             <ModalConfirm
                 modalState={confirmModal}
                 onConfirm={onDelete}
+            />
+               <ModalConfirm
+                modalState={confirmModal}
+                onConfirm={onArchive}
             />
             <FormModal
                 modalState={formModal}

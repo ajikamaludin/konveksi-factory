@@ -17,6 +17,7 @@ class Production extends Model
         'description',
         'deadline',
         'sketch_image',
+        'is_archive',
     ];
 
     protected $appends = ['sketch_image_url', 'total', 'reject', 'left', 'active_line'];

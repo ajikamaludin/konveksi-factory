@@ -18,12 +18,12 @@ class FabricController extends Controller
                 $join->on('fabric_item_id', '=', 'fabric_items.id');
                 $join->whereNull('detail_fabrics.deleted_at');
             })
-            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'),DB::raw('sum(fritter) as fritter_qty'),DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'), DB::raw('sum(fritter) as fritter_qty'), DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
         if ($request->q) {
             $query->where('fabrics.name', 'like', "%{$request->q}%");
         }
 
-        $query->groupBy('fabrics.id')->orderBy('fabrics.created_at', 'desc');
+        $query->where('is_archive', '=', '0')->groupBy('fabrics.id')->orderBy('fabrics.created_at', 'desc');
 
         return inertia('Fabric/Index', [
             'query' => $query->paginate(10),
@@ -51,7 +51,7 @@ class FabricController extends Controller
         ]);
 
         DB::beginTransaction();
-       
+
         $fabric = Fabric::create([
             'name' => $request->name,
             'supplier_id' => $request->supplier_id,
@@ -71,7 +71,7 @@ class FabricController extends Controller
                 $fabricitems->detailFabrics()->create([
                     'qty' => $detail['qty'],
                     'fabric_item_id' => $fabricitems['id'],
-                    'fritter'=>$detail['qty'],
+                    'fritter' => $detail['qty'],
                 ]);
             }
         }
@@ -86,6 +86,39 @@ class FabricController extends Controller
         return inertia('Fabric/Form', [
             'fabric' => $fabric->load(['supplier', 'fabricItems.detailFabrics']),
         ]);
+    }
+    public function getarchive(Request $request)
+    {
+        //archive
+        $query = Fabric::query()->with('supplier', 'fabricItems.detailFabrics')
+            ->join('fabric_items', 'fabric_id', '=', 'fabrics.id')
+            ->join('detail_fabrics', function ($join) {
+                $join->on('fabric_item_id', '=', 'fabric_items.id');
+                $join->whereNull('detail_fabrics.deleted_at');
+            })
+            ->select('fabrics.*', DB::raw('round(sum(qty),2) as qty'), DB::raw('sum(fritter) as fritter_qty'), DB::raw('sum(detail_fabrics.result_qty) as result_qty'));
+
+        if ($request->q) {
+            $query->where('fabrics.name', 'like', "%{$request->q}%");
+        }
+
+        $query->where('is_archive', '=', '1')->groupBy('fabrics.id')->orderBy('fabrics.created_at', 'desc');
+        return inertia('Fabric/Archive', [
+            'query' => $query->paginate(10),
+
+        ]);
+    }
+    public function archive(Fabric $fabric)
+    {
+        $fabric->update(['is_archive' => 1]);
+        return redirect()->route('fabric.index')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
+    }
+    public function unarchive(Fabric $fabric)
+    {
+        $fabric->update(['is_archive' => 0]);
+        return redirect()->route('fabric.archive')
+            ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }
 
     public function update(Request $request, Fabric $fabric)
@@ -121,14 +154,14 @@ class FabricController extends Controller
             $fabricitems = $fabric->fabricItems()->updateOrCreate([
                 'code' => $item['code'],
             ], [
-                'name' => $request->name,
-            ]);
+                    'name' => $request->name,
+                ]);
 
             $fabricitems->detailFabrics()->delete();
             foreach ($item['detail_fabrics'] as $detail) {
                 $fabricitems->detailFabrics()->create([
                     'qty' => $detail['qty'],
-                    'fritter'=>$detail['qty'],
+                    'fritter' => $detail['qty'],
                 ]);
             }
         }
@@ -149,16 +182,17 @@ class FabricController extends Controller
         session()->flash('message', ['type' => 'success', 'message' => 'Item has beed deleted']);
     }
 
-    public function exports(Fabric $fabric){
-        $exports=[
-            ['Lot','Kg','User','Artikel','Sisa']
+    public function exports(Fabric $fabric)
+    {
+        $exports = [
+            ['Lot', 'Kg', 'User', 'Artikel', 'Sisa']
         ];
 
 
-        foreach($fabric->fabricItems as $item){
-            
-            foreach($item->detailFabrics as $detail){
-                $exports[]=[
+        foreach ($fabric->fabricItems as $item) {
+
+            foreach ($item->detailFabrics as $detail) {
+                $exports[] = [
                     $item['code'],
                     $detail['qty'],
                     $item->creator['name'],

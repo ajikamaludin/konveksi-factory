@@ -10,12 +10,12 @@ import Pagination from '@/Components/Pagination';
 import ModalConfirm from '@/Components/ModalConfirm';
 import SearchInput from '@/Components/SearchInput';
 import { hasPermission } from '@/utils';
-import { HiArchive, HiArrowCircleDown, HiArrowNarrowDown, HiFolderDownload, HiOutlineArchive, HiPencil, HiTrash } from 'react-icons/hi';
+import { HiArchive, HiArrowCircleDown, HiArrowCircleLeft, HiArrowNarrowDown, HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import Button from '@/Components/Button';
 
 export default function Index(props) {
     // console.log(props.queryarchive);
-    const { query: { links, data }, auth } = props
+    const { query: { links, data }, auth} = props
 
     const [search, setSearch] = useState('')
     const preValue = usePrevious(search)
@@ -32,14 +32,14 @@ export default function Index(props) {
             router.delete(route('fabric.destroy', confirmModal.data.id))
         }
     }
-    const AddArchive = (fabric) => {
+    const UnArchive = (fabric) => {
         confirmModal.setData(fabric)
         confirmModal.toggle()
         
     }
-    const onArchive=()=>{
+    const onUnarchive=()=>{
         if (confirmModal.data !== null) {
-            router.put(route('fabric.addarchive', confirmModal.data.id))
+            router.put(route('fabric.unarchive', confirmModal.data.id))
         }
     }
 
@@ -57,7 +57,7 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-fabric')
+   
     const canUpdate = hasPermission(auth, 'update-fabric')
     const canDelete = hasPermission(auth, 'delete-fabric')
 
@@ -75,17 +75,15 @@ export default function Index(props) {
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-gray-200 dark:bg-gray-800 space-y-4">
                         <div className='flex justify-between'>
-                            {canCreate && (
-                                <Link href={route("fabric.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
-                            )}
-
-                            <div className="flex items-center">
-                                <Link href={route("fabric.archive")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
-                                    <HiArchive />
+                        <Link href={route("fabric.index")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
+                                    <HiArrowCircleLeft />
                                     <span>
-                                        Archive
+                                        Kembali
                                     </span>
                                 </Link>
+
+                            <div className="flex items-center">
+                                
                                 <SearchInput
                                     onChange={e => setSearch(e.target.value)}
                                     value={search}
@@ -149,10 +147,10 @@ export default function Index(props) {
                                                                 <div>Excel</div>
                                                             </a>
                                                         </Dropdown.Item>
-                                                        <Dropdown.Item onClick={() => AddArchive(fabric)}>
+                                                        <Dropdown.Item onClick={() => UnArchive(fabric)}>
                                                                 <div className='flex space-x-1 items-center'>
                                                                     <HiArchive />
-                                                                    <div>Add Archive</div>
+                                                                    <div>Unarchive</div>
                                                                 </div>
                                                             </Dropdown.Item>
 
@@ -192,7 +190,7 @@ export default function Index(props) {
             />
             <ModalConfirm
                 modalState={confirmModal}
-                onConfirm={onArchive}
+                onConfirm={onUnarchive}
             />
 
         </AuthenticatedLayout>

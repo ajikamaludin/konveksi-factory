@@ -14,6 +14,7 @@ class Fabric extends Model
         'composisi_id',
         'setting_size',
         'supplier_id',
+        'is_archive',
     ];
 
     public function fabricItems()

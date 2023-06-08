@@ -2,44 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { Link, router } from '@inertiajs/react';
 import { usePrevious } from 'react-use';
 import { Head } from '@inertiajs/react';
-import { Dropdown } from 'flowbite-react';
+import { Button, Dropdown } from 'flowbite-react';
+import { HiArchive, HiArrowCircleLeft, HiFolderDownload, HiPencil, HiTrash } from 'react-icons/hi';
 import { useModalState } from '@/hooks';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Pagination from '@/Components/Pagination';
 import ModalConfirm from '@/Components/ModalConfirm';
+import FormModal from './FormModal';
 import SearchInput from '@/Components/SearchInput';
-import { hasPermission } from '@/utils';
-import { HiArchive, HiArrowCircleDown, HiArrowNarrowDown, HiFolderDownload, HiOutlineArchive, HiPencil, HiTrash } from 'react-icons/hi';
-import Button from '@/Components/Button';
+import { formatDate, formatIDDate, formatIDR, hasPermission } from '@/utils';
 
 export default function Index(props) {
-    // console.log(props.queryarchive);
     const { query: { links, data }, auth } = props
-
+    
     const [search, setSearch] = useState('')
     const preValue = usePrevious(search)
 
     const confirmModal = useModalState()
+    const formModal = useModalState()
 
-    const handleDeleteClick = (fabric) => {
-        confirmModal.setData(fabric)
+    const toggleFormModal = (production = null) => {
+        formModal.setData(production)
+        formModal.toggle()
+    }
+
+    const handleDeleteClick = (production) => {
+        confirmModal.setData(production)
         confirmModal.toggle()
     }
 
     const onDelete = () => {
-        if (confirmModal.data !== null) {
-            router.delete(route('fabric.destroy', confirmModal.data.id))
+        if(confirmModal.data !== null) {
+            router.delete(route('production.destroy', confirmModal.data.id))
         }
     }
-    const AddArchive = (fabric) => {
+    const UnArchive = (fabric) => {
         confirmModal.setData(fabric)
         confirmModal.toggle()
         
     }
-    const onArchive=()=>{
+    const onUnarchive=()=>{
         if (confirmModal.data !== null) {
-            router.put(route('fabric.addarchive', confirmModal.data.id))
+            router.put(route('production.unarchive', confirmModal.data.id))
         }
     }
 
@@ -57,9 +62,9 @@ export default function Index(props) {
         }
     }, [search])
 
-    const canCreate = hasPermission(auth, 'create-fabric')
-    const canUpdate = hasPermission(auth, 'update-fabric')
-    const canDelete = hasPermission(auth, 'delete-fabric')
+    
+    const canUpdate = hasPermission(auth, 'update-production')
+    const canDelete = hasPermission(auth, 'delete-production')
 
     return (
         <AuthenticatedLayout
@@ -67,30 +72,26 @@ export default function Index(props) {
             errors={props.errors}
             flash={props.flash}
             page={'Dashboard'}
-            action={'Kain'}
+            action={'Artikel'}
         >
-            <Head title="Kain" />
+            <Head title="Artikel"/>
 
             <div>
                 <div className="mx-auto sm:px-6 lg:px-8 ">
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-gray-200 dark:bg-gray-800 space-y-4">
                         <div className='flex justify-between'>
-                            {canCreate && (
-                                <Link href={route("fabric.create")} className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5'>Tambah</Link>
-                            )}
-
-                            <div className="flex items-center">
-                                <Link href={route("fabric.archive")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
-                                    <HiArchive />
+                           
+                             <Link href={route("production.index")} className="mr-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 flex space-x-3  items-center">
+                                    <HiArrowCircleLeft />
                                     <span>
-                                        Archive
+                                        Kembali
                                     </span>
                                 </Link>
+                            <div className="flex items-center">
                                 <SearchInput
                                     onChange={e => setSearch(e.target.value)}
                                     value={search}
                                 />
-
                             </div>
                         </div>
                         <div className='overflow-auto'>
@@ -99,42 +100,53 @@ export default function Index(props) {
                                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
                                             <th scope="col" className="py-3 px-6">
-                                                #
+                                                Style
                                             </th>
                                             <th scope="col" className="py-3 px-6">
                                                 Nama
                                             </th>
                                             <th scope="col" className="py-3 px-6">
-                                                Supplier
+                                                Total PO
                                             </th>
                                             <th scope="col" className="py-3 px-6">
-                                                Total Kg
+                                                Reject
                                             </th>
                                             <th scope="col" className="py-3 px-6">
                                                 Sisa
                                             </th>
-                                            <th scope="col" className="py-3 px-6" />
+                                            <th scope="col" className="py-3 px-6">
+                                                Line Sewing
+                                            </th>
+                                            <th scope="col" className="py-3 px-6">
+                                                Deadline
+                                            </th>
+                                            <th scope="col" className="py-3 px-6"/>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map((fabric, index) => (
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={fabric.id}>
+                                        {data.map(production => (
+                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={production.id}>
                                                 <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {index + 1}
+                                                    {production.code}
                                                 </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {fabric.name}
+                                                <td className="py-4 px-6">
+                                                    {production.name}
                                                 </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {fabric.supplier?.name}
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.total)}
                                                 </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {fabric.qty}
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.reject)}
                                                 </td>
-                                                <td scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                    {fabric.fritter_qty}
+                                                <td className="py-4 px-6">
+                                                    {formatIDR(production.left)}
                                                 </td>
-
+                                                <td className="py-4 px-6">
+                                                    {production.active_line}
+                                                </td>
+                                                <td className="py-4 px-6">
+                                                    {production.deadline !== null && formatDate(production.deadline)}
+                                                </td>
                                                 <td className="py-4 px-6 flex justify-end">
                                                     <Dropdown
                                                         label={"Opsi"}
@@ -143,35 +155,33 @@ export default function Index(props) {
                                                         dismissOnClick={true}
                                                         size={'sm'}
                                                     >
+                                                        <Dropdown.Item onClick={() => UnArchive(production)}>
+                                                                <div className='flex space-x-1 items-center'>
+                                                                    <HiArchive />
+                                                                    <div>Unarchive</div>
+                                                                </div>
+                                                            </Dropdown.Item>
                                                         <Dropdown.Item>
-                                                            <a href={route("fabric.export", fabric)} target="_blank" className="flex space-x-1 items-center">
-                                                                <HiFolderDownload />
+                                                            <a href={route("production.export", production)} target="_blank" className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
                                                                 <div>Excel</div>
                                                             </a>
                                                         </Dropdown.Item>
-                                                        <Dropdown.Item onClick={() => AddArchive(fabric)}>
-                                                                <div className='flex space-x-1 items-center'>
-                                                                    <HiArchive />
-                                                                    <div>Add Archive</div>
-                                                                </div>
-                                                            </Dropdown.Item>
-
+                                                        <Dropdown.Item>
+                                                            <a href={route("production.exportfinishing", production)} target="_blank" className="flex space-x-1 items-center">
+                                                                <HiFolderDownload/> 
+                                                                <div>Excel Finishing</div>
+                                                            </a>
+                                                        </Dropdown.Item>
                                                         {canUpdate && (
                                                             <Dropdown.Item>
-                                                                <Link href={route("fabric.edit", fabric)} className="flex space-x-1 items-center">
-                                                                    <HiPencil />
+                                                                <Link href={route("production.edit", production)} className="flex space-x-1 items-center">
+                                                                    <HiPencil/> 
                                                                     <div>Ubah</div>
                                                                 </Link>
                                                             </Dropdown.Item>
                                                         )}
-                                                        {canDelete && fabric.result_qty == 0 && (
-                                                            <Dropdown.Item onClick={() => handleDeleteClick(fabric)}>
-                                                                <div className='flex space-x-1 items-center'>
-                                                                    <HiTrash />
-                                                                    <div>Hapus</div>
-                                                                </div>
-                                                            </Dropdown.Item>
-                                                        )}
+                                                        
                                                     </Dropdown>
                                                 </td>
                                             </tr>
@@ -180,7 +190,7 @@ export default function Index(props) {
                                 </table>
                             </div>
                             <div className='w-full flex items-center justify-center'>
-                                <Pagination links={links} params={params} />
+                                <Pagination links={links} params={params}/>
                             </div>
                         </div>
                     </div>
@@ -190,11 +200,13 @@ export default function Index(props) {
                 modalState={confirmModal}
                 onConfirm={onDelete}
             />
-            <ModalConfirm
+             <ModalConfirm
                 modalState={confirmModal}
-                onConfirm={onArchive}
+                onConfirm={onUnarchive}
             />
-
+            <FormModal
+                modalState={formModal}
+            />
         </AuthenticatedLayout>
     );
 }
