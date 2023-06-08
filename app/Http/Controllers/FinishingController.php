@@ -22,6 +22,8 @@ class FinishingController extends Controller
         $size = null;
         $item = null;
         $results = null;
+        $operator = 0;
+        $target = 0;
 
         if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
             $production = Production::find($request->production_id);

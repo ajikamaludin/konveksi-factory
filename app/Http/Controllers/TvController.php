@@ -42,8 +42,8 @@ class TvController extends Controller
                 ->selectRaw('(SUM(finish_quantity) + SUM(reject_quantity)) as total')
                 ->value('total');
 
+            $total = $total <= 0 ? 1 : $total;
             $qty = $total * $workhours;
-            $qty = $qty <= 0 ? 1 : $qty;
             $linehpp += ($salary->payroll * $operator) / $qty;
 
             $hpp = $linehpp / $total;
