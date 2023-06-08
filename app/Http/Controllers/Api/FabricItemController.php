@@ -28,7 +28,7 @@ class FabricItemController extends Controller
     }
     public function fabric(Request $request)
     {
-        $query = Fabric::query()->with('fabricItems.detailFabrics');
+        $query = Fabric::query()->with('fabricItems.detailFabrics')->where('is_archive','=','0');
         
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");

@@ -10,7 +10,7 @@ class ProductionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Production::query()->with(['buyer']);
+        $query = Production::query()->with(['buyer'])->where('is_archive','=','0');
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%")

@@ -11,7 +11,7 @@ class CuttingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cutting::query()->with(['buyer','cuttingItems.size']);
+        $query = Cutting::query()->with(['buyer','cuttingItems.size'])->where('is_archive','=','0');
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%")
