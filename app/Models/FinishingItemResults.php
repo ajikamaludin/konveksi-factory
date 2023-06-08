@@ -11,7 +11,8 @@ class FinishingItemResults extends Model
         'input_at',
     ];
 
-    public function productionItem(){
-      return $this->belongsTo(ProductionItem::class);
+    public function productionItem()
+    {
+        return $this->belongsTo(ProductionItem::class);
     }
 }

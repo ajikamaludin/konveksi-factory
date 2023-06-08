@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('detail_fabrics', function (Blueprint $table) { 
+        Schema::table('detail_fabrics', function (Blueprint $table) {
             $table->decimal('result_qty', 14, 2)->default(0);
             $table->decimal('fritter', 14, 2)->default(0);
         });
-        // Schema::table('fabric_items', function (Blueprint $table) { 
+        // Schema::table('fabric_items', function (Blueprint $table) {
         //     $table->decimal('result_qty', 14, 2)->default(0);
         //     $table->decimal('fritter', 14, 2)->default(0);
         // });

@@ -13,7 +13,8 @@ class UserCuttingItem extends Model
         'fabric_item_id',
     ];
 
-    public function fabricItem(){
+    public function fabricItem()
+    {
         return $this->belongsTo(FabricItem::class);
     }
 }

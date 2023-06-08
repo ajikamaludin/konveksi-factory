@@ -16,7 +16,9 @@ class CuttingItem extends Model
     {
         return $this->belongsTo(Size::class);
     }
-    public function color(){
+
+    public function color()
+    {
         return $this->belongsTo(Color::class);
     }
 }

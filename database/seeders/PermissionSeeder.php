@@ -90,11 +90,11 @@ class PermissionSeeder extends Seeder
             ['id' => Str::uuid(), 'label' => 'Setting', 'name' => 'create-setting'],
             // tv
             ['id' => Str::uuid(), 'label' => 'TV', 'name' => 'view-tv'],
-           //Compositions
-           ['id' => Str::uuid(), 'label' => 'Buat Komposisi', 'name' => 'create-composition'],
-           ['id' => Str::uuid(), 'label' => 'Edit Komposisi', 'name' => 'update-composition'],
-           ['id' => Str::uuid(), 'label' => 'Lihat Komposisi', 'name' => 'view-composition'],
-           ['id' => Str::uuid(), 'label' => 'Hapus Komposisi', 'name' => 'delete-composition'],
+            //Compositions
+            ['id' => Str::uuid(), 'label' => 'Buat Komposisi', 'name' => 'create-composition'],
+            ['id' => Str::uuid(), 'label' => 'Edit Komposisi', 'name' => 'update-composition'],
+            ['id' => Str::uuid(), 'label' => 'Lihat Komposisi', 'name' => 'view-composition'],
+            ['id' => Str::uuid(), 'label' => 'Hapus Komposisi', 'name' => 'delete-composition'],
         ];
 
         foreach ($permissions as $permission) {

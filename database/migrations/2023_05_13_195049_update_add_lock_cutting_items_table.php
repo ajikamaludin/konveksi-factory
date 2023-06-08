@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('cutting_items', function (Blueprint $table) { 
+        Schema::table('cutting_items', function (Blueprint $table) {
             $table->smallInteger('lock')->default(0);
         });
-        // 
+        //
     }
 
     /**

@@ -87,6 +87,7 @@ class FabricController extends Controller
             'fabric' => $fabric->load(['supplier', 'fabricItems.detailFabrics']),
         ]);
     }
+
     public function getarchive(Request $request)
     {
         //archive
@@ -103,20 +104,25 @@ class FabricController extends Controller
         }
 
         $query->where('is_archive', '=', '1')->groupBy('fabrics.id')->orderBy('fabrics.created_at', 'desc');
+
         return inertia('Fabric/Archive', [
             'query' => $query->paginate(10),
 
         ]);
     }
+
     public function archive(Fabric $fabric)
     {
         $fabric->update(['is_archive' => 1]);
+
         return redirect()->route('fabric.index')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
     }
+
     public function unarchive(Fabric $fabric)
     {
         $fabric->update(['is_archive' => 0]);
+
         return redirect()->route('fabric.archive')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }
@@ -154,8 +160,8 @@ class FabricController extends Controller
             $fabricitems = $fabric->fabricItems()->updateOrCreate([
                 'code' => $item['code'],
             ], [
-                    'name' => $request->name,
-                ]);
+                'name' => $request->name,
+            ]);
 
             $fabricitems->detailFabrics()->delete();
             foreach ($item['detail_fabrics'] as $detail) {
@@ -185,9 +191,8 @@ class FabricController extends Controller
     public function exports(Fabric $fabric)
     {
         $exports = [
-            ['Lot', 'Kg', 'User', 'Artikel', 'Sisa']
+            ['Lot', 'Kg', 'User', 'Artikel', 'Sisa'],
         ];
-
 
         foreach ($fabric->fabricItems as $item) {
 

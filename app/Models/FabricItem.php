@@ -10,7 +10,7 @@ class FabricItem extends Model
         'code',
         'name',
         'fabric_id',
-        
+
     ];
 
     public function detailFabrics()
@@ -18,7 +18,8 @@ class FabricItem extends Model
         return $this->hasMany(DetailFabric::class);
     }
 
-    public function first_detail(){
+    public function first_detail()
+    {
         return $this->hasOne(DetailFabric::class)->oldestOfMany();
     }
 

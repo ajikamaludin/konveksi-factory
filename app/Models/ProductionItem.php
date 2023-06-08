@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ProductionItem extends Model
 {
-    public $cascadeDeletes = ['results','finishingresults'];
+    public $cascadeDeletes = ['results', 'finishingresults'];
 
     protected $fillable = [
         'production_id',
@@ -20,7 +20,7 @@ class ProductionItem extends Model
         'lock',
     ];
 
-    protected $appends = ['left_quantity','leftfinishing_quantity'];
+    protected $appends = ['left_quantity', 'leftfinishing_quantity'];
 
     public function size()
     {
@@ -48,13 +48,21 @@ class ProductionItem extends Model
             get: fn () => $this->target_quantity - $this->finish_quantity - $this->reject_quantity,
         );
     }
+
     public function leftfinishingQuantity(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->target_quantity - $this->result_quantity_finishing - $this->reject_quantity_finishing,
         );
     }
-    public function product(){
-        return $this->belongsTo(Production::class,'production_id');
+
+    public function product()
+    {
+        return $this->belongsTo(Production::class, 'production_id');
+    }
+
+    public function production()
+    {
+        return $this->belongsTo(Production::class, 'production_id');
     }
 }

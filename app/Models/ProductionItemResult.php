@@ -11,7 +11,8 @@ class ProductionItemResult extends Model
         'input_at',
     ];
 
-    public function item(){
-        return $this->belongsTo(ProductionItem::class,'production_item_id');
+    public function item()
+    {
+        return $this->belongsTo(ProductionItem::class, 'production_item_id');
     }
 }

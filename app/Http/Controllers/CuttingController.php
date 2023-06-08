@@ -13,12 +13,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Rap2hpoutre\FastExcel\FastExcel;
 
-
 class CuttingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive','=','0');
+        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive', '=', '0');
 
         return inertia('Cutting/Index', [
             'query' => $query->paginate(10),
@@ -67,7 +66,7 @@ class CuttingController extends Controller
             'style' => $request->style,
             'name' => $request->name,
             'deadline' => $request->deadline,
-            'fritter_quantity' => $fritter_quantity
+            'fritter_quantity' => $fritter_quantity,
         ]);
 
         foreach ($request->items as $item) {
@@ -140,7 +139,7 @@ class CuttingController extends Controller
             'style' => $request->style,
             'name' => $request->name,
             'deadline' => $request->deadline,
-            'fritter_quantity' => $fritter_quantity
+            'fritter_quantity' => $fritter_quantity,
         ]);
 
         foreach ($request->items as $item) {
@@ -184,7 +183,7 @@ class CuttingController extends Controller
         $userCutting = UserCutting::with('userCuttingItem.creator', 'userCuttingItem.fabricItem.detailFabrics')->where('artikel_id', $cutting?->production_id)->get();
         $supplier = Fabric::with('supplier', 'fabricItems.detailFabrics')->where('id', $userCutting[0]?->fabric_item_id)->first();
         $ratios = Ratio::with('detailsRatio.size')->where('id', $userCutting[0]?->ratio_id)->first();
-        $sizes = ['', '', '',''];
+        $sizes = ['', '', '', ''];
         $space = ['User', 'Lot', 'Kain', 'Hasil Cutting'];
 
         $qty = 0;
@@ -219,51 +218,49 @@ class CuttingController extends Controller
         $total_qty = 0;
         $total_cutting = 0;
         $count = 0;
-        $fritter=0;
+        $fritter = 0;
         if ($userCutting != null) {
             foreach ($userCutting as $detail) {
-                $ratio_id=$detail['ratio_id'];
+                $ratio_id = $detail['ratio_id'];
                 foreach ($detail->userCuttingItem as $item) {
-                  
+
                     $count++;
                     $items = [
                         $item?->creator?->name,
-                        $item?->fabricItem?->code, $item?->qty_fabric,'',
-                        
+                        $item?->fabricItem?->code, $item?->qty_fabric, '',
+
                     ];
-                   $qty_fabric=$item?->qty_fabric;
-                  
-                    foreach($item?->fabricItem->detailFabrics as $detailFabric){
-                        if($detailFabric['qty']===$qty_fabric&&$detailFabric['result_qty']===$item?->qty_sheet){
-                           $fritter=$detailFabric['fritter'];
+                    $qty_fabric = $item?->qty_fabric;
+
+                    foreach ($item?->fabricItem->detailFabrics as $detailFabric) {
+                        if ($detailFabric['qty'] === $qty_fabric && $detailFabric['result_qty'] === $item?->qty_sheet) {
+                            $fritter = $detailFabric['fritter'];
                         }
                     }
-                  
-                   
+
                     foreach ($cutting->cuttingItems as $cuttingitem) {
-                     
+
                         $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
                         if ($detailRatio == null) {
-                            $qty=0;
-                        }else{
-                            $qty=$detailRatio->qty;
+                            $qty = 0;
+                        } else {
+                            $qty = $detailRatio->qty;
                         }
                         array_push(
                             $items,
                             $item?->qty_sheet * $qty
                         );
-                        if($item?->qty==0){
-                            $itemqty=1;
-                        }else{
-                            $itemqty=$item?->qty;
+                        if ($item?->qty == 0) {
+                            $itemqty = 1;
+                        } else {
+                            $itemqty = $item?->qty;
                         }
                         $detail = [
                             $item?->qty,
-                            ($item?->qty_fabric-$fritter) / $itemqty,
-                          
+                            ($item?->qty_fabric - $fritter) / $itemqty,
+
                         ];
                     }
-
 
                     $total_cutting += $item->qty_sheet;
                     $s = array_merge($items, $detail);
@@ -274,8 +271,7 @@ class CuttingController extends Controller
                 }
             }
         }
-        
-       
+
         // if ($ratios != null) {
         //     foreach ($ratios->detailsRatio as $ratio) {
         //         // array_push($arrcutting, $total_cutting * $ratio?->qty);
@@ -284,9 +280,9 @@ class CuttingController extends Controller
         foreach ($cutting->cuttingItems as $cuttingitem) {
             $detailRatio = DetailRatio::where(['ratio_id' => $ratio_id, 'size_id' => $cuttingitem->size['id']])->first();
             if ($detailRatio == null) {
-                $qty=0;
-            }else{
-                $qty=$detailRatio->qty;
+                $qty = 0;
+            } else {
+                $qty = $detailRatio->qty;
             }
             array_push($arrcutting, $total_cutting * $qty);
         }
@@ -313,8 +309,9 @@ class CuttingController extends Controller
         }
         $sisa = array_merge(['Sisa PO', '', '', ''], $arrsisa, [$cutting?->fritter_quantity]);
         $exports[] = $sisa;
-       
+
         $now = now()->format('d-m-Y');
+
         return (new FastExcel($exports))
             ->withoutHeaders()
             ->download("Cutting-$cutting->name-$now.xlsx");
@@ -322,21 +319,25 @@ class CuttingController extends Controller
 
     public function getarchive(Request $request)
     {
-        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive','=','1');
+        $query = Cutting::query()->with('cuttingItems.size', 'cuttingItems.color', 'creator')->where('is_archive', '=', '1');
 
         return inertia('Cutting/Archive', [
             'query' => $query->paginate(10),
         ]);
     }
+
     public function archive(Cutting $cutting)
     {
         $cutting->update(['is_archive' => 1]);
+
         return redirect()->route('cutting.index')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
     }
+
     public function unarchive(Cutting $cutting)
     {
         $cutting->update(['is_archive' => 0]);
+
         return redirect()->route('cutting.archive')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }

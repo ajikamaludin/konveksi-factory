@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Support\Facades\DB;
 
 class Fabric extends Model
@@ -21,20 +22,23 @@ class Fabric extends Model
     {
         return $this->hasMany(FabricItem::class);
     }
-    public function first_item(){
+
+    public function first_item()
+    {
         return $this->hasOne(FabricItem::class)
-        ->join('detail_fabrics','fabric_item_id','fabric_items.id')
-        ->select('fabric_items.*',DB::raw('sum(fritter) as fritter'))
-        ->where('fritter','>','0')
-        ->groupBy('fabric_items.fabric_id')
-        ;
+            ->join('detail_fabrics', 'fabric_item_id', 'fabric_items.id')
+            ->select('fabric_items.*', DB::raw('sum(fritter) as fritter'))
+            ->where('fritter', '>', '0')
+            ->groupBy('fabric_items.fabric_id');
     }
 
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
     }
-    public function composition(){
+
+    public function composition()
+    {
         return $this->belongsTo(Compositions::class);
     }
 }

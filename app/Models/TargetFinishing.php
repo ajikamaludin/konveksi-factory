@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 class TargetFinishing extends Model
 {
     protected $fillable = [

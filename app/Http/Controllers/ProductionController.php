@@ -11,16 +11,14 @@ use App\Models\SettingPayroll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Mockery\Undefined;
-use Rap2hpoutre\FastExcel\FastExcel;
-
 use function PHPUnit\Framework\isEmpty;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ProductionController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Production::query()->where('is_archive','=','0');
+        $query = Production::query()->where('is_archive', '=', '0');
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
@@ -205,7 +203,7 @@ class ProductionController extends Controller
             if (isEmpty($item->results)) {
                 $linehpp = 0;
                 $detail = [
-                    $linehpp
+                    $linehpp,
                 ];
             }
             foreach ($item->results as $result) {
@@ -214,7 +212,7 @@ class ProductionController extends Controller
                 $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
 
                 $detail = [
-                    $linehpp
+                    $linehpp,
                 ];
 
                 $hpp += $linehpp;
@@ -301,16 +299,19 @@ class ProductionController extends Controller
             if ($item->finishingresults->isEmpty()) {
                 $linehpp = 0;
                 $detail = [
-                    $linehpp
+                    $linehpp,
                 ];
             } else {
                 foreach ($item->finishingresults as $result) {
                     $workhours = SettingPayroll::getdays($result->input_date);
                     $operator = OperatorFinishing::whereDate('input_at', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
-                    $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
+
+                    $total = ($result->finish_quantity + $result->reject_quantity);
+                    $total = $total <= 0 ? 1 : $total;
+                    $linehpp = ($salary->payroll * $operator?->qty) / ($total * $workhours);
 
                     $detail = [
-                        $linehpp
+                        $linehpp,
                     ];
 
                     $hpp += $linehpp;
@@ -343,7 +344,7 @@ class ProductionController extends Controller
             '',
             $hpp / $count,
         ];
-       
+
         $now = now()->format('d-m-Y');
 
         return (new FastExcel($exports))
@@ -353,7 +354,7 @@ class ProductionController extends Controller
 
     public function getarchive(Request $request)
     {
-        $query = Production::query()->where('is_archive','=','1');
+        $query = Production::query()->where('is_archive', '=', '1');
 
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
@@ -365,15 +366,19 @@ class ProductionController extends Controller
             'query' => $query->paginate(10),
         ]);
     }
+
     public function archive(Production $production)
     {
         $production->update(['is_archive' => 1]);
+
         return redirect()->route('production.index')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Archive']);
     }
+
     public function unarchive(Production $production)
     {
         $production->update(['is_archive' => 0]);
+
         return redirect()->route('production.archive')
             ->with('message', ['type' => 'success', 'message' => 'Fabric has beed Unarchive']);
     }

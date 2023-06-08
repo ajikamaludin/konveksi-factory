@@ -46,8 +46,8 @@ class UserCuttingController extends Controller
             // 'items.*.detail_fabric' => 'required|array',
             // 'items.*.detail_fabric.id' => 'required|exists:detail_fabrics,id',
         ]);
-      
-        $cutting_id=$cutting->id;
+
+        $cutting_id = $cutting->id;
         $userCutting = UserCutting::with('userCuttingItem.creator')->where([
             ['cutting_id', '=', $cutting_id],
         ])->get();
@@ -74,7 +74,7 @@ class UserCuttingController extends Controller
             } else {
                 $total_po = $request->fritter_quantity;
             }
-           
+
             foreach ($request->items as $item) {
                 // dd( $item['total_qty'],$request,$total_po);
                 $result_quantity = $item['total_qty'] + $result_quantity;
@@ -87,13 +87,13 @@ class UserCuttingController extends Controller
                         'qty' => $item['total_qty'],
                         'fritter' => $request->fritter_quantity,
                         'lock' => 1,
-                        'fabric_item_id' => $item['fabric_item_id']
+                        'fabric_item_id' => $item['fabric_item_id'],
                     ]);
                     $total_qty = $total_qty + $qty_fabric;
                 }
                 DetailFabric::where('id', $item['id'])->update([
                     'fritter' => $item['fritter_item'],
-                    'result_qty' => $item['quantity'] + $item['result_qty']
+                    'result_qty' => $item['quantity'] + $item['result_qty'],
                 ]);
             }
             if ($result_quantity == 0) {
@@ -101,8 +101,7 @@ class UserCuttingController extends Controller
             }
 
             $consumsion = $total_qty / $result_quantity;
-           
-           
+
             Cutting::where('id', $cutting_id)->update([
                 'result_quantity' => $result_quantity,
                 'fritter_quantity' => $request->fritter_quantity,
@@ -110,7 +109,7 @@ class UserCuttingController extends Controller
                 'lock' => '1',
             ]);
             DB::commit();
-           
+
             session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
         } catch (\Exception $e) {
             // dd($e);

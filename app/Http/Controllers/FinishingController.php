@@ -5,26 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Color;
 use App\Models\FinishingItemResults;
 use App\Models\OperatorFinishing;
-use Rap2hpoutre\FastExcel\FastExcel;
 use App\Models\Production;
 use App\Models\ProductionItem;
 use App\Models\Size;
 use App\Models\TargetFinishing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class FinishingController extends Controller
 {
-    //
     public function index(Request $request)
     {
         $production = null;
         $color = null;
         $size = null;
         $item = null;
-        $operator = 0;
-        $target = 0;
         $results = null;
 
         if ($request->production_id != '' && $request->color_id != '' && $request->size_id != '') {
@@ -47,21 +43,21 @@ class FinishingController extends Controller
         )
             ->join('production_items', 'production_items.id', '=', 'finishing_item_results.production_item_id')
             ->join('productions', 'productions.id', '=', 'production_items.production_id')
-            ->groupBy(DB::raw('DATE(input_at)'))->orderby('finishing_item_results.input_at', 'desc')->get();
+            ->groupBy(DB::raw('DATE(input_at)'))->orderby('finishing_item_results.input_at', 'desc')
+            ->get();
+
         if ($request->production_id != '') {
-            $gettarget = TargetFinishing::whereDate('input_at', '=', $dataNow)
+            $target = TargetFinishing::whereDate('input_at', '=', $dataNow)
                 ->where('production_id', '=', $request->production_id)
-                ->orderBy('input_at', 'desc')->first();
-            if (!empty($gettarget)) {
-                $target = $gettarget?->qty;
-            }
-            $getOperator = OperatorFinishing::whereDate('input_at', '=', $dataNow)
+                ->orderBy('input_at', 'desc')
+                ->value('qty') ?? 0;
+
+            $operator = OperatorFinishing::whereDate('input_at', '=', $dataNow)
                 ->where('production_id', '=', $request->production_id)
-                ->orderBy('input_at', 'desc')->first();
-            if (!empty($getOperator)) {
-                $operator = $getOperator?->qty;
-            }
+                ->orderBy('input_at', 'desc')
+                ->value('qty') ?? 0;
         }
+
         return inertia('Finishing/Index', [
             'item' => $item,
             '_production' => $production,
@@ -92,21 +88,29 @@ class FinishingController extends Controller
                 'reject_quantity_finishing' => $item->reject_quantity_finishing + $request->reject_quantity,
             ]);
 
-            $resultItem = $item->finishingresults()->create([
+            $item->finishingresults()->create([
                 'input_at' => now(),
                 'finish_quantity' => $request->finish_quantity,
                 'reject_quantity' => $request->reject_quantity,
             ]);
-            TargetFinishing::whereDate('input_at', $date)->where('production_id', '=', $item->production_id)->updateOrCreate([
-                'qty' => $request->qtytarget,
-                'input_at' => $date,
-                'production_id' => $item->production_id
-            ]);
-            OperatorFinishing::whereDate('input_at', $date)->where('production_id', '=', $item->production_id)->updateOrCreate([
-                'qty' => $request->qty,
-                'input_at' => $date,
-                'production_id' => $item->production_id
-            ]);
+
+            TargetFinishing::whereDate('input_at', $date)
+                ->where('production_id', '=', $item->production_id)
+                ->updateOrCreate([
+                    'input_at' => $date,
+                    'production_id' => $item->production_id,
+                ], [
+                    'qty' => $request->qtytarget,
+                ]);
+
+            OperatorFinishing::whereDate('input_at', $date)
+                ->where('production_id', '=', $item->production_id)
+                ->updateOrCreate([
+                    'input_at' => $date,
+                    'production_id' => $item->production_id,
+                ], [
+                    'qty' => $request->qty,
+                ]);
 
             DB::commit();
             session()->flash('message', ['type' => 'success', 'message' => 'Item has beed saved']);
@@ -115,10 +119,10 @@ class FinishingController extends Controller
         }
     }
 
-    public function export(String $finishing)
+    public function export(string $finishing)
     {
         $exports = [
-            ['Tanggal', 'Artikel','Size','Result', 'Reject']
+            ['Tanggal', 'Artikel', 'Size', 'Result', 'Reject'],
         ];
         $results = FinishingItemResults::Select(
             'productions.id',

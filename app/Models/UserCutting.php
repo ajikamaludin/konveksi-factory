@@ -8,14 +8,16 @@ class UserCutting extends Model
         'fabric_item_id',
         'artikel_id',
         'ratio_id',
-        'cutting_id'
+        'cutting_id',
     ];
 
     public function userCuttingItem()
     {
         return $this->hasMany(UserCuttingItem::class);
     }
-    public function ratio(){
+
+    public function ratio()
+    {
         return $this->belongsTo(Ratio::class);
     }
 }

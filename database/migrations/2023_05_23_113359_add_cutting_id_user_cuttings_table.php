@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::table('user_cuttings', function (Blueprint $table) { 
+        Schema::table('user_cuttings', function (Blueprint $table) {
             $table->uuid('cutting_id')->nullable();
         });
     }

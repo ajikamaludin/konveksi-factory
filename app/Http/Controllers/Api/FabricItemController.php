@@ -16,20 +16,21 @@ class FabricItemController extends Controller
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }
-        if ($request->fabric_id){
-            $query->where('fabric_id',$request->fabric_id);
+        if ($request->fabric_id) {
+            $query->where('fabric_id', $request->fabric_id);
         }
 
-        if($request->fabric_item_id){
-            $query->where('id',$request->fabric_item_id);
+        if ($request->fabric_item_id) {
+            $query->where('id', $request->fabric_item_id);
         }
 
         return $query->orderBy('created_at', 'desc')->get();
     }
+
     public function fabric(Request $request)
     {
-        $query = Fabric::query()->with('fabricItems.detailFabrics')->where('is_archive','=','0');
-        
+        $query = Fabric::query()->with('fabricItems.detailFabrics')->where('is_archive', '=', '0');
+
         if ($request->q) {
             $query->where('name', 'like', "%{$request->q}%");
         }

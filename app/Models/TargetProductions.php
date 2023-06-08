@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-
-
 class TargetProductions extends Model
 {
     protected $fillable = [

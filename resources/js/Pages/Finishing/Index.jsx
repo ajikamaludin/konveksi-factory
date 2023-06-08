@@ -1,125 +1,125 @@
-import React, { useState, useEffect } from "react";
-import { router, Head, useForm } from "@inertiajs/react";
-import { usePrevious } from "react-use";
+import React, { useState, useEffect } from 'react'
+import { router, Head, useForm } from '@inertiajs/react'
+import { usePrevious } from 'react-use'
 
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import ProductionSelectionInput from "../Production/SelectionInput";
-import ColorSelectionInput from "../Color/SelectionInput";
-import SizeSelectionInput from "../Size/SelectionInput";
-import { isEmpty } from "lodash";
-import { HiFolderDownload, HiOutlinePlusCircle } from "react-icons/hi";
-import FormInput from "@/Components/FormInput";
-import Input from "@/Components/Input";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import ProductionSelectionInput from '../Production/SelectionInput'
+import ColorSelectionInput from '../Color/SelectionInput'
+import SizeSelectionInput from '../Size/SelectionInput'
+import { isEmpty } from 'lodash'
+import { HiFolderDownload, HiOutlinePlusCircle } from 'react-icons/hi'
+import FormInput from '@/Components/FormInput'
+import Input from '@/Components/Input'
 
 export default function Index(props) {
-    const { item, _production, _color, _size, results,operator,target } = props;
+    const { item, _production, _color, _size, results, operator, target } =
+        props
 
     const { data, setData, post, processing, errors, reset, clearErrors } =
         useForm({
             finish_quantity: 0,
             reject_quantity: 0,
             qty: operator,
-            qtytarget:target,
-        });
+            qtytarget: target,
+        })
 
     const handleOnChange = (event) => {
         setData(
             event.target.name,
-            event.target.type === "checkbox"
+            event.target.type === 'checkbox'
                 ? event.target.checked
                     ? 1
                     : 0
                 : event.target.value
-        );
-    };
+        )
+    }
 
-    const [search, setSearch] = useState("");
-    const preValue = usePrevious(search);
+    const [search, setSearch] = useState('')
+    const preValue = usePrevious(search)
 
-    const [buyer, setBuyer] = useState("-");
-    const [production, setProduction] = useState(_production);
-    const [color, setColor] = useState(_color);
-    const [size, setSize] = useState(_size);
+    const [buyer, setBuyer] = useState('-')
+    const [production, setProduction] = useState(_production)
+    const [color, setColor] = useState(_color)
+    const [size, setSize] = useState(_size)
 
     const handleSelectProduction = (production) => {
         if (isEmpty(production) === false) {
-            setBuyer(production?.buyer?.name);
-            setProduction(production);
-            setSearch({ ...search, production_id: production.id });
-            setData({'qty':operator,'qtytarget':target})
-            return;
+            setBuyer(production?.buyer?.name)
+            setProduction(production)
+            setSearch({ ...search, production_id: production.id })
+            return
         }
-        setSearch({ ...search, production_id: "" });
-        setBuyer("-");
-        setProduction("");
-    };
+        setSearch({ ...search, production_id: '' })
+        setBuyer('-')
+        setProduction('')
+    }
 
     const handleSelectColor = (color) => {
         if (isEmpty(color) === false) {
-            setColor(color);
-            setSearch({ ...search, color_id: color.id });
-            setData({'qty':operator,'qtytarget':target})
-            return;
+            setColor(color)
+            setSearch({ ...search, color_id: color.id })
+            return
         }
-        setColor("");
-        setSearch({ ...search, color_id: "" });
-    };
+        setColor('')
+        setSearch({ ...search, color_id: '' })
+    }
 
     const handleSize = (size) => {
         if (isEmpty(size) === false) {
-            setSize(size);
-            setSearch({ ...search, size_id: size.id });
-            setData({'qty':operator,'qtytarget':target})
-            return;
+            setSize(size)
+            setSearch({ ...search, size_id: size.id })
+            return
         }
-        setSearch({ ...search, size_id: "" });
-        setSize("");
-    };
+        setSearch({ ...search, size_id: '' })
+        setSize('')
+    }
 
     const handleReset = () => {
-        // reset();
         setData({
+            ...data,
             finish_quantity: 0,
             reject_quantity: 0,
-         
         })
-    };
+    }
 
     const addQuantity = () => {
-        setData("finish_quantity", +data.finish_quantity + 1);
-    };
+        setData('finish_quantity', +data.finish_quantity + 1)
+    }
 
     const addReject = () => {
-        setData("reject_quantity", +data.reject_quantity + 1);
-    };
+        setData('reject_quantity', +data.reject_quantity + 1)
+    }
 
     const handleSubmit = () => {
-        post(route("finishing.create", item), {
+        post(route('finishing.create', item), {
             onSuccess: () => handleReset(),
-        });
-    };
+        })
+    }
 
     useEffect(() => {
         if (preValue) {
             router.get(route(route().current()), search, {
                 replace: true,
                 preserveState: true,
-            });
-            setData({
-                finish_quantity: 0,
-                reject_quantity: 0,
-               
-            });
+            })
         }
-    }, [search]);
+    }, [search])
+
+    useEffect(() => {
+        setData({
+            ...data,
+            qty: operator,
+            qtytarget: target,
+        })
+    }, [target, operator])
 
     return (
         <AuthenticatedLayout
             auth={props.auth}
             errors={props.errors}
             flash={props.flash}
-            page={"Dashboard"}
-            action={"Finishing"}
+            page={'Dashboard'}
+            action={'Finishing'}
         >
             <Head title="Finishing" />
 
@@ -169,28 +169,28 @@ export default function Index(props) {
                         </div>
                         {item && (
                             <>
-                                <div className='flex'>
-                                <div className='flex-auto px-2'>
-                                    <FormInput
-                                        type="number"
-                                        name="qty"
-                                        value={data.qty}
-                                        onChange={handleOnChange}
-                                        label="Operator"
-                                        error={errors.qty}
-                                    />
+                                <div className="flex">
+                                    <div className="flex-auto px-2">
+                                        <FormInput
+                                            type="number"
+                                            name="qty"
+                                            value={data.qty}
+                                            onChange={handleOnChange}
+                                            label="Operator"
+                                            error={errors.qty}
+                                        />
+                                    </div>
+                                    <div className="flex-auto px-2">
+                                        <FormInput
+                                            type="number"
+                                            name="qtytarget"
+                                            value={data.qtytarget}
+                                            onChange={handleOnChange}
+                                            label="Target"
+                                            error={errors.qtytarget}
+                                        />
+                                    </div>
                                 </div>
-                                <div className='flex-auto px-2'>
-                                    <FormInput
-                                        type="number"
-                                        name="qtytarget"
-                                        value={data.qtytarget}
-                                        onChange={handleOnChange}
-                                        label="Target"
-                                        error={errors.qtytarget}
-                                    />
-                                </div>
-                            </div>
                                 <div className="flex flex-row gap-2 w-full justify-around h-20">
                                     <div className="w-1/3 flex items-end">
                                         <button
@@ -211,7 +211,7 @@ export default function Index(props) {
                                             value={data.finish_quantity}
                                             onChange={handleOnChange}
                                             name="finish_quantity"
-                                            className={"text-lg"}
+                                            className={'text-lg'}
                                         />
                                     </div>
                                     <div className="w-1/3 flex flex-col justify-between">
@@ -221,7 +221,7 @@ export default function Index(props) {
                                         <Input
                                             value={item?.leftfinishing_quantity}
                                             readOnly={true}
-                                            className={"text-lg"}
+                                            className={'text-lg'}
                                         />
                                     </div>
                                 </div>
@@ -241,7 +241,7 @@ export default function Index(props) {
                                             value={data.reject_quantity}
                                             onChange={handleOnChange}
                                             name="reject_quantity"
-                                            className={"text-lg"}
+                                            className={'text-lg'}
                                         />
                                     </div>
                                     <div className="w-1/3 flex flex-col justify-between invisible">
@@ -262,7 +262,7 @@ export default function Index(props) {
                                                 +data.reject_quantity
                                             }
                                             readOnly={true}
-                                            className={"text-lg"}
+                                            className={'text-lg'}
                                         />
                                     </div>
                                     <div className="w-1/3 flex flex-col justify-between">
@@ -274,7 +274,7 @@ export default function Index(props) {
                                                     +data.reject_quantity)
                                             }
                                             readOnly={true}
-                                            className={"text-lg"}
+                                            className={'text-lg'}
                                         />
                                     </div>
                                 </div>
@@ -381,16 +381,18 @@ export default function Index(props) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {results.map((finish,index) => (
+                                    {results.map((finish, index) => (
                                         <tr
                                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                             key={index}
                                         >
-                                            <td>{finish.input_at}</td>
-                                            <td>
+                                            <td className="py-3 px-6">
+                                                {finish.input_at}
+                                            </td>
+                                            <td className="py-3 px-6">
                                                 <a
                                                     href={route(
-                                                        "finishing.export",
+                                                        'finishing.export',
                                                         finish.input_at
                                                     )}
                                                     target="_blank"
@@ -409,5 +411,5 @@ export default function Index(props) {
                 </div>
             </div>
         </AuthenticatedLayout>
-    );
+    )
 }
