@@ -5,7 +5,7 @@ import { formatIDR } from '@/utils';
 import Button from '@/Components/Button';
 
 export default function Index(props) {
-    const { _production, hourline, target, operator, hpp, hasil } = props
+    const { _production, hourline, target, operator, hpp, hasil,creator } = props
     
     const [isfull, setFull] = useState(false)
     const handlefull = () => {
@@ -42,13 +42,13 @@ export default function Index(props) {
                     <div className="p-6 overflow-hidden shadow-sm sm:rounded-lg bg-white space-y-6 min-h-screen">
                         <div className='grid grid-cols-4 text-center'>
                             <div className='border-r-2'>
-                                <div className='mb-2 text-4xl'>{_production?.name}</div>
+                                <div className='mb-2 text-4xl'>{_production==null?"-":_production?.name}</div>
                             </div>
                             <div className='border-r-2'>
-                                <div className='mb-2 text-4xl'>{_production?.active_line}</div>
+                                <div className='mb-2 text-4xl'>{creator}</div>
                             </div>
                             <div className='border-r-2 mt-1'>
-                                <div div className='mb-2 text-4xl'>PO {formatIDR(_production?.total)}</div>
+                                <div div className='mb-2 text-4xl'>PO {_production==null?"-":formatIDR(_production?.total)}</div>
                             </div>
                             <div className='border-r-2 mt-1'>
                                 <div div className='mb-2 text-4xl'>Jam {hourline}</div>
@@ -65,7 +65,7 @@ export default function Index(props) {
                             </div>
                             <div className='border-r-2'>
                                 <div div className='mb-2 text-4xl'>Sisa PO</div>
-                                <div div className='mb-2 text-4xl'>{formatIDR(_production?.left)}</div>
+                                <div div className='mb-2 text-4xl'> {_production==null?"-":formatIDR(_production?.left)} </div>
                             </div>
                         </div>
                         <div className='grid grid-cols-3 text-center'>

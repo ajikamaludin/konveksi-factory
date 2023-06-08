@@ -17,40 +17,51 @@ class TvController extends Controller
     {
 
         $target = 0;
-        $hourline = null;
+        $hourline = "-";
         $salary = SettingPayroll::first();
         $hasil = 0;
         $hpp = 0;
         $dataNow=date('Y-m-d');
-        $prod=ProductionItemResult::with(['item.product'])
+        $product=null;
+        $linehpp=0;
+        $prod=ProductionItemResult::with(['item.product','creator'])
         ->where('created_by', Auth::user()->id)
-        ->orderBy('created_at', 'DESC');
-      
+        ->whereDate('input_at','=',$dataNow)
+        ->orderBy('created_at', 'DESC')->get();
+        $count=1;
+        $creator="-";
         $operator = Operator::whereDate('input_date', '=', $dataNow)->orderBy('input_date', 'desc')->value('qty') ?? 1;
-        if ($prod != null) {
-            dd($prod);
-                    $workhours = SettingPayroll::getdays($prod->input_at);
-                    $hourline = Carbon::parse($prod->input_at)->format('H:i:s');
+        if ($prod->isNotEmpty()) {
+            $count=count($prod);
+                    foreach($prod as $detail){
+                     
+                    $creator=$detail->creator->name;
+                    $workhours = SettingPayroll::getdays($detail->input_at);
+                    $hourline = Carbon::parse($detail->input_at)->format('H:i:s');
                     $gettarget = TargetProductions::whereDate('input_at','=',$dataNow)
-                    ->where('production_id','=',$prod->item->product->id)
+                    ->where('production_id','=',$detail->item->product->id)
                     ->orderBy('input_at','desc')->first();
                     if (!empty($gettarget)){
                         $target=$gettarget?->qty;
                     } 
-                    $qty = ($prod->item->finish_quantity + $prod->reject_quantity) * $workhours;
-          
-                    $linehpp = ($salary->payroll * $operator) / $qty;
-                    $hpp = $linehpp;
-                    $hasil = $prod->item->finish_quantity + $prod->item->reject_quantity;
+                    $qty = ($detail->finish_quantity + $detail->reject_quantity) * $workhours;
+                    $linehpp += ($salary->payroll * $operator) / $qty;
+                    $hasil += ($detail->finish_quantity + $detail->reject_quantity);
+                    $product=$detail?->item?->product;
+                   
+                }
         }
-        
+     
+        $hpp = $linehpp/$count;
+      
         return inertia('Tv/Index', [
-            '_production' => $prod?->item?->product,
+            '_production' => $product,
             'target' => $target,
             'operator' => $operator,
             'hourline' => $hourline,
             'hpp' => $hpp,
             'hasil' => $hasil,
+            'creator'=>$creator,
         ]);
     }
 }
