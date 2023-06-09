@@ -191,8 +191,22 @@ class FabricController extends Controller
     public function exports(Fabric $fabric)
     {
         $exports = [
-            ['Lot', 'Kg', 'User', 'Artikel', 'Sisa'],
+            ['Name', 'Tanggal', 'Supplier', 'Nomor Surat Jalan', 'Komposisi','Setting Kain'],
+            [
+                $fabric->name,
+                $fabric->order_date,
+                $fabric?->supplier?->name,
+                $fabric->letter_number,
+                $fabric?->composition?->name,
+                $fabric->setting_size,
+            ],
+            [],
+            [],
         ];
+
+        $exports []= 
+            ['Lot', 'Kg', 'User', 'Artikel', 'Sisa']
+        ;
 
         foreach ($fabric->fabricItems as $item) {
 
