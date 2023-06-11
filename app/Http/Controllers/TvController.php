@@ -8,7 +8,9 @@ use App\Models\ProductionItemResult;
 use App\Models\SettingPayroll;
 use App\Models\TargetProductions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TvController extends Controller
 {
@@ -18,8 +20,9 @@ class TvController extends Controller
         $target = 0;
         $hourline = '-';
         $salary = SettingPayroll::first();
-        $total = 0;
+        $hasil = 0;
         $hpp = 0;
+        $estimate = 0;
         $dataNow = date('Y-m-d');
         $linehpp = 0;
         $creator = auth()->user()->name;
@@ -37,16 +40,28 @@ class TvController extends Controller
             $workhours = SettingPayroll::getdays($dataNow);
             $productionItemIds = $production->items()->pluck('id')->toArray();
 
+            $totalBefore = ProductionItemResult::whereIn('production_item_id', $productionItemIds)
+                ->whereDate('created_at', '<', $dataNow)
+                ->selectRaw('(SUM(finish_quantity) + SUM(reject_quantity)) as total')
+                ->value('total');
+
+            $count_total = ProductionItemResult::whereIn('production_item_id', $productionItemIds)
+                ->whereDate('created_at', $dataNow)
+                ->count();
+
             $total = ProductionItemResult::whereIn('production_item_id', $productionItemIds)
                 ->whereDate('created_at', $dataNow)
                 ->selectRaw('(SUM(finish_quantity) + SUM(reject_quantity)) as total')
                 ->value('total');
 
-            $total = $total <= 0 ? 1 : $total;
-            $qty = $total * $workhours;
-            $linehpp += ($salary->payroll * $operator) / $qty;
+            $hasil = $total;
+
+            $total = ($total <= 0 ? 1 : $total) + $totalBefore;
+            $linehpp = ($salary->payroll * $operator);
 
             $hpp = $linehpp / $total;
+
+            $estimate = ($total / $count_total) * $workhours;
         }
 
         return inertia('Tv/Index', [
@@ -55,8 +70,9 @@ class TvController extends Controller
             'operator' => $operator,
             'hourline' => $hourline,
             'hpp' => $hpp,
-            'hasil' => $total,
+            'hasil' => $hasil,
             'creator' => $creator,
+            'estimate' => $estimate
         ]);
     }
 }

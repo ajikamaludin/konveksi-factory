@@ -5,8 +5,16 @@ import { formatIDR } from '@/utils'
 import Button from '@/Components/Button'
 
 export default function Index(props) {
-    const { _production, hourline, target, operator, hpp, hasil, creator } =
-        props
+    const {
+        _production,
+        hourline,
+        target,
+        operator,
+        hpp,
+        hasil,
+        creator,
+        estimate,
+    } = props
 
     const [isfull, setFull] = useState(false)
     const handlefull = () => {
@@ -144,7 +152,7 @@ export default function Index(props) {
                                     Perkiraan
                                 </div>
                                 <div div className="mb-6 text-7xl font-bold">
-                                    {target}
+                                    {estimate}
                                 </div>
                             </div>
                             <div className="p-1">
