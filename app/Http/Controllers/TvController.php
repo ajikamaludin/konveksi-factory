@@ -27,7 +27,9 @@ class TvController extends Controller
         $linehpp = 0;
         $creator = auth()->user()->name;
         $production = null;
-        $operator = Operator::whereDate('input_date', '=', $dataNow)->orderBy('input_date', 'desc')->value('qty') ?? 1;
+        $operator = Operator::whereDate('input_date', '=', $dataNow)
+            ->where('created_by', auth()->id())
+            ->orderBy('input_date', 'desc')->value('qty') ?? 1;
         $lastSewingResult = ProductionItemResult::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->first();
 
         if ($lastSewingResult != null) {
@@ -61,6 +63,8 @@ class TvController extends Controller
 
             $hpp = $linehpp / $total;
 
+            $workhours = $workhours <= 0 ? 1 : $workhours;
+            $count_total = $count_total <= 0 ? 1 : $count_total;
             $estimate = ($total / $count_total) * $workhours;
         }
 

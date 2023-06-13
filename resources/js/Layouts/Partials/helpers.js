@@ -1,5 +1,5 @@
 export const filterOpenMenu = (user, item) => {
-    const isAdmin = +user.is_superadmin === 1
+    const isAdmin = user.role === null
     if ('items' in item) {
         let items = []
         if (isAdmin) {

@@ -8,5 +8,6 @@ class Operator extends Model
         'qty',
         'input_date',
         'production_item_id',
+        'created_by'
     ];
 }

@@ -55,7 +55,10 @@ class LineSewingController extends Controller
                 ->value('qty') ?? 0;
         }
 
-        $operator = Operator::whereDate('input_date', '=', $dataNow)->orderBy('input_date', 'desc')->value('qty') ?? 0;
+        $operator = Operator::whereDate('input_date', '=', $dataNow)
+            ->where('created_by', auth()->id())
+            ->orderBy('input_date', 'desc')->value('qty');
+        $operator = $operator ?? 0;
 
         return inertia('LineSewing/Index', [
             'item' => $item,
@@ -95,6 +98,7 @@ class LineSewingController extends Controller
             Operator::whereDate('input_date', $date)
                 ->updateOrCreate([
                     'input_date' => $date,
+                    'created_by' => auth()->id()
                 ], [
                     'qty' => $request->qty,
                 ]);

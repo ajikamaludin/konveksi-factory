@@ -12,7 +12,7 @@ export default function SidebarNav({ user }) {
         if (!item.show) {
             return null
         }
-        if (+user.is_superadmin === 1) {
+        if (user.role === null) {
             return filterOpenMenu(user, item)
         }
         if(user.role.permissions.find(p => p.name === item.permission)) {
