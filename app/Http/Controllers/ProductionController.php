@@ -209,10 +209,12 @@ class ProductionController extends Controller
             foreach ($item->results as $result) {
                 $workhours = SettingPayroll::getdays($result->input_date);
                 $operator = Operator::whereDate('input_date', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
-                $total=$result->finish_quantity + $result->reject_quantity;
-                $total=$total<=0?1:$total;
-                $workhours=$workhours<=0?1:$workhours;
-                $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
+                $totalqty = $result->finish_quantity + $result->reject_quantity;
+                $totalqty = $totalqty <= 0 ? 1 : $totalqty;
+                $workhours = $workhours <= 0 ? 1 : $workhours;
+                $totalpay = $salary->payroll * $operator?->qty;
+                $totalpay = $totalpay <= 0 ? 1 : $totalpay;
+                $linehpp = $totalpay / $totalqty * $workhours;
 
                 $detail = [
                     $linehpp,
@@ -311,8 +313,10 @@ class ProductionController extends Controller
 
                     $total = ($result->finish_quantity + $result->reject_quantity);
                     $total = $total <= 0 ? 1 : $total;
-                    $workhours=$workhours<=0?1:$workhours;
-                    $linehpp = ($salary->payroll * $operator?->qty) / ($total * $workhours);
+                    $workhours = $workhours <= 0 ? 1 : $workhours;
+                    $totalpay = $salary->payroll * $operator?->qty;
+                    $totalpay = $totalpay <= 0 ? 1 : $totalpay;
+                    $linehpp = $totalpay / ($total * $workhours);
 
                     $detail = [
                         $linehpp,
