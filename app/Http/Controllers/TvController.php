@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Operator;
 use App\Models\Production;
 use App\Models\ProductionItemResult;
+use App\Models\Setting;
 use App\Models\SettingPayroll;
 use App\Models\TargetProductions;
 use Illuminate\Http\Request;
@@ -65,7 +66,13 @@ class TvController extends Controller
 
             $workhours = $workhours <= 0 ? 1 : $workhours;
             $count_total = $count_total <= 0 ? 1 : $count_total;
-            $estimate = ($total / $count_total) * $workhours;
+
+            $runningHour = Carbon::parse(Setting::START_WORK)->diffInHours(now(), false);
+            $runningHour = $runningHour <= 0 ? 1 : $runningHour;
+            $average = $hasil / $runningHour; // total dibagi jam sudah dijalani, dapat rata2 hasil perjam
+            $diffHours = Carbon::parse(Setting::START_WORK)->addHours($workhours)->diffInHours(now(), false);
+            $diffHours = $diffHours <= 0 ? 1 : $diffHours;
+            $estimate = $average * $diffHours;
         }
 
         return inertia('Tv/Index', [
@@ -73,10 +80,10 @@ class TvController extends Controller
             'target' => $target,
             'operator' => $operator,
             'hourline' => $hourline,
-            'hpp' => $hpp,
+            'hpp' => number_format($hpp, 0, '.', ','),
             'hasil' => $hasil,
             'creator' => $creator,
-            'estimate' => $estimate
+            'estimate' => number_format($estimate, 0, '.', ',')
         ]);
     }
 }

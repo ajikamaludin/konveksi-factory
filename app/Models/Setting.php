@@ -11,6 +11,8 @@ class Setting extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
+    const START_WORK = '08:00';
+
     protected $fillalble = [
         'key',
         'value',

@@ -45,7 +45,7 @@ export default function Index(props) {
                         preserveState: true,
                     }
                 ),
-            1000 * 90 //90 detik
+            1000 * 60 * 5 //5 menit
         )
 
         return () => clearTimeout(to)
