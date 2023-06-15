@@ -209,6 +209,9 @@ class ProductionController extends Controller
             foreach ($item->results as $result) {
                 $workhours = SettingPayroll::getdays($result->input_date);
                 $operator = Operator::whereDate('input_date', '=', Carbon::parse($result->input_at)->format('Y-m-d'))->first();
+                $total=$result->finish_quantity + $result->reject_quantity;
+                $total=$total<=0?1:$total;
+                $workhours=$workhours<=0?1:$workhours;
                 $linehpp = ($salary->payroll * $operator?->qty) / ($result->finish_quantity + $result->reject_quantity) * $workhours;
 
                 $detail = [
@@ -308,6 +311,7 @@ class ProductionController extends Controller
 
                     $total = ($result->finish_quantity + $result->reject_quantity);
                     $total = $total <= 0 ? 1 : $total;
+                    $workhours=$workhours<=0?1:$workhours;
                     $linehpp = ($salary->payroll * $operator?->qty) / ($total * $workhours);
 
                     $detail = [
