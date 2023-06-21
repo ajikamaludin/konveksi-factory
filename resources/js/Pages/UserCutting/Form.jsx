@@ -43,7 +43,7 @@ export default function Form(props) {
     const onSeletedProduct = (production) => {
         if (isEmpty(production) === false) {
             let size = production?.cutting_items.map((val) => {
-              
+
                 return {
                     size_id: val?.size?.id,
                     size_name: val?.size?.name,
@@ -110,22 +110,27 @@ export default function Form(props) {
     const onSeletedRatio = (ratio) => {
 
         if (isEmpty(ratio) === false) {
-           
             let newratio=[]
-            sizeCutting.map(item1 => {
+            const uniqueSizeCutting=sizeCutting.map(e=>e['size_name']).map((e, i, final) => final.indexOf(e) === i && i).filter(e => sizeCutting[e]).map(e => sizeCutting[e]);
+
+            uniqueSizeCutting.map(item1 => {
+                var temp=item1.size_name
+                if(item1.size_name!=temp){
+                    temp=item1.size_name;
+                }
                 ratio.details_ratio.map((item2) => {
-                    if (item2.size_id === item1.size_id) {
-                     
+                    if (item2.size_id === item1.size_id&&temp==item2.size.name) {
                         newratio.push(item2)
                     }
                 })
+
             });
+
             const qtyratio = newratio.reduce((sum, val) =>
             sum += val.qty, 0
         )
-        
+            // console.log("ratio",qtyratio);
             setRatioQty(qtyratio)
-
             let detail = data.items.map((item, i) => {
                 return {
                     ...item,
@@ -169,7 +174,7 @@ export default function Form(props) {
     const addQuantity = (name, value, index) => {
         setData("items", data.items.map((item, i) => {
             if (i === index) {
-
+                console.log(ratio_qty);
                 if (name != 'fritter_item') {
                     // if (data.fritter_quantity >= (parseFloat(value) + 1) * ratio_qty) {
                     item[name] = parseFloat(value) + 1,
