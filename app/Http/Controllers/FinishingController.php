@@ -124,7 +124,7 @@ class FinishingController extends Controller
     public function export(string $finishing)
     {
         $exports = [
-            ['Tanggal', 'Artikel', 'Size', 'Result', 'Reject'],
+            [],
         ];
         $results = FinishingItemResults::Select(
             'productions.id',
@@ -141,12 +141,17 @@ class FinishingController extends Controller
                 $finishing,
                 $result['name'],
             ];
+            $resultReject=[
+                'Tanggal', 'Artikel'
+            ];
             $production_items = FinishingItemResults::with('productionItem.size')->whereDate('input_at', $finishing)->get();
             foreach ($production_items as $item) {
                 if ($result['id'] == $item['productionItem']['production_id']) {
+                    array_push($resultReject,'Size','Result','Reject');
                     array_push($products, $item['productionItem']['size']['name'], $item['finish_quantity'], $item['reject_quantity']);
                 }
             }
+            $exports[]=$resultReject;
             $exports[] = $products;
         }
 
